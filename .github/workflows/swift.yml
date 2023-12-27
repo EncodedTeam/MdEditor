@@ -1,16 +1,20 @@
 name: MdEditor
 
 on:
+  push:
+    branches:
+      - 'TaskManager-SPM-add'
+      
   pull_request:
     branches: 
       - develop
 
 jobs:
-  build:
-    name: Build MdEditor
+  Test_TaskManagerPackage:
+    name: Test TaskManagerPackage
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - uses: jdx/rtx-action@v1
-      - name: Build
-        run: exec ./.github/build.sh
+      - name: Run Testing
+        run: exec ./.github/TaskManagerPackage.sh

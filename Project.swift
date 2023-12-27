@@ -44,7 +44,10 @@ let project = Project(
 			infoPlist: "Targets/\(projectName)/Environments/Info.plist",
 			sources: ["Targets/\(projectName)/**"],
 			resources: ["Targets/\(projectName)/Resources/**"],
-			scripts: scripts
+			scripts: scripts,
+			dependencies: [
+				.external(name: "TaskManagerPackage")
+			]
 		),
 		Target(
 			name: "\(projectName)Tests",
@@ -56,6 +59,16 @@ let project = Project(
 			sources: ["Targets/\(projectName)Tests/**"],
 			dependencies: [
 				.target(name: "\(projectName)")
-			])
+			]
+		),
+		Target(
+			name: "TaskManagerPackageTests",
+			destinations: .iOS,
+			product: .unitTests,
+			bundleId: "com.encoders.TaskManagerPackageTests",
+			infoPlist: .none,
+			sources: ["TaskManagerPackage/Tests/**"],
+			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+		)
 	]
 )
