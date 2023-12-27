@@ -4,7 +4,8 @@ import ProjectDescription
 let dependencies = Dependencies(
 	swiftPackageManager: .init(
 		productTypes: [
-			"TaskManagerPackage": .framework
+			"TaskManagerPackage": .framework,
+			"DataStructuresPackage": .framework
         ]
 	),
 	platforms: [.iOS]

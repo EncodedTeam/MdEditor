@@ -35,7 +35,8 @@ let project = Project(
 	name: projectName,
 	organizationName: organization,
 	packages: [
-		.local(path: .relativeToManifest("TaskManagerPackage"))
+		.local(path: .relativeToManifest("TaskManagerPackage")),
+		.local(path: .relativeToManifest("DataStructuresPackage"))
 	],
 	targets: [
 		Target(
@@ -49,7 +50,8 @@ let project = Project(
 			resources: ["Targets/\(projectName)/Resources/**"],
 			scripts: scripts,
 			dependencies: [
-				.package(product: "TaskManagerPackage", type: .runtime)
+				.package(product: "TaskManagerPackage", type: .runtime),
+				.package(product: "DataStructuresPackage", type: .runtime)
 			]
 		),
 		Target(
