@@ -73,7 +73,7 @@ public struct DoublyLinkedList<T> {
 	public mutating func append(_ value: T) {
 		let newNode = Node(value, previous: tail)
 
-		tail?.next =  newNode
+		tail?.next = newNode
 		tail = newNode
 
 		if head == nil {
@@ -181,7 +181,7 @@ extension DoublyLinkedList: CustomStringConvertible {
 		var current = head
 
 		while current != nil {
-			values.append("\(current!)")
+			values.append("\(current!)") // swiftlint:disable:this force_unwrapping
 			current = current?.next
 		}
 
@@ -208,7 +208,7 @@ public struct Queue<T> {
 		elements.value(at: 0)
 	}
 
-	///Инициализатор для очереди
+	/// Инициализатор для очереди
 	public init() {
 		elements = DoublyLinkedList<T>()
 	}

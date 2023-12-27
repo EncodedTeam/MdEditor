@@ -11,4 +11,3 @@ import XCTest
 final class QueueTests: XCTestCase {
 	/// testing here
 }
-
