@@ -34,6 +34,9 @@ private let scripts: [TargetScript] = [
 let project = Project(
 	name: projectName,
 	organizationName: organization,
+	packages: [
+		.local(path: .relativeToManifest("TaskManagerPackage"))
+	],
 	targets: [
 		Target(
 			name: projectName,
@@ -44,7 +47,10 @@ let project = Project(
 			infoPlist: "Targets/\(projectName)/Environments/Info.plist",
 			sources: ["Targets/\(projectName)/**"],
 			resources: ["Targets/\(projectName)/Resources/**"],
-			scripts: scripts
+			scripts: scripts,
+			dependencies: [
+				.package(product: "TaskManagerPackage", type: .runtime)
+			]
 		),
 		Target(
 			name: "\(projectName)Tests",
