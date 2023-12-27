@@ -6,7 +6,7 @@ private let organization = "EncodedTeam"
 private let projectName = "MdEditor"
 
 private var bundleId: String {
-	"com.overcoders.\(projectName)"
+	"com.encoders.\(projectName)"
 }
 
 private var swiftLintTargetScript: TargetScript {
