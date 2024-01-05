@@ -9,20 +9,143 @@ import XCTest
 @testable import DataStructuresPackage
 
 final class DoublyLinkedListTests: XCTestCase {
+	
+	var sut: DoublyLinkedList<Int>!
+	
+	override func setUp() {
+		super.setUp()
+		sut = DoublyLinkedList<Int>()
+	}
+	
+	override func tearDown() {
+		sut = nil
+		super.tearDown()
+	}
 
+	/// Тест свойства определяющего, пуст ли список.
 	func test_isEmpty_shouldBeTrue() {
-		let sut = DoublyLinkedList<Any>()
-
-		let result = sut.isEmpty
-
-		XCTAssertTrue(result)
+		XCTAssertTrue(sut.isEmpty, "Список содержит значения")
 	}
 
 	func test_isEmpty_shouldBeFalse() {
-		let sut = DoublyLinkedList(value: 1)
-
-		let result = sut.isEmpty
-
-		XCTAssertFalse(result)
+		sut.push(1)
+		
+		XCTAssertFalse(sut.isEmpty, "Список не содержит значения")
+	}
+	
+	/// Тест добавлния в начало списка значения.
+	func test_push_shouldBeCorrectCount() {
+		sut.push(1)
+		
+		XCTAssertEqual(sut.count, 1, "Не соответствует количество элементов в списке")
+	}
+	
+	/// Тест добавлния в конец списка значения.
+	func test_append_shouldBeCorrectCount() {
+		sut.append(1)
+		
+		XCTAssertEqual(sut.count, 1, "Не соответствует количество элементов в списке")
+	}
+	
+	/// Тест добавлния в середину списка значения.
+	func test_insert_resultShouldBeCorrectValue() {
+		sut.append(1)
+		sut.append(2)
+		
+		sut.insert(3, after: 1)
+		let result = sut.value(at: 2)
+		
+		XCTAssertEqual(result, 3, "По индексу не верное значение")
+	}
+	
+	func test_insert_countShouldBeCorrect() {
+		sut.append(1)
+		sut.append(3)
+		
+		sut.insert(2, after: 0)
+		
+		XCTAssertEqual(sut.count, 3, "Элемент не добавлен в список")
+	}
+	
+	/// Тест извлечения значения из начала строки.
+	func test_pop_resultShouldBeEqual() {
+		sut.append(1)
+		sut.append(2)
+		
+		let result = sut.pop()
+		
+		XCTAssertEqual(result, 1, "Извлечено не верное значение")
+	}
+	
+	func test_pop_countShouldBeCorrect() {
+		sut.append(1)
+		sut.append(2)
+		
+		let _ = sut.pop()
+		
+		XCTAssertEqual(sut.count, 1, "Элемент не удален из списка")
+	}
+	
+	/// Тест извлечения значения из конца строки.
+	func test_removeLast_resultShouldBeEqual() {
+		sut.append(1)
+		sut.append(2)
+		
+		let result = sut.removeLast()
+		
+		XCTAssertEqual(result, 2, "Извлечено не верное значение")
+	}
+	
+	func test_removeLast_countShouldBeCorrect() {
+		sut.append(1)
+		sut.append(2)
+		
+		let _ = sut.removeLast()
+		
+		XCTAssertEqual(sut.count, 1, "Элемент не удален из списка")
+	}
+	
+	/// Тест извлечения значения из середины строки.
+	func test_remove_resultShouldBeEqual() {
+		sut.append(1)
+		sut.append(2)
+		sut.append(3)
+		
+		let result = sut.remove(after: 0)
+		
+		XCTAssertEqual(result, 2, "Извлечено не верное значение")
+	}
+	
+	func test_remove_countShouldBeCorrect() {
+		sut.append(1)
+		sut.append(2)
+		
+		let _ = sut.remove(after: 0)
+		
+		XCTAssertEqual(sut.count, 1, "Элемент не удален из списка")
+	}
+	
+	/// Тест получения значения по индексу.
+	func test_value_resultShouldBeEqual() {
+		sut.append(1)
+		sut.append(2)
+		sut.append(3)
+		
+		let resultFirstHalf = sut.value(at: 0)
+		let resultSecondHalf = sut.value(at: 2)
+		
+		XCTAssertEqual(resultFirstHalf, 1, "Извлечено не верное значение в первой половине")
+		XCTAssertEqual(resultSecondHalf, 3, "Извлечено не верное значение во второй половине")
+	}
+	
+	/// Тест проверки текстовой строки  листа
+	func test_description_resultresultShouldBeEqual() {
+		sut.append(1)
+		sut.append(2)
+		let expectedResult = "count = 2; list = 1 <-> 2"
+		
+		let result = sut.description
+		
+		XCTAssertEqual(result, expectedResult, "Значения не совпадают")
 	}
 }
