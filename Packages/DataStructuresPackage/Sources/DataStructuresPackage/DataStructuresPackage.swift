@@ -21,6 +21,8 @@ public struct DoublyLinkedList<T> {
 		///  - previous:  Ссылка на предыдущий узел, если он есть.
 		public init(_ value: T, previous: Node<T>? = nil, next: Node<T>? = nil) {
 			self.value = value
+			self.next = next
+			self.previous = previous
 		}
 	}
 
@@ -73,7 +75,7 @@ public struct DoublyLinkedList<T> {
 	public mutating func append(_ value: T) {
 		let newNode = Node(value, previous: tail)
 
-		tail?.next =  newNode
+		tail?.next = newNode
 		tail = newNode
 
 		if head == nil {
@@ -93,7 +95,7 @@ public struct DoublyLinkedList<T> {
 		let nextNode = currentNode.next
 		let newNode = Node(value, previous: currentNode, next: nextNode)
 		currentNode.next = newNode
-		newNode.previous = newNode
+		nextNode?.previous = newNode
 
 		if newNode.next == nil {
 			tail = newNode
@@ -161,6 +163,13 @@ public struct DoublyLinkedList<T> {
 		if index <= count / 2 {
 			currentNode = head
 			while currentIndex < index {
+				currentNode = currentNode?.next
+				currentIndex += 1
+			}
+		} else {
+			currentIndex = count - 1
+			currentNode = tail
+			while currentIndex > index {
 				currentNode = currentNode?.previous
 				currentIndex -= 1
 			}
