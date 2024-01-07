@@ -4,30 +4,30 @@ import Foundation
 public struct DoublyLinkedList<T> {
 
 	/// Узел линейного двунаправленного списка
-	public class Node<T> {
+	public class Node {
 		/// Значение, которое хранит узел
 		public var value: T
 
 		/// Ссылка на следующий узел, если он есть
-		public var next: Node<T>?
+		public var next: Node?
 
 		/// Ссылка на предыдущий узел, если он есть
-		public var previous: Node<T>?
+		public var previous: Node?
 
 		/// Инициализатор узла линейного однонаправленного списка.
 		/// - Parameters:
 		///  - value: Значение для хранения в узле;
 		///  - next:  Ссылка на следующий узел, если он есть;
 		///  - previous:  Ссылка на предыдущий узел, если он есть.
-		public init(_ value: T, previous: Node<T>? = nil, next: Node<T>? = nil) {
+		public init(_ value: T, previous: Node? = nil, next: Node? = nil) {
 			self.value = value
 			self.next = next
 			self.previous = previous
 		}
 	}
 
-	private(set) var head: Node<T>?
-	private(set) var tail: Node<T>?
+	private(set) var head: Node?
+	private(set) var tail: Node?
 
 	/// Возвращает количество элементов списка.
 	///
@@ -156,10 +156,10 @@ public struct DoublyLinkedList<T> {
 		node(at: index)?.value
 	}
 
-	private func node(at index: Int) -> Node<T>? {
+	private func node(at index: Int) -> Node? {
 		guard index >= 0 && index < count else { return nil }
 		var currentIndex = 0
-		var currentNode: Node<T>?
+		var currentNode: Node?
 		if index <= count / 2 {
 			currentNode = head
 			while currentIndex < index {
