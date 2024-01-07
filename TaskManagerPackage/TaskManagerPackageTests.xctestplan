@@ -1,0 +1,28 @@
+{
+  "configurations" : [
+    {
+      "id" : "01767829-45F2-4AF4-AE25-607195CFD345",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:..\/..\/MdEditor.xcodeproj",
+      "identifier" : "182EAD9731EF0C0CEDFA91FA",
+      "name" : "MdEditor"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TaskManagerPackageTests",
+        "name" : "TaskManagerPackageTests"
+      }
+    }
+  ],
+  "version" : 1
+}

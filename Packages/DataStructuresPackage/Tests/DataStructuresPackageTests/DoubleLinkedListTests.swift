@@ -22,6 +22,14 @@ final class DoublyLinkedListTests: XCTestCase {
 		super.tearDown()
 	}
 
+	/// Тест инициализатора, проверяющий, что голова и хвост указывают на один и тот же узел
+	func test_initWithValue_shouldBeEqual() {
+		let value = 16
+		sut = DoublyLinkedList(value: value)
+
+		XCTAssertEqual(sut.head?.value, value, "Значения не равны" )
+	}
+
 	/// Тест свойства определяющего, пуст ли список.
 	func test_isEmpty_shouldBeTrue() {
 		XCTAssertTrue(sut.isEmpty, "Список содержит значения")
@@ -33,21 +41,21 @@ final class DoublyLinkedListTests: XCTestCase {
 		XCTAssertFalse(sut.isEmpty, "Список не содержит значения")
 	}
 	
-	/// Тест добавлния в начало списка значения.
+	/// Тест добавления в начало списка значения.
 	func test_push_shouldBeCorrectCount() {
 		sut.push(1)
 		
 		XCTAssertEqual(sut.count, 1, "Не соответствует количество элементов в списке")
 	}
 	
-	/// Тест добавлния в конец списка значения.
+	/// Тест добавления в конец списка значения.
 	func test_append_shouldBeCorrectCount() {
 		sut.append(1)
 		
 		XCTAssertEqual(sut.count, 1, "Не соответствует количество элементов в списке")
 	}
 	
-	/// Тест добавлния в середину списка значения.
+	/// Тест добавления в середину списка значения.
 	func test_insert_resultShouldBeCorrectValue() {
 		sut.append(1)
 		sut.append(2)
@@ -57,7 +65,19 @@ final class DoublyLinkedListTests: XCTestCase {
 		
 		XCTAssertEqual(result, 3, "По индексу не верное значение")
 	}
-	
+
+	/// Тест добавления в середину списка значения, индекс которого за пределами списка
+	func test_insertWithIndexOutOfRange_resultShouldBeEqual() {
+		var previosCount = 0
+		sut.append(1)
+		sut.append(2)
+
+		previosCount = sut.count
+		sut.insert(3, after: 5)
+
+		XCTAssertEqual(previosCount, sut.count, "Счетчик изменился")
+	}
+
 	func test_insert_countShouldBeCorrect() {
 		sut.append(1)
 		sut.append(3)
@@ -85,7 +105,20 @@ final class DoublyLinkedListTests: XCTestCase {
 		
 		XCTAssertEqual(sut.count, 1, "Элемент не удален из списка")
 	}
-	
+
+	func test_popWithEmptyList_resultShouldBeNil() {
+		let value = sut.pop()
+
+		XCTAssertNil(value, "Извлеченное значение не nil")
+	}
+
+	func test_pop_resultShouldBeNil() {
+		sut.append(1)
+
+		let _ = sut.pop()
+		XCTAssertNil(sut.tail, "При извлечении в tail осталось значение")
+	}
+
 	/// Тест извлечения значения из конца строки.
 	func test_removeLast_resultShouldBeEqual() {
 		sut.append(1)
@@ -104,7 +137,21 @@ final class DoublyLinkedListTests: XCTestCase {
 		
 		XCTAssertEqual(sut.count, 1, "Элемент не удален из списка")
 	}
-	
+
+	func test_removeLastWithEmptyList() {
+		let value = sut.removeLast()
+
+		XCTAssertNil(value, "Извлеченное значение не nil")
+	}
+
+	func test_removeLast_resultShouldBeNil() {
+		sut.append(1)
+
+		let _ = sut.removeLast()
+
+		XCTAssertNil(sut.head, "При извлечении в Head осталось значение")
+	}
+
 	/// Тест извлечения значения из середины строки.
 	func test_remove_resultShouldBeEqual() {
 		sut.append(1)
@@ -124,18 +171,28 @@ final class DoublyLinkedListTests: XCTestCase {
 		
 		XCTAssertEqual(sut.count, 1, "Элемент не удален из списка")
 	}
-	
+
+	func test_removeWithEmptyList_resultShouldBeNil() {
+		let value = sut.remove(after: 2)
+
+		XCTAssertNil(value, "Извлеченное значение не равно nil")
+	}
+
 	/// Тест получения значения по индексу.
 	func test_value_resultShouldBeEqual() {
 		sut.append(1)
 		sut.append(2)
 		sut.append(3)
-		
+		sut.append(4)
+		sut.append(5)
+		sut.append(6)
 		let resultFirstHalf = sut.value(at: 0)
 		let resultSecondHalf = sut.value(at: 2)
+		let anotherResultSecondHalf = sut.value(at: 4)
 		
-		XCTAssertEqual(resultFirstHalf, 1, "Извлечено не верное значение в первой половине")
-		XCTAssertEqual(resultSecondHalf, 3, "Извлечено не верное значение во второй половине")
+		XCTAssertEqual(resultFirstHalf, 1, "Извлечено неверное значение в первой половине")
+		XCTAssertEqual(resultSecondHalf, 3, "Извлечено неверное значение во второй половине")
+		XCTAssertEqual(anotherResultSecondHalf, 5, "Извлечено неверное значение в конце списка")
 	}
 	
 	/// Тест проверки текстовой строки  листа

@@ -26,8 +26,8 @@ public struct DoublyLinkedList<T> {
 		}
 	}
 
-	private var head: Node<T>?
-	private var tail: Node<T>?
+	private(set) var head: Node<T>?
+	private(set) var tail: Node<T>?
 
 	/// Возвращает количество элементов списка.
 	///
@@ -52,7 +52,7 @@ public struct DoublyLinkedList<T> {
 		}
 	}
 
-	/// Добавлние в начало списка значения.
+	/// Добавлeние в начало списка значения.
 	///
 	/// Сложность O(1).
 	/// - Parameter value: Значение, которое будет добавлено в список.
@@ -107,12 +107,12 @@ public struct DoublyLinkedList<T> {
 	/// Извлечение значения из начала строки.
 	///
 	/// Сложность O(1).
-	/// - Returns: Извлеченное изсписка значение.
+	/// - Returns: Извлеченное из списка значение.
 	public mutating func pop() -> T? {
 		guard let currentHead = head else { return nil }
 		head = currentHead.next
 		head?.previous = nil
-		if isEmpty { tail = nil }
+		if head == nil { tail = nil }
 
 		count -= 1
 
@@ -127,7 +127,7 @@ public struct DoublyLinkedList<T> {
 		guard let currentTail = tail else { return nil }
 		tail = currentTail.previous
 		tail?.next = nil
-		if isEmpty { head = nil }
+		if tail == nil { head = nil }
 		count -= 1
 
 		return currentTail.value
