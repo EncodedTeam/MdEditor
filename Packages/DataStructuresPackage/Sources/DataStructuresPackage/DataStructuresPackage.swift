@@ -26,8 +26,8 @@ public struct DoublyLinkedList<T> {
 		}
 	}
 
-	private(set) var head: Node?
-	private(set) var tail: Node?
+	private var head: Node?
+	private var tail: Node?
 
 	/// Возвращает количество элементов списка.
 	///

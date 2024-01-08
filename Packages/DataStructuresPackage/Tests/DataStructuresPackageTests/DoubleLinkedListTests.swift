@@ -27,7 +27,7 @@ final class DoublyLinkedListTests: XCTestCase {
 		let value = 16
 		sut = DoublyLinkedList(value: value)
 
-		XCTAssertEqual(sut.head?.value, value, "Значения не равны" )
+		XCTAssertEqual(sut.value(at: 0), value, "Значения не равны" )
 	}
 
 	/// Тест свойства определяющего, пуст ли список.
@@ -112,11 +112,12 @@ final class DoublyLinkedListTests: XCTestCase {
 		XCTAssertNil(value, "Извлеченное значение не nil")
 	}
 
-	func test_pop_resultShouldBeNil() {
+	func test_pop_resultShouldBeTrue() {
 		sut.append(1)
 
 		let _ = sut.pop()
-		XCTAssertNil(sut.tail, "При извлечении в tail осталось значение")
+		
+		XCTAssertTrue(sut.isEmpty, "При извлечении в tail осталось значение")
 	}
 
 	/// Тест извлечения значения из конца строки.
@@ -144,12 +145,12 @@ final class DoublyLinkedListTests: XCTestCase {
 		XCTAssertNil(value, "Извлеченное значение не nil")
 	}
 
-	func test_removeLast_resultShouldBeNil() {
+	func test_removeLast_resultShouldBeTrue() {
 		sut.append(1)
 
 		let _ = sut.removeLast()
 
-		XCTAssertNil(sut.head, "При извлечении в Head осталось значение")
+		XCTAssertTrue(sut.isEmpty, "При извлечении в Head осталось значение")
 	}
 
 	/// Тест извлечения значения из середины строки.
