@@ -1,6 +1,9 @@
 name: DataStructuresPackage
 
 on:
+  push:
+    branches: 
+      - 'MDED-16-project-structure'
   pull_request:
     branches:
       - develop

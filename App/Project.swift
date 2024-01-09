@@ -39,8 +39,8 @@ let project = Project(
 		disableSynthesizedResourceAccessors: true
 	),
 	packages: [
-		.local(path: .relativeToManifest("Packages/TaskManagerPackage")),
-		.local(path: .relativeToManifest("Packages/DataStructuresPackage"))
+		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
+		.local(path: .relativeToManifest("../Packages/DataStructuresPackage"))
 	],
 	targets: [
 		Target(
@@ -49,9 +49,9 @@ let project = Project(
 			product: .app,
 			bundleId: bundleId,
 			deploymentTargets: .iOS("16.0"),
-			infoPlist: "Environments/Info.plist",
-			sources: ["Sources/**"],
-			resources: ["Resources/**"],
+			infoPlist: "\(projectName)/Environments/Info.plist",
+			sources: ["\(projectName)/Sources/**"],
+			resources: ["\(projectName)/Resources/**"],
 			scripts: scripts,
 			dependencies: [
 				.package(product: "TaskManagerPackage", type: .runtime),
@@ -65,7 +65,7 @@ let project = Project(
 			bundleId: "\(bundleId)Tests",
 			deploymentTargets: .iOS("16.0"),
 			infoPlist: .none,
-			sources: ["Tests/**"],
+			sources: ["\(projectName)Tests/**"],
 			dependencies: [
 				.target(name: "\(projectName)")
 			],
