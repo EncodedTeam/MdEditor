@@ -34,9 +34,9 @@ private let scripts: [TargetScript] = [
 let project = Project(
 	name: projectName,
 	organizationName: organization,
-	options: Project.Options.options(
+	options: .options(
 		disableBundleAccessors: true,
-		disableSynthesizedResourceAccessors: true
+		disableSynthesizedResourceAccessors: false
 	),
 	packages: [
 		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
