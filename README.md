@@ -11,7 +11,19 @@
 ```sh
 git clone git@github.com:EncodedTeam/MdEditor.git
 cd MdEditor
+```
+Редактирование манифеста:
+```sh
+tuist edit
+```
+Генерация проекта:
+```sh
+cd App
 tuist generate
+```
+или
+```sh
+tuist generate -p App
 ```
 
 ## Добавленные SPM-пакеты:
