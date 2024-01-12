@@ -49,15 +49,6 @@ final class TodoListViewController: UITableViewController {
 	}
 }
 
-// MARK: - Actions
-
-private extension TodoListViewController {
-	@objc
-	func addTapped() {
-		interactor?.createTask()
-	}
-}
-
 // MARK: - UITableView
 
 extension TodoListViewController {
@@ -97,12 +88,6 @@ private extension TodoListViewController {
 		navigationController?.navigationBar.prefersLargeTitles = true
 		
 		self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-
-		navigationItem.rightBarButtonItem = UIBarButtonItem(
-			barButtonSystemItem: .add,
-			target: self,
-			action: #selector(addTapped)
-		)
 	}
 
 	func getTaskForIndex(_ indexPath: IndexPath) -> TodoListModel.ViewModel.Task {

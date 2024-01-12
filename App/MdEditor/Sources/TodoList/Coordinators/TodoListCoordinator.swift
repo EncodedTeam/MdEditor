@@ -32,17 +32,7 @@ final class TodoListCoordinator: ICoordinator {
 		orderedTaskManager.addTasks(tasks: repository.getTasks())
 
 		let assembler = TodoListAssembler(taskManager: orderedTaskManager)
-		let viewController = assembler.assembly {
-			self.showCreateTaskScene()
-		}
-		navigationController.pushViewController(viewController, animated: true)
-	}
-	
-	private func showCreateTaskScene() {
-		let assembler = CreateTaskAssembler(taskManager: taskManager)
-		let viewController = assembler.assembly {
-			self.navigationController.popViewController(animated: true)
-		}
+		let viewController = assembler.assembly()
 		navigationController.pushViewController(viewController, animated: true)
 	}
 }

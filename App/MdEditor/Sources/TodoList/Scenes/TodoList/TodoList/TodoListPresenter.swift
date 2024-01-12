@@ -13,25 +13,18 @@ protocol ITodoListPresenter {
 	/// Отображение экрана со списком заданий.
 	/// - Parameter response: Подготовленные к отображению данные.
 	func present(response: TodoListModel.Response)
-
-	/// Создание нового задания.
-	func createTask()
 }
-
-typealias EmptyClosure = () -> Void
 
 final class TodoListPresenter: ITodoListPresenter {
 
 	// MARK: - Dependencies
 
 	private weak var viewController: ITodoListViewController! // swiftlint:disable:this implicitly_unwrapped_optional
-	private var createTaskClosure: EmptyClosure?
 
 	// MARK: - Initialization
 
-	init(viewController: ITodoListViewController, createTaskClosure: EmptyClosure?) {
+	init(viewController: ITodoListViewController) {
 		self.viewController = viewController
-		self.createTaskClosure = createTaskClosure
 	}
 
 	// MARK: - Public methods
@@ -46,10 +39,6 @@ final class TodoListPresenter: ITodoListPresenter {
 			sections.append(sectionData)
 		}
 		viewController.render(viewModel: TodoListModel.ViewModel(tasksBySections: sections))
-	}
-
-	func createTask() {
-		createTaskClosure?()
 	}
 
 	// MARK: - Private methods
