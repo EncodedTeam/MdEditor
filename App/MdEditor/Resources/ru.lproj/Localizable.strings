@@ -1,1 +1,8 @@
 
+"Authorization.title" = "Авторизация";
+"Authorization.authorization" = "Authorization";
+"Authorization.password" = "Password";
+"Authorization.login" = "Login";
+
+"TodoList.title" = "TodoList";
+"TodoList.Filter.description" = "Filter \"%@\"";
