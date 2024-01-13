@@ -10,45 +10,36 @@ final class MainCoordinator: BaseCoordinator {
 
 	// MARK: - Dependencies
 
-	private let tabBarController: UITabBarController
-	private let taskManager = TaskManager()
-
-	// MARK: - Private properties
-
-	private let pages: [TabbarPage] = TabbarPage.allTabbarPages
+	private let navigationController: UINavigationController
+	private let taskManager: ITaskManager
 
 	// MARK: - Initialization
 	
-	init(tabBarController: UITabBarController) {
-		self.tabBarController = tabBarController
+	init(navigationController: UINavigationController, taskManager: ITaskManager) {
+		self.navigationController = navigationController
+		self.taskManager = taskManager
 	}
 
 	// MARK: - Internal methods
 
 	override func start() {
-		tabBarController.viewControllers?.enumerated().forEach { item in
-			guard let controller = item.element as? UINavigationController else { return }
-			runFlowByIndex(item.offset, on: controller)
-		}
+		runLoginFlow()
 	}
-}
 
-// MARK: - run Flows -
-private extension MainCoordinator {
-	func runFlowByIndex(_ index: Int, on controller: UINavigationController) {
-		let coordinator: ICoordinator
-		switch pages[index] {
-		case .todoList:
-			coordinator = TodoListCoordinator(
-				navigationController: controller,
-				taskManager: taskManager
-			)
-		case .chart:
-			coordinator = ChartsCoordinator(
-				navigationController: controller,
-				taskManager: taskManager
-			)
+	func runLoginFlow() {
+		let coordinator = LoginCoordinator(navigationController: navigationController)
+		addDependency(coordinator)
+
+		coordinator.finishFlow = { [weak self] in
+			self?.runTodoListFlow()
+			self?.removeDependency(coordinator)
 		}
+
+		coordinator.start()
+	}
+
+	func runTodoListFlow() {
+		let coordinator = TodoListCoordinator(navigationController: navigationController, taskManager: taskManager)
 		addDependency(coordinator)
 		coordinator.start()
 	}

@@ -4,49 +4,47 @@
 //
 
 import UIKit
+import TaskManagerPackage
 
 final class AppCoordinator: BaseCoordinator {
 
 	// MARK: - Dependencies
 
 	private let navigationController: UINavigationController
-	private var window: UIWindow?
+	private let window: UIWindow?
 
 	// MARK: - Initialization
 
 	init(window: UIWindow?) {
-		self.window = window
 		self.navigationController = UINavigationController()
+
+		self.window = window
+		self.window?.rootViewController = navigationController
+		self.window?.makeKeyAndVisible()
 	}
 	
 	// MARK: - Internal methods
 
 	override func start() {
-		runLoginFlow()
+		runMainFLow()
 	}
 
-	func runLoginFlow() {
-		let coordinator = LoginCoordinator(navigationController: navigationController) 
-		addDependency(coordinator)
-
-		coordinator.finishFlow = { [weak self, weak coordinator] in
-			self?.runMainFlow()
-			coordinator.map { self?.removeDependency($0) }
-		}
-
-		coordinator.start()
-
-		window?.rootViewController = navigationController
-		window?.makeKeyAndVisible()
-	}
-
-	func runMainFlow() {
-		let tabBarController = TabBarController()
-		let coordinator = MainCoordinator(tabBarController: tabBarController)
+	func runMainFLow() {
+		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: buildTaskManager())
 		addDependency(coordinator)
 		coordinator.start()
 
 		navigationController.isNavigationBarHidden = true
-		navigationController.setViewControllers([tabBarController], animated: true)
+	}
+
+	// MARK: - Private methods
+
+	private func buildTaskManager() -> ITaskManager {
+		let taskManager = TaskManager()
+		let repository = TaskRepositoryStub()
+		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
+		orderedTaskManager.addTasks(tasks: repository.getTasks())
+
+		return orderedTaskManager
 	}
 }

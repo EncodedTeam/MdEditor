@@ -11,11 +11,11 @@ final class TodoListCoordinator: ICoordinator {
 	// MARK: - Dependencies
 
 	private let navigationController: UINavigationController
-	private let taskManager: TaskManager
+	private let taskManager: ITaskManager
 
 	// MARK: - Initialization
 
-	init(navigationController: UINavigationController, taskManager: TaskManager) {
+	init(navigationController: UINavigationController, taskManager: ITaskManager) {
 		self.navigationController = navigationController
 		self.taskManager = taskManager
 	}
@@ -26,12 +26,10 @@ final class TodoListCoordinator: ICoordinator {
 		showTodoListScene()
 	}
 
-	private func showTodoListScene() {
-		let repository = TaskRepositoryStub()
-		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
-		orderedTaskManager.addTasks(tasks: repository.getTasks())
+	// MARK: - Private methods
 
-		let assembler = TodoListAssembler(taskManager: orderedTaskManager)
+	private func showTodoListScene() {
+		let assembler = TodoListAssembler(taskManager: taskManager)
 		let viewController = assembler.assembly()
 		navigationController.pushViewController(viewController, animated: true)
 	}
