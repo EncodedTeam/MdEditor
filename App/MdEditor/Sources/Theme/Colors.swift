@@ -7,13 +7,14 @@
 
 import UIKit
 
+/// Палиттра цветов https://colorscheme.ru/#0142Lllu-LAuC
 enum Colors {
 	static let red = UIColor.color(
 		light: Asset.WarmAndCold.Red.punch.color,
 		dark: Asset.WarmAndCold.Red.bitterSweet.color
 	)
 	static let orange = UIColor.color(
-		light: Asset.WarmAndCold.Orange.warm.color,
+		light: Asset.WarmAndCold.Orange.tangerine.color,
 		dark: Asset.WarmAndCold.Orange.mustard.color
 	)
 	static let green = UIColor.color(
@@ -44,13 +45,4 @@ enum Colors {
 		light: Asset.WarmAndCold.Gray.iron.color,
 		dark: Asset.WarmAndCold.Blue.fadedBlue.color
 	)
-}
-
-enum Theme {
-	static let mainColor = Colors.orange
-	static let accentColor = Colors.red
-	static let backgroundColor = Colors.light
-
-	static let white = Colors.white
-	static let black = Colors.black
 }

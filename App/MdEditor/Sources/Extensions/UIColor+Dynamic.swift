@@ -2,8 +2,6 @@
 //  UIColor+Dynamic.swift
 //  MdEditor
 //
-//  Created by Aksilont on 12.01.2024.
-//
 
 import UIKit
 

@@ -83,7 +83,7 @@ extension TodoListViewController {
 private extension TodoListViewController {
 
 	private func setupUI() {
-		view.backgroundColor = .white
+		view.backgroundColor = ThemeProvider.colors.backgroundColor
 		title = L10n.TodoList.title
 		navigationItem.setHidesBackButton(true, animated: true)
 		navigationController?.navigationBar.prefersLargeTitles = true
@@ -100,20 +100,26 @@ private extension TodoListViewController {
 	func configureCell(_ cell: UITableViewCell, with task: TodoListModel.ViewModel.Task) {
 		var contentConfiguration = cell.defaultContentConfiguration()
 
-		cell.tintColor = .red
+		cell.tintColor = ThemeProvider.colors.tintColorCell
+		cell.backgroundColor = ThemeProvider.colors.backgroundColor
 		cell.selectionStyle = .none
 
 		switch task {
 		case .importantTask(let task):
-			let redText = [NSAttributedString.Key.foregroundColor: UIColor.red]
-			let taskText = NSMutableAttributedString(string: task.priority + " ", attributes: redText )
-			taskText.append(NSAttributedString(string: task.title))
+			let priorityText = [NSAttributedString.Key.foregroundColor: ThemeProvider.colors.importantColor]
+			let taskText = NSMutableAttributedString(string: task.priority + " ", attributes: priorityText)
+
+			let titleText = [NSAttributedString.Key.foregroundColor: ThemeProvider.colors.textColor]
+			let taskTitle = NSMutableAttributedString(string: task.title, attributes: titleText)
+			taskText.append(taskTitle)
 
 			contentConfiguration.attributedText = taskText
 			contentConfiguration.secondaryText = task.deadLine
+			contentConfiguration.secondaryTextProperties.color = ThemeProvider.colors.secondaryTextColor
 			cell.accessoryType = task.completed ? .checkmark : .none
 		case .regularTask(let task):
 			contentConfiguration.text = task.title
+			contentConfiguration.textProperties.color = ThemeProvider.colors.textColor
 			cell.accessoryType = task.completed ? .checkmark : .none
 		}
 

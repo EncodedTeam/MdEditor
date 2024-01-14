@@ -2,8 +2,6 @@
 //  UIColorHexTests.swift
 //  MdEditorTests
 //
-//  Created by Aksilont on 12.01.2024.
-//
 
 import XCTest
 @testable import MdEditor

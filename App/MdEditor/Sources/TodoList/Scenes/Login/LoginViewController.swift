@@ -65,15 +65,14 @@ private extension LoginViewController {
 	func makeTextField() -> UITextField {
 		let textField = UITextField()
 
-		textField.backgroundColor = .white
-		textField.textColor = .black
+		textField.backgroundColor = ThemeProvider.colors.backgroundColor
+		textField.textColor = ThemeProvider.colors.accentColor
+		textField.tintColor = ThemeProvider.colors.tintColor
 		textField.layer.borderWidth = Sizes.borderWidth
 		textField.layer.cornerRadius = Sizes.cornerRadius
-		textField.layer.borderColor = UIColor.lightGray.cgColor
+		textField.layer.borderColor = ThemeProvider.colors.borderColor.cgColor
 		textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Sizes.Padding.half, height: textField.frame.height))
 		textField.leftViewMode = .always
-		textField.translatesAutoresizingMaskIntoConstraints = false
-
 		textField.translatesAutoresizingMaskIntoConstraints = false
 
 		return textField
@@ -84,7 +83,7 @@ private extension LoginViewController {
 
 		button.configuration = .filled()
 		button.configuration?.cornerStyle = .medium
-		button.configuration?.baseBackgroundColor = .red
+		button.configuration?.baseBackgroundColor = ThemeProvider.colors.mainColor
 		button.configuration?.title = L10n.Authorization.buttonTitle
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
 
@@ -94,7 +93,7 @@ private extension LoginViewController {
 	}
 
 	func setupUI() {
-		view.backgroundColor = .white
+		view.backgroundColor = ThemeProvider.colors.backgroundColor
 		title = L10n.Authorization.title
 		navigationController?.navigationBar.prefersLargeTitles = true
 
