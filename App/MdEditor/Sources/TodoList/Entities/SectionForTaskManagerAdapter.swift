@@ -36,15 +36,15 @@ enum Section {
 	var title: String {
 		switch self {
 		case .completed:
-			return "Completed"
+			return L10n.SectionForTaskManagerAdapter.completed
 		case .uncompleted:
-			return "Uncompleted"
+			return L10n.SectionForTaskManagerAdapter.uncompleted
 		case .allTasks:
-			return "All"
+			return L10n.SectionForTaskManagerAdapter.all
 		case .important:
-			return "Important"
+			return L10n.SectionForTaskManagerAdapter.important
 		case .regular:
-			return "Regular"
+			return L10n.SectionForTaskManagerAdapter.regular
 		}
 	}
 }
