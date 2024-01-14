@@ -7,6 +7,7 @@
 "Authorization.wrongLogin" = "Wrong login.";
 "Authorization.emptyFields" = "Empty fields.";
 "Authorization.errorAuth" = "Wrong password and login.";
+"Authorization.error" = "Error";
 
 "TodoList.title" = "TodoList";
 "TodoList.deadline" = "Deadline";

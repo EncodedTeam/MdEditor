@@ -7,8 +7,9 @@
 "Authorization.wrongLogin" = "Неверный логин.";
 "Authorization.emptyFields" = "Пустые поля логин или пароль.";
 "Authorization.errorAuth" = "Неверный пароль и логин.";
+"Authorization.error" = "Ошибка";
 
-"TodoList.title" = "Список задч";
+"TodoList.title" = "Список задач";
 "TodoList.deadline" = "Крайний срок до";
 
 "SectionForTaskManagerAdapter.uncompleted" = "Невыполненные";
