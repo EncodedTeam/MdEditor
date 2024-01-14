@@ -3,6 +3,10 @@
 "Authorization.password" = "Password";
 "Authorization.login" = "Login";
 "Authorization.buttonTitle" = "Login";
+"Authorization.wrongPassword" = "Wrong password.";
+"Authorization.wrongLogin" = "Wrong login.";
+"Authorization.emptyFields" = "Empty fields.";
+"Authorization.errorAuth" = "Wrong password and login.";
 
 "TodoList.title" = "TodoList";
 "TodoList.deadline" = "Deadline";

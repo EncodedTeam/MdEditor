@@ -3,6 +3,10 @@
 "Authorization.password" = "Пароль";
 "Authorization.login" = "Логин";
 "Authorization.buttonTitle" = "Вход в систему";
+"Authorization.wrongPassword" = "Неверный пароль.";
+"Authorization.wrongLogin" = "Неверный логин.";
+"Authorization.emptyFields" = "Пустые поля логин или пароль.";
+"Authorization.errorAuth" = "Неверный пароль и логин.";
 
 "TodoList.title" = "Список задч";
 "TodoList.deadline" = "Крайний срок до";

@@ -33,8 +33,6 @@ final class AppCoordinator: BaseCoordinator {
 		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: buildTaskManager())
 		addDependency(coordinator)
 		coordinator.start()
-
-		navigationController.isNavigationBarHidden = true
 	}
 
 	// MARK: - Private methods

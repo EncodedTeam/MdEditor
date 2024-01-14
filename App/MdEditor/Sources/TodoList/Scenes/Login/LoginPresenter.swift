@@ -43,13 +43,13 @@ extension LoginError: LocalizedError {
 	var errorDescription: String? {
 		switch self {
 		case .wrongPassword:
-			return "Неверный пароль."
+			return L10n.Authorization.wrongPassword
 		case .wrongLogin:
-			return "Неверный логин."
+			return L10n.Authorization.wrongLogin
 		case .emptyFields:
-			return "Пустые поля логин или пароль."
+			return L10n.Authorization.emptyFields
 		case .errorAuth:
-			return "Неверный пароль и логин."
+			return L10n.Authorization.errorAuth
 		}
 	}
 }
