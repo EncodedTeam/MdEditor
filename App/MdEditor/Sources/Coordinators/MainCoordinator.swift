@@ -30,9 +30,9 @@ final class MainCoordinator: BaseCoordinator {
 		let coordinator = LoginCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 
-		coordinator.finishFlow = { [weak self] in
+		coordinator.finishFlow = { [weak self, weak coordinator] in
 			self?.runTodoListFlow()
-			self?.removeDependency(coordinator)
+			coordinator.map { self?.removeDependency($0) }
 		}
 
 		coordinator.start()
