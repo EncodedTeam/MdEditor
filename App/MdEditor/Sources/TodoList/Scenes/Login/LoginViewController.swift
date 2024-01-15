@@ -68,6 +68,10 @@ private extension LoginViewController {
 		textField.backgroundColor = ThemeProvider.colors.backgroundColor
 		textField.textColor = ThemeProvider.colors.accentColor
 		textField.tintColor = ThemeProvider.colors.tintColor
+
+		textField.font = UIFont.preferredFont(forTextStyle: .body)
+		textField.adjustsFontForContentSizeCategory = true
+
 		textField.layer.borderWidth = Sizes.borderWidth
 		textField.layer.cornerRadius = Sizes.cornerRadius
 		textField.layer.borderColor = ThemeProvider.colors.borderColor.cgColor
@@ -85,6 +89,10 @@ private extension LoginViewController {
 		button.configuration?.cornerStyle = .medium
 		button.configuration?.baseBackgroundColor = ThemeProvider.colors.mainColor
 		button.configuration?.title = L10n.Authorization.buttonTitle
+
+		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+		button.titleLabel?.adjustsFontForContentSizeCategory = true
+
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
 
 		button.translatesAutoresizingMaskIntoConstraints = false
