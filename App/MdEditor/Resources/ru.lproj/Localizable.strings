@@ -2,7 +2,7 @@
 "Authorization.title" = "Авторизация";
 "Authorization.password" = "Пароль";
 "Authorization.login" = "Логин";
-"Authorization.buttonTitle" = "Вход в систему";
+"Authorization.buttonTitle" = "Логин";
 "Authorization.wrongPassword" = "Неверный пароль.";
 "Authorization.wrongLogin" = "Неверный логин.";
 "Authorization.emptyFields" = "Пустые поля логин или пароль.";
