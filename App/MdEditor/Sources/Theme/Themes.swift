@@ -49,6 +49,12 @@ protocol IThemeSetsColor {
 	var black: UIColor { get }
 }
 
+/// Стандартные цвета
+extension IThemeSetsColor {
+	var white: UIColor { Colors.white }
+	var black: UIColor { Colors.black }
+}
+
 struct ThemeModern: IThemeSetsColor {
 	let mainColor = Colors.purple
 	let accentColor = Colors.purple
@@ -59,9 +65,6 @@ struct ThemeModern: IThemeSetsColor {
 	let tintColorCell = Colors.green
 	let backgroundColor = Colors.white
 	let borderColor = Colors.purple
-
-	let white = Colors.white
-	let black = Colors.black
 }
 
 struct ThemeDark: IThemeSetsColor {
@@ -74,11 +77,9 @@ struct ThemeDark: IThemeSetsColor {
 	let tintColorCell = Colors.dark
 	let backgroundColor = Colors.white
 	let borderColor = Colors.dark
-
-	let white = Colors.white
-	let black = Colors.black
 }
 
+/// Обеспечивает доступ к цветовым темам приложения
 class ThemeProvider {
 	// MARK: - Properties
 	var theme: Themes
