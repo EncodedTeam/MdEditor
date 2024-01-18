@@ -110,6 +110,11 @@ private extension LoginViewController {
 		textFieldPass.placeholder = L10n.Authorization.password
 		textFieldPass.isSecureTextEntry = true
 
+		textFieldLogin.accessibilityIdentifier = "12"
+		textFieldPass.accessibilityIdentifier = "34"
+		buttonLogin.accessibilityIdentifier = "56"
+		textFieldLogin.ac
+
 		view.addSubview(textFieldLogin)
 		view.addSubview(textFieldPass)
 		view.addSubview(buttonLogin)

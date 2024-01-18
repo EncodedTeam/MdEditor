@@ -10,10 +10,10 @@ import XCTest
 final class LoginScreenObject: BaseScreenObject {
 	
 	// MARK: - Private properties
-	
-	private lazy var textFieldLogin = app.textFields[L10n.Authorization.login]
-	private lazy var textFieldPass = app.textFields[L10n.Authorization.password]
-	private lazy var loginButton = app.buttons[L10n.Authorization.buttonTitle]
+
+	private lazy var textFieldLogin = app.textFields["12"]
+	private lazy var textFieldPass = app.textFields["34"]
+	private lazy var loginButton = app.buttons["56"]
 	
 	// MARK: - ScreenObject Methods
 
