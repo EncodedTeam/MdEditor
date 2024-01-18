@@ -12,7 +12,7 @@ final class LoginScreenObject: BaseScreenObject {
 	// MARK: - Private properties
 
 	private lazy var textFieldLogin = app.textFields["Login"]
-	private lazy var textFieldPass = app.textFields["Pass"]
+	private lazy var textFieldPass = app.secureTextFields["Pass"]
 	private lazy var loginButton = app.buttons["Login2"]
 	
 	// MARK: - ScreenObject Methods
@@ -22,7 +22,7 @@ final class LoginScreenObject: BaseScreenObject {
 		assert(textFieldLogin, [.exists])
 		assert(textFieldPass, [.exists])
 		assert(loginButton, [.exists])
-		
+
 		return self
 	}
 	
@@ -50,5 +50,9 @@ final class LoginScreenObject: BaseScreenObject {
 		loginButton.tap()
 		
 		return self
+	}
+
+	func closeAlert() -> Self {
+		
 	}
 }
