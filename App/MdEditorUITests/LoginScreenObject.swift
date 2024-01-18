@@ -11,9 +11,9 @@ final class LoginScreenObject: BaseScreenObject {
 	
 	// MARK: - Private properties
 
-	private lazy var textFieldLogin = app.textFields["12"]
-	private lazy var textFieldPass = app.textFields["34"]
-	private lazy var loginButton = app.buttons["56"]
+	private lazy var textFieldLogin = app.textFields["Login"]
+	private lazy var textFieldPass = app.textFields["Pass"]
+	private lazy var loginButton = app.buttons["Login2"]
 	
 	// MARK: - ScreenObject Methods
 
