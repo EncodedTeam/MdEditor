@@ -50,7 +50,7 @@ let project = Project(
 			bundleId: bundleId,
 			deploymentTargets: .iOS("16.0"),
 			infoPlist: "\(projectName)/Environments/Info.plist",
-			sources: ["\(projectName)/Sources/**"],
+			sources: ["\(projectName)/Sources/**", "\(projectName)/Shared/**"],
 			resources: ["\(projectName)/Resources/**"],
 			scripts: scripts,
 			dependencies: [

@@ -16,10 +16,10 @@ final class LoginViewController: UIViewController {
 	var interactor: ILoginInteractor?
 
 	// MARK: - Private properties
-
-	private lazy var textFieldLogin: UITextField = makeTextField()
-	private lazy var textFieldPass: UITextField = makeTextField()
-	private lazy var buttonLogin: UIButton = makeButtonLogin()
+	
+	private lazy var textFieldLogin: UITextField = makeTextField(accessibilityIdentifier: AccessibilityIdentifier.buttonLogin)
+	private lazy var textFieldPass: UITextField = makeTextField(accessibilityIdentifier: "2")
+	private lazy var buttonLogin: UIButton = makeButtonLogin(accessibilityIdentifier: "3")
 
 	private var constraints = [NSLayoutConstraint]()
 
@@ -62,7 +62,7 @@ private extension LoginViewController {
 
 private extension LoginViewController {
 
-	func makeTextField() -> UITextField {
+	func makeTextField(accessibilityIdentifier: String) -> UITextField {
 		let textField = UITextField()
 
 		textField.backgroundColor = ThemeProvider.colors.backgroundColor
@@ -77,12 +77,13 @@ private extension LoginViewController {
 		textField.layer.borderColor = ThemeProvider.colors.borderColor.cgColor
 		textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Sizes.Padding.half, height: textField.frame.height))
 		textField.leftViewMode = .always
+		textField.accessibilityIdentifier = accessibilityIdentifier
 		textField.translatesAutoresizingMaskIntoConstraints = false
 
 		return textField
 	}
 
-	func makeButtonLogin() -> UIButton {
+	func makeButtonLogin(accessibilityIdentifier: String) -> UIButton {
 		let button = UIButton()
 
 		button.configuration = .filled()
@@ -94,7 +95,7 @@ private extension LoginViewController {
 		button.titleLabel?.adjustsFontForContentSizeCategory = true
 
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
-
+		button.accessibilityIdentifier = accessibilityIdentifier
 		button.translatesAutoresizingMaskIntoConstraints = false
 
 		return button
