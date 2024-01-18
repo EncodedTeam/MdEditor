@@ -5,12 +5,12 @@
 
 ## Установка
 Проект генерируется с помощью [Tuist](https://tuist.io/).
-Используемая версия - 3.36.3
+Используемая версия - 3.40.0
 
 **Шаги действий:**
 ```sh
 git clone git@github.com:EncodedTeam/MdEditor.git
-cd MdEditor
+cd MdEditor/App
 ```
 Редактирование манифеста:
 ```sh
@@ -18,12 +18,7 @@ tuist edit
 ```
 Генерация проекта:
 ```sh
-cd App
 tuist generate
-```
-или
-```sh
-tuist generate -p App
 ```
 
 ## Добавленные SPM-пакеты:
