@@ -16,7 +16,7 @@ protocol ITodoListViewController: AnyObject {
 }
 
 /// Главный экран приложения.
-final class TodoListViewController: UITableViewController {
+final class TodoListViewController: UITableViewController, Accessible {
 
 	// MARK: - Dependencies
 
@@ -41,6 +41,7 @@ final class TodoListViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+		generateAccessibilityIdentifiers()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
