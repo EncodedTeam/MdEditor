@@ -2,11 +2,11 @@ import ProjectDescription
 
 // MARK: - Project
 
-private let organization = "EncodedTeam"
-private let projectName = "MdEditor"
-
-private var bundleId: String {
-	"com.encoders.\(projectName)"
+enum ProjectSettings {
+	public static var organizationName: String { "EncodedTeam" }
+	public static var projectName: String { "MdEditor" }
+	public static var targerVersion: String { "15.0" }
+	public static var bundleId: String { "com.\(organizationName).\(projectName)" }
 }
 
 private var swiftLintTargetScript: TargetScript {
@@ -32,9 +32,11 @@ private let scripts: [TargetScript] = [
 ]
 
 let project = Project(
-	name: projectName,
-	organizationName: organization,
+	name: ProjectSettings.projectName,
+	organizationName: ProjectSettings.organizationName,
 	options: .options(
+		defaultKnownRegions: ["Base", "ru"],
+		developmentRegion: "Base",
 		disableBundleAccessors: true,
 		disableSynthesizedResourceAccessors: false
 	),
@@ -44,14 +46,14 @@ let project = Project(
 	],
 	targets: [
 		Target(
-			name: projectName,
+			name: ProjectSettings.projectName,
 			destinations: .iOS,
 			product: .app,
-			bundleId: bundleId,
-			deploymentTargets: .iOS("16.0"),
-			infoPlist: "\(projectName)/Environments/Info.plist",
-			sources: ["\(projectName)/Sources/**", "\(projectName)/Shared/**"],
-			resources: ["\(projectName)/Resources/**"],
+			bundleId: ProjectSettings.bundleId,
+			deploymentTargets: .iOS(ProjectSettings.targerVersion),
+			infoPlist: "\(ProjectSettings.projectName)/Environments/Info.plist",
+			sources: ["\(ProjectSettings.projectName)/Sources/**", "\(ProjectSettings.projectName)/Shared/**"],
+			resources: ["\(ProjectSettings.projectName)/Resources/**"],
 			scripts: scripts,
 			dependencies: [
 				.package(product: "TaskManagerPackage", type: .runtime),
@@ -59,17 +61,53 @@ let project = Project(
 			]
 		),
 		Target(
-			name: "\(projectName)Tests",
+			name: "\(ProjectSettings.projectName)Tests",
 			destinations: .iOS,
 			product: .unitTests,
-			bundleId: "\(bundleId)Tests",
-			deploymentTargets: .iOS("16.0"),
+			bundleId: "\(ProjectSettings.bundleId)Tests",
+			deploymentTargets: .iOS(ProjectSettings.targerVersion),
 			infoPlist: .none,
-			sources: ["\(projectName)Tests/**"],
+			sources: ["\(ProjectSettings.projectName)Tests/**"],
 			dependencies: [
-				.target(name: "\(projectName)")
+				.target(name: "\(ProjectSettings.projectName)")
 			],
 			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+		),
+		Target(
+			name: "\(ProjectSettings.projectName)UITests",
+			destinations: .iOS,
+			product: .uiTests,
+			bundleId: "\(ProjectSettings.bundleId)UITests",
+			deploymentTargets: .iOS(ProjectSettings.targerVersion),
+			infoPlist: .none,
+			sources: ["\(ProjectSettings.projectName)UITests/**"],
+			dependencies: [
+				.target(name: "\(ProjectSettings.projectName)")
+			],
+			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+		)
+	],
+	schemes: [
+		Scheme(
+			name: ProjectSettings.projectName,
+			shared: true,
+			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)"]),
+			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)")
+		),
+		Scheme(
+			name: "\(ProjectSettings.projectName)Tests",
+			shared: true,
+			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)Tests"]),
+			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)Tests")
+		),
+		Scheme(
+			name: "\(ProjectSettings.projectName)UITests",
+			shared: true,
+			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)UITests"]),
+			testAction: .targets(["\(ProjectSettings.projectName)UITests"]),
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)UITests")
 		)
 	]
 )
