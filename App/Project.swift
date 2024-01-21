@@ -35,6 +35,8 @@ let project = Project(
 	name: ProjectSettings.projectName,
 	organizationName: ProjectSettings.organizationName,
 	options: .options(
+		defaultKnownRegions: ["Base", "ru"],
+		developmentRegion: "Base",
 		disableBundleAccessors: true,
 		disableSynthesizedResourceAccessors: false
 	),
