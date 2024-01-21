@@ -52,7 +52,7 @@ let project = Project(
 			bundleId: ProjectSettings.bundleId,
 			deploymentTargets: .iOS(ProjectSettings.targerVersion),
 			infoPlist: "\(ProjectSettings.projectName)/Environments/Info.plist",
-			sources: ["\(ProjectSettings.projectName)/Sources/**"],
+			sources: ["\(ProjectSettings.projectName)/Sources/**", "\(ProjectSettings.projectName)/Shared/**"],
 			resources: ["\(ProjectSettings.projectName)/Resources/**"],
 			scripts: scripts,
 			dependencies: [

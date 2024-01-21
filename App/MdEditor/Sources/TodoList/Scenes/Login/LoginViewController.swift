@@ -9,14 +9,14 @@ import UIKit
 
 protocol ILoginViewController: AnyObject {}
 
-final class LoginViewController: UIViewController {
+final class LoginViewController: UIViewController, Accessible {
 
 	// MARK: - Dependencies
 
 	var interactor: ILoginInteractor?
 
 	// MARK: - Private properties
-
+	
 	private lazy var textFieldLogin: UITextField = makeTextField()
 	private lazy var textFieldPass: UITextField = makeTextField()
 	private lazy var buttonLogin: UIButton = makeButtonLogin()
@@ -38,6 +38,7 @@ final class LoginViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+		generateAccessibilityIdentifiers()
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -94,7 +95,6 @@ private extension LoginViewController {
 		button.titleLabel?.adjustsFontForContentSizeCategory = true
 
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
-
 		button.translatesAutoresizingMaskIntoConstraints = false
 
 		return button
