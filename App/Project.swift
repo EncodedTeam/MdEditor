@@ -101,14 +101,30 @@ let project = Project(
 			shared: true,
 			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)Tests"]),
 			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
-			runAction: .runAction(executable: "\(ProjectSettings.projectName)Tests")
+			runAction: .runAction(
+				executable: "\(ProjectSettings.projectName)Tests",
+				arguments: .init(
+					launchArguments: [
+						.init(name: "-AppleLanguages", isEnabled: true),
+						.init(name: "(en)", isEnabled: true)
+					]
+				)
+			)
 		),
 		Scheme(
 			name: "\(ProjectSettings.projectName)UITests",
 			shared: true,
 			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)UITests"]),
 			testAction: .targets(["\(ProjectSettings.projectName)UITests"]),
-			runAction: .runAction(executable: "\(ProjectSettings.projectName)UITests")
+			runAction: .runAction(
+				executable: "\(ProjectSettings.projectName)UITests",
+				arguments: .init(
+					launchArguments: [
+						.init(name: "-AppleLanguages", isEnabled: true),
+						.init(name: "(en)", isEnabled: true)
+					]
+				)
+			)
 		)
 	]
 )
