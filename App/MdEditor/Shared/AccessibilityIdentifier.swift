@@ -20,7 +20,7 @@ extension Accessible {
 				var identifier = child.label {
 				identifier = identifier.replacingOccurrences(of: ".storage", with: "")
 				identifier = identifier.replacingOccurrences(of: "$__lazy_storage_$_", with: "")
-				
+
 				view.accessibilityIdentifier = "\(type(of: self)).\(identifier)"
 			}
 		}
