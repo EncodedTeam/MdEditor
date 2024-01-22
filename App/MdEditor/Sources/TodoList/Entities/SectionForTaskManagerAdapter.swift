@@ -62,7 +62,13 @@ final class SectionForTaskManagerAdapter: ISectionForTaskManagerAdapter {
 
 	init(taskManager: ITaskManager, sections: [Section] = [.uncompleted, .completed]) {
 		self.taskManager = taskManager
-		self.sections = sections
+
+		let isStubbing = ProcessInfo.processInfo.arguments.contains("isStubbing")
+		if isStubbing {
+			self.sections = [.uncompleted, .completed]
+		} else {
+			self.sections = sections
+		}
 	}
 
 	// MARK: - Public methods

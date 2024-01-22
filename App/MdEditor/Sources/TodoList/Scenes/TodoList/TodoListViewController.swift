@@ -70,6 +70,7 @@ extension TodoListViewController {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let task = getTaskForIndex(indexPath)
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+		cell.accessibilityIdentifier = "TodoListVC.Cell(\(indexPath.section),\(indexPath.row))"
 		configureCell(cell, with: task)
 		return cell
 	}
@@ -90,6 +91,7 @@ private extension TodoListViewController {
 		navigationController?.navigationBar.prefersLargeTitles = true
 		
 		self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+		self.tableView.accessibilityIdentifier = "TodoListVC.tableView"
 	}
 
 	func getTaskForIndex(_ indexPath: IndexPath) -> TodoListModel.ViewModel.Task {
