@@ -27,3 +27,27 @@ extension Accessible {
 #endif
 	}
 }
+
+enum AccessibilityIdentifier: CustomStringConvertible {
+	case tableView
+	case section(index: Int)
+	case cell(section: Int, row: Int)
+
+	var controller: AvailableControllers { .TodoListViewController }
+
+	var description: String {
+		switch self {
+		case .tableView:
+			return "TodoListViewController.tableView"
+		case .section(let index):
+			return "TodoListViewController.section-\(index)"
+		case .cell(let section, let row):
+			return "TodoListViewController.cell-\(section)-\(row)"
+		}
+	}
+}
+
+enum AvailableControllers: String {
+	case LoginViewController
+	case TodoListViewController
+}

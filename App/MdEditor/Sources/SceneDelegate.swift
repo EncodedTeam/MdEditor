@@ -17,11 +17,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	) {
 		guard let scene = (scene as? UIWindowScene) else { return }
 		let window = UIWindow(windowScene: scene)
-		let isStubbing = ProcessInfo.processInfo.arguments.contains("isStubbing")
 
 		ThemeProvider.shared.theme = .modern
 
-		appCoordinator = AppCoordinator(window: window, taskManager: buildTaskManager(isStubbing: isStubbing))
+		appCoordinator = AppCoordinator(window: window, taskManager: buildTaskManager())
 		appCoordinator.start()
 
 		self.window = window
@@ -29,10 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	// MARK: - Private methods
 
-	private func buildTaskManager(isStubbing: Bool) -> ITaskManager {
+	private func buildTaskManager() -> ITaskManager {
 		let taskManager = TaskManager()
 		var repository: ITaskRepository
-		if isStubbing {
+		if ProcessInfo.processInfo.isUITesting {
 			repository = TaskRepositoryStub()
 		} else {
 			repository = TaskRepositoryStub() /// В реальной ситуации данные подгружаются из хранилища или сети

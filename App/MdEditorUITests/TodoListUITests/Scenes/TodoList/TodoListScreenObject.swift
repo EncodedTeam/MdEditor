@@ -10,7 +10,8 @@ import XCTest
 
 final class TodoListScreenObject: BaseScreenObject {
 	// MARK: - Private properties
-	private lazy var tableView = app.tables["TodoListVC.tableView"]
+	private lazy var tableView = app.tables[AccessibilityIdentifier.tableView.description]
+	private let titleTaskCorrect = "!!! Do homework"
 
 	// MARK: - ScreenObject Methods
 	@discardableResult
@@ -21,39 +22,49 @@ final class TodoListScreenObject: BaseScreenObject {
 	}
 
 	@discardableResult
-	func tapOnCell() -> Self {
-		assert(tableView, [.exists])
+	func checkSectionsTitle() -> Self {
+		let completedSection = L10n.TodoList.Section.completed
+		let uncompletedSection = L10n.TodoList.Section.uncompleted
 
-		let completedSection = L10n.SectionForTaskManagerAdapter.completed
-		let uncompletedSection = L10n.SectionForTaskManagerAdapter.uncompleted
+		let section0 = tableView.otherElements[AccessibilityIdentifier.section(index: 0).description]
+		XCTAssertEqual(section0.label, uncompletedSection, "Title section 0 should be equal '\(uncompletedSection)'")
 
-		var cell = tableView.cells["TodoListVC.Cell(0,0)"]
-		let titleTaskResult = "!!! Do homework"
-		var titleTask = cell.staticTexts[titleTaskResult]
-		XCTAssertEqual(titleTask.label, titleTaskResult, "Should be equal \(titleTaskResult)")
-//		var deadlineTask = cell.staticTexts[""]
+		let section1 = tableView.otherElements[AccessibilityIdentifier.section(index: 1).description]
+		XCTAssertEqual(section1.label, completedSection, "Title section 1 should be equal '\(completedSection)'")
+
+		return self
+	}
+
+	@discardableResult
+	func checkCellsInfo() -> Self {
+		let cell = tableView.cells[AccessibilityIdentifier.cell(section: 0, row: 0).description]
 		assert(cell, [.exists])
-//		assert(titleTask, [.exists])
-//		assert(deadlineTask, [.exists])
+
+		let titleTask = cell.staticTexts.element(boundBy: 0).label
+		XCTAssertEqual(titleTask, titleTaskCorrect, "Title task should be equal '\(titleTaskCorrect)'")
+
+		let deadlineTask = cell.staticTexts.element(boundBy: 1).label
+		let isDeadlineTaskContain = deadlineTask.contains(L10n.TodoList.deadline)
+		XCTAssertEqual(isDeadlineTaskContain, true, "'\(deadlineTask)' should contain '\(L10n.TodoList.deadline)'")
+
+		return self
+	}
+
+	@discardableResult
+	func tapOnCell() -> Self {
+		var cell = tableView.cells[AccessibilityIdentifier.cell(section: 0, row: 0).description]
+		var titleTask = cell.staticTexts[titleTaskCorrect]
+		assert(cell, [.exists])
+		assert(titleTask, [.exists])
 		assert(cell, [.isNotSelected])
 		cell.tap()
 
-		cell = tableView.cells["TodoListVC.Cell(1,0)"]
-		titleTask = cell.staticTexts[titleTaskResult]
-//		deadlineTask = cell.staticTexts[""]
+		cell = tableView.cells[AccessibilityIdentifier.cell(section: 1, row: 0).description]
+		titleTask = cell.staticTexts[titleTaskCorrect]
 		assert(cell, [.exists])
 		assert(titleTask, [.exists])
-//		assert(deadlineTask, [.exists])
 		assert(cell, [.isSelected])
 		cell.tap()
-
-		cell = tableView.cells["TodoListVC.Cell(0,0)"]
-		titleTask = cell.staticTexts[titleTaskResult]
-//		deadlineTask = cell.staticTexts[""]
-		assert(cell, [.exists])
-		assert(titleTask, [.exists])
-//		assert(deadlineTask, [.exists])
-		assert(cell, [.isNotSelected])
 
 		return self
 	}

@@ -80,7 +80,7 @@ let project = Project(
 			bundleId: "\(ProjectSettings.bundleId)UITests",
 			deploymentTargets: .iOS(ProjectSettings.targerVersion),
 			infoPlist: .none,
-			sources: ["\(ProjectSettings.projectName)UITests/**"],
+			sources: ["\(ProjectSettings.projectName)UITests/**", "\(ProjectSettings.projectName)/Shared/**"],
 			resources: ["\(ProjectSettings.projectName)/Resources/**"],
 			dependencies: [
 				.target(name: "\(ProjectSettings.projectName)")
