@@ -32,14 +32,14 @@ final class DoublyLinkedListTests: XCTestCase {
 
 	/// Тест инициализатора с пустым список
 	func test_initWithoutValue_shouldBeCorrect() {
-		XCTAssertTrue(sut.isEmpty, "Список содержит значения")
+		XCTAssertTrue(sut.isEmpty, "Список должен быть пустым")
 		XCTAssertEqual(sut.count, 0, "Count не равен 0")
 	}
 
 	func test_isEmpty_shouldBeFalse() {
 		sut.push(1)
 		
-		XCTAssertFalse(sut.isEmpty, "Список не содержит значения")
+		XCTAssertFalse(sut.isEmpty, "Список должен содержать значения")
 	}
 	
 	/// Тест добавления в начало списка значения.
@@ -76,7 +76,7 @@ final class DoublyLinkedListTests: XCTestCase {
 		previosCount = sut.count
 		sut.insert(3, after: 5)
 
-		XCTAssertEqual(previosCount, sut.count, "Счетчик изменился")
+		XCTAssertEqual(previosCount, sut.count, "Ожидалось, что count не изменится")
 	}
 
 	func test_insert_countShouldBeCorrect() {
@@ -110,7 +110,7 @@ final class DoublyLinkedListTests: XCTestCase {
 	func test_popWithEmptyList_resultShouldBeNil() {
 		let value = sut.pop()
 
-		XCTAssertNil(value, "Извлеченное значение не nil")
+		XCTAssertNil(value, "Ожидалось nil")
 	}
 
 	func test_pop_resultShouldBeTrue() {
@@ -171,13 +171,13 @@ final class DoublyLinkedListTests: XCTestCase {
 		
 		let _ = sut.remove(after: 0)
 		
-		XCTAssertEqual(sut.count, 1, "Элемент не удален из списка")
+		XCTAssertEqual(sut.count, 1, "Count ожидался уменьшиться")
 	}
 
 	func test_removeWithEmptyList_resultShouldBeNil() {
 		let value = sut.remove(after: 2)
 
-		XCTAssertNil(value, "Извлеченное значение не равно nil")
+		XCTAssertNil(value, "Извлеченное значение ожидалось nil")
 	}
 
 	/// Тест получения значения по индексу.
