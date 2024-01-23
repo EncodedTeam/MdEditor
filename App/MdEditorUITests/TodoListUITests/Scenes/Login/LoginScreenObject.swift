@@ -2,8 +2,7 @@
 //  LoginScreenObject.swift
 //  MdEditorUITests
 //
-//  Created by Aksilont on 20.01.2024.
-//  Copyright © 2024 EncodedTeam. All rights reserved.
+//  Created by Kirill Leonov on 05.04.2023.
 //
 
 import XCTest
@@ -15,6 +14,7 @@ final class LoginScreenObject: BaseScreenObject {
 	private lazy var textFieldLogin = app.textFields["LoginViewController.textFieldLogin"]
 	private lazy var textFieldPass = app.secureTextFields["LoginViewController.textFieldPass"]
 	private lazy var loginButton = app.buttons["LoginViewController.buttonLogin"]
+	private lazy var alert = app.alerts.firstMatch
 
 	// MARK: - ScreenObject Methods
 
@@ -49,6 +49,14 @@ final class LoginScreenObject: BaseScreenObject {
 	func login() -> Self {
 		assert(loginButton, [.exists])
 		loginButton.tap()
+
+		return self
+	}
+
+	@discardableResult
+	func closeAlert() -> Self {
+		assert(alert, [.exists])
+		alert.buttons.firstMatch.tap()
 
 		return self
 	}
