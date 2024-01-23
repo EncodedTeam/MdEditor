@@ -86,19 +86,6 @@ let project = Project(
 			],
 			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
 		),
-		Target(
-			name: "\(projectName)UITests",
-			destinations: .iOS,
-			product: .uiTests,
-			bundleId: "\(bundleId)UITests",
-			deploymentTargets: .iOS("16.0"),
-			infoPlist: .none,
-			sources: ["\(projectName)UITests/**", "Derived/Sources/**"],
-			dependencies: [
-				.target(name: "\(projectName)")
-			],
-			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
-		)
 	],
 	schemes: [
 		Scheme(

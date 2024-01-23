@@ -19,9 +19,9 @@ final class LoginSceneUITest: XCTestCase {
 			.set(password: "Admin")
 			.set(login: "pa$$32!")
 			.login()
+		// TODO: Проверить, что преходит на тудулист сцену
 	}
 
-	// TODO: Test with invalidData, close Alert
 	func test_login_withInValidCred_mustBeShowAlert() {
 		let app = XCUIApplication()
 		let loginScreen = LoginScreenObject(app: app)
