@@ -85,7 +85,30 @@ let project = Project(
 				.target(name: "\(ProjectSettings.projectName)")
 			],
 			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+		)
+	],
+	schemes: [
+		Scheme(
+			name: ProjectSettings.projectName,
+			shared: true,
+			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)"]),
+			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)")
 		),
+		Scheme(
+			name: "\(ProjectSettings.projectName)Tests",
+			shared: true,
+			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)Tests"]),
+			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)Tests")
+		),
+		Scheme(
+			name: "\(ProjectSettings.projectName)UITests",
+			shared: true,
+			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)UITests"]),
+			testAction: .targets(["\(ProjectSettings.projectName)UITests"]),
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)UITests")
+		)
 	],
 	schemes: [
 		Scheme(
