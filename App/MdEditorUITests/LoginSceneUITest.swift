@@ -23,16 +23,15 @@ final class LoginSceneUITest: XCTestCase {
 
 	// TODO: Test with invalidData, close Alert
 	func test_login_withInValidCred_mustBeShowAlert() {
-//		let app = XCUIApplication()
-//		let loginScreen = LoginScreenObject(app: app)
-//		app.launch()
-//
-//		loginScreen
-//			.isLoginScreen()
-//			.set(password: "user")
-//			.set(login: "wrongPass")
-//			.login()
-//
-	}
+		let app = XCUIApplication()
+		let loginScreen = LoginScreenObject(app: app)
+		app.launch()
 
+		loginScreen
+			.isLoginScreen()
+			.set(password: "user")
+			.set(login: "wrongPass")
+			.login()
+			.closeAlert()
+	}
 }

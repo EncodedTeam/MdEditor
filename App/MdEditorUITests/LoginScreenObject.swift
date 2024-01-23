@@ -14,7 +14,8 @@ final class LoginScreenObject: BaseScreenObject {
 	private lazy var textFieldLogin = app.textFields["Login"]
 	private lazy var textFieldPass = app.secureTextFields["Pass"]
 	private lazy var loginButton = app.buttons["Login2"]
-	
+	private lazy var alert = app.alerts.firstMatch
+
 	// MARK: - ScreenObject Methods
 
 	@discardableResult
@@ -52,7 +53,11 @@ final class LoginScreenObject: BaseScreenObject {
 		return self
 	}
 
+	@discardableResult
 	func closeAlert() -> Self {
-		
+		assert(alert, [.exists])
+		alert.buttons.firstMatch.tap()
+
+		return self
 	}
 }
