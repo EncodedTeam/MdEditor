@@ -16,8 +16,8 @@ final class LoginSceneUITest: XCTestCase {
 	
 		loginScreen
 			.isLoginScreen()
-			.set(password: "Admin")
-			.set(login: "pa$$32!")
+			.set(login: "Admin")
+			.set(password: "pa$$32!")
 			.login()
 		// TODO: Проверить, что преходит на тудулист сцену
 	}
