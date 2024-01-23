@@ -33,8 +33,6 @@ enum AccessibilityIdentifier: CustomStringConvertible {
 	case section(index: Int)
 	case cell(section: Int, row: Int)
 
-	var controller: AvailableControllers { .TodoListViewController }
-
 	var description: String {
 		switch self {
 		case .tableView:
@@ -45,9 +43,4 @@ enum AccessibilityIdentifier: CustomStringConvertible {
 			return "TodoListViewController.cell-\(section)-\(row)"
 		}
 	}
-}
-
-enum AvailableControllers: String {
-	case LoginViewController
-	case TodoListViewController
 }
