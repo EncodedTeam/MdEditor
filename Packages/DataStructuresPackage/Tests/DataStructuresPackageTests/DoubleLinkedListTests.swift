@@ -22,17 +22,18 @@ final class DoublyLinkedListTests: XCTestCase {
 		super.tearDown()
 	}
 
-	/// Тест инициализатора, проверяющий, что голова и хвост указывают на один и тот же узел
+	/// Тест инициализатора со значением в списке
 	func test_initWithValue_shouldBeEqual() {
 		let value = 16
 		sut = DoublyLinkedList(value: value)
-
 		XCTAssertEqual(sut.value(at: 0), value, "Значения не равны" )
+		XCTAssertEqual(sut.headValue, sut.tailValue, "Значение головы не равно значению в хвосте")
 	}
 
-	/// Тест свойства определяющего, пуст ли список.
-	func test_isEmpty_shouldBeTrue() {
+	/// Тест инициализатора с пустым список
+	func test_initWithoutValue_shouldBeCorrect() {
 		XCTAssertTrue(sut.isEmpty, "Список содержит значения")
+		XCTAssertEqual(sut.count, 0, "Count не равен 0")
 	}
 
 	func test_isEmpty_shouldBeFalse() {
