@@ -1,6 +1,6 @@
 //
 //  TodoListScreenObject.swift
-//  MdEditor
+//  MdEditorUITests
 //
 //  Created by Aksilont on 20.01.2024.
 //  Copyright © 2024 EncodedTeam. All rights reserved.

@@ -2,8 +2,6 @@
 //  LoginScreenObject.swift
 //  MdEditorUITests
 //
-//  Created by Kirill Leonov on 05.04.2023.
-//
 
 import XCTest
 

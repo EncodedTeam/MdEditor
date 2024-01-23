@@ -68,6 +68,7 @@ let project = Project(
 			deploymentTargets: .iOS(ProjectSettings.targerVersion),
 			infoPlist: .none,
 			sources: ["\(ProjectSettings.projectName)Tests/**"],
+			scripts: scripts,
 			dependencies: [
 				.target(name: "\(ProjectSettings.projectName)")
 			],
@@ -82,6 +83,7 @@ let project = Project(
 			infoPlist: .none,
 			sources: ["\(ProjectSettings.projectName)UITests/**", "\(ProjectSettings.projectName)/Shared/**"],
 			resources: ["\(ProjectSettings.projectName)/Resources/**"],
+			scripts: scripts,
 			dependencies: [
 				.target(name: "\(ProjectSettings.projectName)")
 			],
