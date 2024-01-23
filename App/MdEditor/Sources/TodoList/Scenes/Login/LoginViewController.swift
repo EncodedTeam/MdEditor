@@ -1,6 +1,6 @@
 //
 //  LoginViewController.swift
-//  TodoList
+//  MdEditor
 //
 //  Created by Kirill Leonov on 14.11.2023.
 //
@@ -109,6 +109,10 @@ private extension LoginViewController {
 		textFieldLogin.placeholder = L10n.Login.loginPlaceholder
 		textFieldPass.placeholder = L10n.Login.passPlaceholder
 		textFieldPass.isSecureTextEntry = true
+
+		textFieldLogin.accessibilityIdentifier = "LoginViewController.textFieldLogin"
+		textFieldPass.accessibilityIdentifier = "LoginViewController.textFieldPass"
+		buttonLogin.accessibilityIdentifier = "LoginViewController.buttonLogin"
 
 		view.addSubview(textFieldLogin)
 		view.addSubview(textFieldPass)

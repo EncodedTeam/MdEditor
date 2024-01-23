@@ -68,6 +68,7 @@ let project = Project(
 			deploymentTargets: .iOS(ProjectSettings.targerVersion),
 			infoPlist: .none,
 			sources: ["\(ProjectSettings.projectName)Tests/**"],
+			scripts: scripts,
 			dependencies: [
 				.target(name: "\(ProjectSettings.projectName)")
 			],
@@ -80,7 +81,9 @@ let project = Project(
 			bundleId: "\(ProjectSettings.bundleId)UITests",
 			deploymentTargets: .iOS(ProjectSettings.targerVersion),
 			infoPlist: .none,
-			sources: ["\(ProjectSettings.projectName)UITests/**"],
+			sources: ["\(ProjectSettings.projectName)UITests/**", "\(ProjectSettings.projectName)/Shared/**"],
+			resources: ["\(ProjectSettings.projectName)/Resources/**"],
+			scripts: scripts,
 			dependencies: [
 				.target(name: "\(ProjectSettings.projectName)")
 			],
@@ -100,14 +103,30 @@ let project = Project(
 			shared: true,
 			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)Tests"]),
 			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
-			runAction: .runAction(executable: "\(ProjectSettings.projectName)Tests")
+			runAction: .runAction(
+				executable: "\(ProjectSettings.projectName)Tests",
+				arguments: .init(
+					launchArguments: [
+						.init(name: "-AppleLanguages", isEnabled: true),
+						.init(name: "(en)", isEnabled: true)
+					]
+				)
+			)
 		),
 		Scheme(
 			name: "\(ProjectSettings.projectName)UITests",
 			shared: true,
 			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)UITests"]),
 			testAction: .targets(["\(ProjectSettings.projectName)UITests"]),
-			runAction: .runAction(executable: "\(ProjectSettings.projectName)UITests")
+			runAction: .runAction(
+				executable: "\(ProjectSettings.projectName)UITests",
+				arguments: .init(
+					launchArguments: [
+						.init(name: "-AppleLanguages", isEnabled: true),
+						.init(name: "(en)", isEnabled: true)
+					]
+				)
+			)
 		)
 	]
 )

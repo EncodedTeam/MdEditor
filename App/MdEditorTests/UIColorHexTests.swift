@@ -6,8 +6,6 @@
 import XCTest
 @testable import MdEditor
 
-// swiftlint:disable force_cast
-
 final class UIColorHexTests: XCTestCase {
 
 	func test_init_withValidParameters_shouldBeInitSuccess() {
@@ -68,5 +66,3 @@ final class UIColorHexTests: XCTestCase {
 		XCTAssertEqual(sut, expectedColor, "Ошибка создания цвета")
 	}
 }
-
-// swiftlint:enable force_cast

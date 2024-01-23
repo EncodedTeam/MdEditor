@@ -74,7 +74,7 @@ extension BaseScreenObject {
 		case rus = "Русская"
 		case emoji = "Emoji"
 	}
-	
+
 	func setKeyboard(language: Lang) {
 		app.buttons["Next keyboard"].press(forDuration: 0.5)
 		app.tables["InputSwitcherTable"].staticTexts[language.rawValue].tap()

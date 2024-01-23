@@ -1,6 +1,6 @@
 //
 //  AppCoordinator.swift
-//  TodoList
+//  MdEditor
 //
 
 import UIKit
@@ -12,15 +12,18 @@ final class AppCoordinator: BaseCoordinator {
 
 	private let navigationController: UINavigationController
 	private let window: UIWindow?
+	private let taskmanager: ITaskManager
 
 	// MARK: - Initialization
 
-	init(window: UIWindow?) {
+	init(window: UIWindow?, taskManager: ITaskManager) {
 		self.navigationController = UINavigationController()
 
 		self.window = window
 		self.window?.rootViewController = navigationController
 		self.window?.makeKeyAndVisible()
+
+		self.taskmanager = taskManager
 	}
 	
 	// MARK: - Internal methods
@@ -30,19 +33,8 @@ final class AppCoordinator: BaseCoordinator {
 	}
 
 	func runMainFLow() {
-		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: buildTaskManager())
+		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: taskmanager)
 		addDependency(coordinator)
 		coordinator.start()
-	}
-
-	// MARK: - Private methods
-
-	private func buildTaskManager() -> ITaskManager {
-		let taskManager = TaskManager()
-		let repository = TaskRepositoryStub()
-		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
-		orderedTaskManager.addTasks(tasks: repository.getTasks())
-
-		return orderedTaskManager
 	}
 }
