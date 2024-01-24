@@ -10,7 +10,7 @@ import XCTest
 
 final class TodoListScreenObject: BaseScreenObject {
 	// MARK: - Private properties
-	private lazy var tableView = app.tables[AccessibilityIdentifier.tableView.description]
+	private lazy var tableView = app.tables[AccessibilityIdentifier.TodoList.tableView.description]
 	private let titleTaskCorrect = "!!! Do homework"
 
 	// MARK: - ScreenObject Methods
@@ -26,10 +26,10 @@ final class TodoListScreenObject: BaseScreenObject {
 		let completedSection = L10n.TodoList.Section.completed
 		let uncompletedSection = L10n.TodoList.Section.uncompleted
 
-		let section0 = tableView.otherElements[AccessibilityIdentifier.section(index: 0).description]
+		let section0 = tableView.otherElements[AccessibilityIdentifier.TodoList.section(index: 0).description]
 		XCTAssertEqual(section0.label, uncompletedSection, "Title section 0 should be equal '\(uncompletedSection)'")
 
-		let section1 = tableView.otherElements[AccessibilityIdentifier.section(index: 1).description]
+		let section1 = tableView.otherElements[AccessibilityIdentifier.TodoList.section(index: 1).description]
 		XCTAssertEqual(section1.label, completedSection, "Title section 1 should be equal '\(completedSection)'")
 
 		return self
@@ -37,7 +37,7 @@ final class TodoListScreenObject: BaseScreenObject {
 
 	@discardableResult
 	func checkCellsInfo() -> Self {
-		let cell = tableView.cells[AccessibilityIdentifier.cell(section: 0, row: 0).description]
+		let cell = tableView.cells[AccessibilityIdentifier.TodoList.cell(section: 0, row: 0).description]
 		assert(cell, [.exists])
 
 		let titleTask = cell.staticTexts.element(boundBy: 0).label
@@ -52,14 +52,14 @@ final class TodoListScreenObject: BaseScreenObject {
 
 	@discardableResult
 	func tapOnCell() -> Self {
-		var cell = tableView.cells[AccessibilityIdentifier.cell(section: 0, row: 0).description]
+		var cell = tableView.cells[AccessibilityIdentifier.TodoList.cell(section: 0, row: 0).description]
 		var titleTask = cell.staticTexts[titleTaskCorrect]
 		assert(cell, [.exists])
 		assert(titleTask, [.exists])
 		assert(cell, [.isNotSelected])
 		cell.tap()
 
-		cell = tableView.cells[AccessibilityIdentifier.cell(section: 1, row: 0).description]
+		cell = tableView.cells[AccessibilityIdentifier.TodoList.cell(section: 1, row: 0).description]
 		titleTask = cell.staticTexts[titleTaskCorrect]
 		assert(cell, [.exists])
 		assert(titleTask, [.exists])

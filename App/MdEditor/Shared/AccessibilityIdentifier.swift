@@ -28,19 +28,38 @@ extension Accessible {
 	}
 }
 
-enum AccessibilityIdentifier: CustomStringConvertible {
-	case tableView
-	case section(index: Int)
-	case cell(section: Int, row: Int)
+enum AccessibilityIdentifier {
+	enum Login: CustomStringConvertible {
+		case textFieldLogin
+		case textFieldPass
+		case buttonLogin
 
-	var description: String {
-		switch self {
-		case .tableView:
-			return "TodoListViewController.tableView"
-		case .section(let index):
-			return "TodoListViewController.section-\(index)"
-		case .cell(let section, let row):
-			return "TodoListViewController.cell-\(section)-\(row)"
+		var description: String {
+			switch self {
+			case .textFieldLogin:
+				return "LoginViewController.textFieldLogin"
+			case .textFieldPass:
+				return "LoginViewController.textFieldPass"
+			case .buttonLogin:
+				return "LoginViewController.buttonLogin"
+			}
+		}
+	}
+
+	enum TodoList: CustomStringConvertible {
+		case tableView
+		case section(index: Int)
+		case cell(section: Int, row: Int)
+
+		var description: String {
+			switch self {
+			case .tableView:
+				return "TodoListViewController.tableView"
+			case .section(let index):
+				return "TodoListViewController.section-\(index)"
+			case .cell(let section, let row):
+				return "TodoListViewController.cell-\(section)-\(row)"
+			}
 		}
 	}
 }

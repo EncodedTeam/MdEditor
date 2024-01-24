@@ -20,6 +20,8 @@ final class TodoListUITests: XCTestCase {
 
 		loginScreen
 			.isLoginScreen()
+			.set(login: "Admin")
+			.set(password: "pa$$32!")
 			.login()
 
 		todoScreen
@@ -37,6 +39,8 @@ final class TodoListUITests: XCTestCase {
 
 		loginScreen
 			.isLoginScreen()
+			.set(login: "Admin")
+			.set(password: "pa$$32!")
 			.login()
 
 		todoScreen
@@ -54,6 +58,8 @@ final class TodoListUITests: XCTestCase {
 
 		loginScreen
 			.isLoginScreen()
+			.set(login: "Admin")
+			.set(password: "pa$$32!")
 			.login()
 
 		todoScreen
