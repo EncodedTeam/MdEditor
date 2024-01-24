@@ -9,9 +9,9 @@ final class LoginScreenObject: BaseScreenObject {
 
 	// MARK: - Private properties
 
-	private lazy var textFieldLogin = app.textFields["LoginViewController.textFieldLogin"]
-	private lazy var textFieldPass = app.secureTextFields["LoginViewController.textFieldPass"]
-	private lazy var loginButton = app.buttons["LoginViewController.buttonLogin"]
+	private lazy var textFieldLogin = app.textFields[AccessibilityIdentifier.Login.textFieldLogin.description]
+	private lazy var textFieldPass = app.secureTextFields[AccessibilityIdentifier.Login.textFieldPass.description]
+	private lazy var buttonLogin = app.buttons[AccessibilityIdentifier.Login.buttonLogin.description]
 	private lazy var alert = app.alerts.firstMatch
 
 	// MARK: - ScreenObject Methods
@@ -20,7 +20,7 @@ final class LoginScreenObject: BaseScreenObject {
 	func isLoginScreen() -> Self {
 		assert(textFieldLogin, [.exists])
 		assert(textFieldPass, [.exists])
-		assert(loginButton, [.exists])
+		assert(buttonLogin, [.exists])
 
 		return self
 	}
@@ -45,8 +45,8 @@ final class LoginScreenObject: BaseScreenObject {
 
 	@discardableResult
 	func login() -> Self {
-		assert(loginButton, [.exists])
-		loginButton.tap()
+		assert(buttonLogin, [.exists])
+		buttonLogin.tap()
 
 		return self
 	}
