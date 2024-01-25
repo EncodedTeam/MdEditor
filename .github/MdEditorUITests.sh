@@ -1,4 +1,6 @@
-xcodebuild test-without-building \
+cd App/
+tuist generate
+xcodebuild test \
     -quiet \
     -workspace 'MdEditor.xcworkspace' \
     -scheme 'MdEditorUITests' \

@@ -15,16 +15,20 @@ jobs:
       - name: Build
         run: exec ./.github/MdEditor.sh
   UnitTests:
+    needs: Build
     name: MdEditor Unit Tests
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
       - name: Testing
         run: exec ./.github/MdEditorUnitTests.sh
   UITests:
+    needs: [Build, UnitTests]
     name: MdEditor UI Tests
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
       - name: Testing
-        run: exec ./.github/MdEditors.sh
+        run: exec ./.github/MdEditorUITests.sh
