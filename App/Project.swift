@@ -81,7 +81,10 @@ let project = Project(
 			bundleId: "\(ProjectSettings.bundleId)UITests",
 			deploymentTargets: .iOS(ProjectSettings.targerVersion),
 			infoPlist: .none,
-			sources: ["\(ProjectSettings.projectName)UITests/**", "\(ProjectSettings.projectName)/Shared/**"],
+			sources: [
+				"\(ProjectSettings.projectName)UITests/**", 
+				"\(ProjectSettings.projectName)/Shared/**"
+			],
 			resources: ["\(ProjectSettings.projectName)/Resources/**"],
 			scripts: scripts,
 			dependencies: [
@@ -95,7 +98,10 @@ let project = Project(
 			name: ProjectSettings.projectName,
 			shared: true,
 			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)"]),
-			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
+			testAction: .targets([
+				"\(ProjectSettings.projectName)Tests",
+				"\(ProjectSettings.projectName)UITests"
+			]),
 			runAction: .runAction(executable: "\(ProjectSettings.projectName)")
 		),
 		Scheme(
