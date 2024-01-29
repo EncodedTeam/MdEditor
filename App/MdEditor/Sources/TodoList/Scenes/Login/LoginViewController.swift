@@ -66,16 +66,16 @@ private extension LoginViewController {
 	func makeTextField() -> UITextField {
 		let textField = UITextField()
 
-		textField.backgroundColor = ThemeProvider.colors.backgroundColor
-		textField.textColor = ThemeProvider.colors.accentColor
-		textField.tintColor = ThemeProvider.colors.tintColor
+		textField.backgroundColor = Theme.backgroundColor
+		textField.textColor = Theme.accentColor
+		textField.tintColor = Theme.tintColor
 
 		textField.font = UIFont.preferredFont(forTextStyle: .body)
 		textField.adjustsFontForContentSizeCategory = true
 
 		textField.layer.borderWidth = Sizes.borderWidth
 		textField.layer.cornerRadius = Sizes.cornerRadius
-		textField.layer.borderColor = ThemeProvider.colors.borderColor.cgColor
+		textField.layer.borderColor = Theme.borderColor.cgColor
 		textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Sizes.Padding.half, height: textField.frame.height))
 		textField.leftViewMode = .always
 		textField.translatesAutoresizingMaskIntoConstraints = false
@@ -88,7 +88,7 @@ private extension LoginViewController {
 
 		button.configuration = .filled()
 		button.configuration?.cornerStyle = .medium
-		button.configuration?.baseBackgroundColor = ThemeProvider.colors.mainColor
+		button.configuration?.baseBackgroundColor = Theme.mainColor
 		button.configuration?.title = L10n.Login.buttonTitle
 
 		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
@@ -101,7 +101,7 @@ private extension LoginViewController {
 	}
 
 	func setupUI() {
-		view.backgroundColor = ThemeProvider.colors.backgroundColor
+		view.backgroundColor = Theme.backgroundColor
 		title = L10n.Login.title
 		navigationController?.navigationBar.prefersLargeTitles = true
 
