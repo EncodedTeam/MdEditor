@@ -16,7 +16,7 @@ final class LoginAssembler {
 		let viewController = LoginViewController()
 		let presenter = LoginPresenter(viewController: viewController, loginResultClosure: loginResultClosure)
 		let worker: ILoginWorker
-		if ProcessInfo.processInfo.isUITesting {
+		if CommandLine.isUITesting {
 			worker = StubLoginWorker()
 		} else {
 			worker = LoginWorker()

@@ -29,10 +29,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func buildTaskManager() -> ITaskManager {
 		let taskManager = TaskManager()
 		var repository: ITaskRepository
-		if ProcessInfo.processInfo.isUITesting {
+		if CommandLine.isUITesting {
 			repository = TaskRepositoryStub()
 		} else {
-			repository = TaskRepositoryStub() /// В реальной ситуации данные подгружаются из хранилища или сети
+			repository = TaskRepositoryStub() // В реальной ситуации данные подгружаются из хранилища или сети
 		}
 		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
 		orderedTaskManager.addTasks(tasks: repository.getTasks())
