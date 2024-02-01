@@ -37,7 +37,7 @@ final class MainCoordinator: BaseCoordinator {
 		addDependency(coordinator)
 
 		coordinator.finishFlow = { [weak self, weak coordinator] in
-			self?.runTodoListFlow()
+			self?.runEditorFlow()
 			coordinator.map { self?.removeDependency($0) }
 		}
 
@@ -46,6 +46,12 @@ final class MainCoordinator: BaseCoordinator {
 
 	func runTodoListFlow() {
 		let coordinator = TodoListCoordinator(navigationController: navigationController, taskManager: taskManager)
+		addDependency(coordinator)
+		coordinator.start()
+	}
+
+	func runEditorFlow() {
+		let coordinator = EditorCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 		coordinator.start()
 	}
