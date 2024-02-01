@@ -9,7 +9,7 @@
 import Foundation
 
 protocol IStartScreenPresenter {
-
+	func present(response: StartScreenModel.Response)
 }
 
 final class StartScreenPresenter: IStartScreenPresenter {
@@ -28,6 +28,13 @@ final class StartScreenPresenter: IStartScreenPresenter {
 	}
 
 	// MARK: - Public methods
+
+	func present(response: StartScreenModel.Response) {
+		let docs = response.docs
+		let viewModel = StartScreenModel.ViewModel(documents: docs)
+
+		viewController?.render(with: viewModel)
+	}
 
 	// MARK: - Private methods
 
