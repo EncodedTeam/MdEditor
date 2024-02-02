@@ -13,13 +13,12 @@ protocol IStartScreenInteractor {
 }
 
 final class StartScreenInteractor: IStartScreenInteractor {
-	// MARK: - Public properties
+
 	// MARK: - Dependencies
 
 	private var presenter: IStartScreenPresenter?
 	private var docsRepository: IDocsRepository
 
-	// MARK: - Private properties
 	// MARK: - Initialization
 
 	init(presenter: IStartScreenPresenter?, docsRepository: IDocsRepository) {
@@ -41,5 +40,4 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		presenter?.present(response: response)
 	}
 
-	// MARK: - Private methods
 }

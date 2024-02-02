@@ -13,13 +13,11 @@ protocol IStartScreenPresenter {
 }
 
 final class StartScreenPresenter: IStartScreenPresenter {
-	// MARK: - Public properties
 
 	// MARK: - Dependencies
 
 	private weak var viewController: IStartScreenViewController?
 
-	// MARK: - Private properties
 
 	// MARK: - Initialization
 

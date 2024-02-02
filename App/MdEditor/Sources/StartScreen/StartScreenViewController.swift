@@ -13,7 +13,6 @@ protocol IStartScreenViewController: AnyObject {
 }
 
 final class StartScreenViewController: UIViewController {
-	// MARK: - Public properties
 
 	// MARK: - Dependencies
 
@@ -51,11 +50,6 @@ final class StartScreenViewController: UIViewController {
 		super.viewDidLayoutSubviews()
 		layout()
 	}
-
-	// MARK: - Public methods
-
-	// MARK: - Private methods
-
 }
 
 // MARK: - IStartScreenViewController
