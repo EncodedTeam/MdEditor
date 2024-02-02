@@ -24,32 +24,61 @@ final class DocsRepositoryStub: IDocsRepository {
 	/// - Returns: Массив документов
 	func getDocs() -> [Document] {
 		var docs: [Document] = []
+		let fileManager = FileManager.default
+		let bundleUrl = Bundle.main.bundleURL
+		let docsURL = bundleUrl.appendingPathComponent("Documents.bundle")
 
-		if let docsURL = Bundle.main.url(forResource: "Documents", withExtension: nil),
-		   let enumerator = FileManager.default.enumerator(at: docsURL, includingPropertiesForKeys: nil) {
+		func processDirectory(at directoryURL: URL) {
+			do {
+				let contents = try fileManager.contentsOfDirectory(
+					at: directoryURL,
+					includingPropertiesForKeys: nil,
+					options: .skipsHiddenFiles
+				)
 
-			while let fileURL = enumerator.nextObject() as? URL {
-				if fileURL.pathExtension == "md" {
-					let fileName = fileURL.lastPathComponent
-					let preview = generatePreview(for: fileURL)
-					let docInfo = Document(fileName: fileName, preview: preview)
-					docs.append(docInfo)
+				for item in contents {
+					if item.hasDirectoryPath {
+						processDirectory(at: item)
+					} else if item.pathExtension == "md" {
+						let fileName = item.lastPathComponent
+						let preview = generateRandomColorImage(size: CGSize(width: 150, height: 250))
+						docs.append(Document(fileName: fileName, preview: preview))
+					}
 				}
+			} catch let error as NSError {
+				fatalError(error.localizedDescription)
 			}
 		}
+
+		processDirectory(at: docsURL)
+
 		return docs
 	}
 
-	private func generatePreview(for fileURL: URL) -> UIImage? {
-		let webView = WKWebView()
-		let markdownString = try? String(contentsOf: fileURL, encoding: .utf8)
-		webView.loadHTMLString(markdownString ?? "empty", baseURL: nil)
-
-		let renderer = UIGraphicsImageRenderer(size: webView.bounds.size)
+//	private func generatePreview(for fileURL: URL) -> UIImage? {
+//		let webView = WKWebView()
+//		let markdownString = try? String(contentsOf: fileURL, encoding: .utf8)
+//		webView.loadHTMLString(markdownString ?? "empty", baseURL: nil)
+//
+//		let renderer = UIGraphicsImageRenderer(size: webView.bounds.size)
+//		let image = renderer.image { context in
+//			webView.drawHierarchy(in: webView.bounds, afterScreenUpdates: true)
+//		}
+//
+//		return image
+//	}
+	private func generateRandomColorImage(size: CGSize) -> UIImage {
+		let renderer = UIGraphicsImageRenderer(size: size)
 		let image = renderer.image { context in
-			webView.drawHierarchy(in: webView.bounds, afterScreenUpdates: true)
+			let randomColor = UIColor(
+				red: CGFloat.random(in: 0...1),
+				green: CGFloat.random(in: 0...1),
+				blue: CGFloat.random(in: 0...1),
+				alpha: 1.0
+			)
+			randomColor.setFill()
+			context.fill(context.format.bounds)
 		}
-
 		return image
 	}
 }

@@ -31,5 +31,3 @@ enum  StartScreenModel {
 struct ImageData {
 	let data: Data?
 }
-
-

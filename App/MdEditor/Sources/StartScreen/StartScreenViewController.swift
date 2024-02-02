@@ -20,8 +20,14 @@ final class StartScreenViewController: UIViewController {
 	var interactor: IStartScreenInteractor?
 
 	// MARK: - Private properties
-	private lazy var collectionView: UICollectionView = makeCollectionView()
+	private lazy var collectionViewDocs: UICollectionView = makeCollectionView()
+	private lazy var buttonNew: UIButton = makeButton(with: L10n.StartScreen.newDocumentButtonTitle, and: "doc")
+	private lazy var buttonOpen: UIButton = makeButton(with: L10n.StartScreen.openButtonTitle, and: "menucard.fill")
+	private lazy var buttonAbout: UIButton = makeButton(with: L10n.StartScreen.aboutButtonTitle, and: "info.bubble")
+	private lazy var stackViewButttons: UIStackView = makeStackViewButtons()
+
 	private var constraints = [NSLayoutConstraint]()
+
 	private var viewModel = StartScreenModel.ViewModel(documents: [])
 
 	// MARK: - Initialization
@@ -90,7 +96,7 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		layout collectionViewLayout: UICollectionViewLayout,
 		sizeForItemAt indexPath: IndexPath
 	) -> CGSize {
-		let width = collectionView.frame.width
+		let width = collectionView.frame.width / 5
 		let height = collectionView.frame.height
 
 		return CGSize(width: width, height: height)
@@ -104,27 +110,65 @@ private extension StartScreenViewController {
 		title = L10n.StartScreen.title
 		navigationItem.setHidesBackButton(true, animated: true)
 		navigationController?.navigationBar.prefersLargeTitles = true
+		view.backgroundColor = Theme.backgroundColor
 
 		interactor?.fetchData()
 		
-		collectionView.dataSource = self
-		collectionView.delegate = self
-		view.addSubview(collectionView)
+		collectionViewDocs.dataSource = self
+		collectionViewDocs.delegate = self
+		view.addSubview(collectionViewDocs)
+		view.addSubview(stackViewButttons)
 	}
 
 	func makeCollectionView() -> UICollectionView {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
+		layout.minimumLineSpacing = 10
+
+		let itemWidth = view.frame.width
+		let itemHeight = view.frame.height
+
+		layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
 
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		collectionView.register(RecentDocumentCell.self, forCellWithReuseIdentifier: RecentDocumentCell.reuseIdentifier)
 		collectionView.isPagingEnabled = true
-		collectionView.showsHorizontalScrollIndicator = true
+		collectionView.showsHorizontalScrollIndicator = false
 		collectionView.backgroundColor = .clear
 
 		collectionView.translatesAutoresizingMaskIntoConstraints = false
 
 		return collectionView
+	}
+
+	func makeButton(with title: String, and systemImageName: String) -> UIButton {
+		let button = UIButton()
+
+		var configuration = UIButton.Configuration.plain()
+		configuration.title = title
+		configuration.image = UIImage(systemName: systemImageName)
+		configuration.image?.withTintColor(Theme.mainColor)
+
+		button.configuration = configuration
+
+		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+		button.titleLabel?.adjustsFontForContentSizeCategory = true
+
+		button.translatesAutoresizingMaskIntoConstraints = false
+
+		return button
+	}
+
+	func makeStackViewButtons() -> UIStackView {
+		let stackView = UIStackView(arrangedSubviews: [buttonNew, buttonOpen, buttonAbout])
+		stackView.axis = .vertical
+		stackView.spacing = Sizes.Padding.double
+		stackView.alignment = .leading
+		stackView.distribution = .fill
+
+		stackView.translatesAutoresizingMaskIntoConstraints = false
+
+		return stackView
 	}
 }
 
@@ -136,10 +180,14 @@ private extension StartScreenViewController {
 		NSLayoutConstraint.deactivate(constraints)
 
 		let newConstraints = [
-			collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Sizes.Padding.normal),
-			collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-			collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
-			collectionView.bottomAnchor.constraint(equalTo: view.centerYAnchor)
+			collectionViewDocs.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+			collectionViewDocs.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			collectionViewDocs.widthAnchor.constraint(equalTo: view.widthAnchor),
+			collectionViewDocs.bottomAnchor.constraint(equalTo: stackViewButttons.topAnchor, constant: -Sizes.Padding.double),
+
+			stackViewButttons.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+			stackViewButttons.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal),
+			stackViewButttons.trailingAnchor.constraint(equalTo: view.centerXAnchor)
 		]
 
 		NSLayoutConstraint.activate(newConstraints)

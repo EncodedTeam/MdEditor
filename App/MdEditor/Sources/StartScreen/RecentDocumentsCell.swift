@@ -15,6 +15,7 @@ final class RecentDocumentCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
+		imageView.layer.cornerRadius = Sizes.cornerRadius
 		return imageView
 	}()
 
@@ -46,9 +47,9 @@ final class RecentDocumentCell: UICollectionViewCell {
 			imageView.topAnchor.constraint(equalTo: topAnchor),
 			imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
 			imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-			imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+			imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Sizes.Padding.double),
 
-			label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+			label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Sizes.Padding.half),
 			label.leadingAnchor.constraint(equalTo: leadingAnchor),
 			label.trailingAnchor.constraint(equalTo: trailingAnchor)
 		])

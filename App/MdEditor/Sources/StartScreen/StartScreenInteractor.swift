@@ -31,7 +31,6 @@ final class StartScreenInteractor: IStartScreenInteractor {
 
 	func fetchData() {
 		let docsFromRepository = docsRepository.getDocs()
-		print(docsFromRepository.first?.fileName)
 		let documents = docsFromRepository.map { document in
 			StartScreenModel.Document(
 				fileName: document.fileName,
