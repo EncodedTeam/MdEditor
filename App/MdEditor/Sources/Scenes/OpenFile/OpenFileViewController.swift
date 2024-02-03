@@ -8,11 +8,105 @@
 
 import UIKit
 
-protocol IOpenFileViewController {
+/// Протокол экрана открытия файла
+protocol IOpenFileViewController: AnyObject {
+	/// Метод отрисовки информации на экране.
+	/// - Parameter viewModel: данные для отрисовки на экране.
+	func render(viewModel: OpenFileModel.ViewModel)
 }
 
 final class OpenFileViewController: UIViewController {
+	// MARK: - Dependencies
+	var interactor: IOpenFileInteractor?
+
+	// MARK: - Private properties
+	private lazy var tableView: UITableView = makeTableView()
+	private var viewModel = TodoListModel.ViewModel(tasksBySections: [])
+
+	// MARK: - Lifecycle
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		setupUI()
+	}
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		layout()
+	}
 }
 
-extension OpenFileViewController: IOpenFileViewController { 
+// MARK: - UITableViewDelegate
+extension OpenFileViewController: UITableViewDelegate {
+}
+
+// MARK: - UITableViewDataSource
+extension OpenFileViewController: UITableViewDataSource {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		10
+	}
+
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let cell = tableView.dequeueReusableCell(
+			withIdentifier: FileItemTableViewCell.cellIdentifier,
+			for: indexPath
+		) as? FileItemTableViewCell else {
+			return UITableViewCell()
+		}
+
+		// Accessibility: Identifier
+		cell.accessibilityIdentifier = AccessibilityIdentifier.OpenFile.cell(
+			section: indexPath.section,
+			row: indexPath.row
+		).description
+
+		cell.selectionStyle = .none
+		cell.configure()
+
+		return cell
+	}
+}
+
+// MARK: - Setup UI
+private extension OpenFileViewController {
+	func makeTableView() -> UITableView {
+		let tableView = UITableView()
+		tableView.translatesAutoresizingMaskIntoConstraints = false
+		return tableView
+	}
+
+	/// Настройка UI экрана
+	func setupUI() {
+		view.backgroundColor = Theme.backgroundColor
+		title = "Choose File..."
+		navigationItem.setHidesBackButton(false, animated: true)
+		navigationController?.navigationBar.prefersLargeTitles = false
+
+		tableView.dataSource = self
+		tableView.delegate = self
+		tableView.register(FileItemTableViewCell.self, forCellReuseIdentifier: FileItemTableViewCell.cellIdentifier)
+
+		// Accessibility: Identifier
+		tableView.accessibilityIdentifier = AccessibilityIdentifier.OpenFile.tableView.description
+
+		view.addSubview(tableView)
+	}
+}
+
+// MARK: - Layout UI
+private extension OpenFileViewController {
+	func layout() {
+		let newConstraints = [
+			tableView.topAnchor.constraint(equalTo: view.topAnchor),
+			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+		]
+		NSLayoutConstraint.activate(newConstraints)
+	}
+}
+
+// MARK: - IOpenFileViewController
+extension OpenFileViewController: IOpenFileViewController {
+	func render(viewModel: OpenFileModel.ViewModel) {
+	}
 }

@@ -33,7 +33,8 @@ final class AppCoordinator: BaseCoordinator {
 	}
 
 	func runMainFLow() {
-		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: taskmanager)
+//		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: taskmanager)
+		let coordinator = OpenFileCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 		coordinator.start()
 	}

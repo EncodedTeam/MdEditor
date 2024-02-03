@@ -62,4 +62,21 @@ enum AccessibilityIdentifier {
 			}
 		}
 	}
+
+	enum OpenFile: CustomStringConvertible {
+		case tableView
+		case section(index: Int)
+		case cell(section: Int, row: Int)
+
+		var description: String {
+			switch self {
+			case .tableView:
+				return "OpenFileViewController.tableView"
+			case .section(let index):
+				return "OpenFileViewController.section-\(index)"
+			case .cell(let section, let row):
+				return "OpenFileViewController.cell-\(section)-\(row)"
+			}
+		}
+	}
 }

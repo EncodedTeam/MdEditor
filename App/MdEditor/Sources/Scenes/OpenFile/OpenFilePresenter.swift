@@ -9,7 +9,21 @@
 import Foundation
 
 protocol IOpenFilePresenter {
+	/// Отображение экрана со списком заданий.
+	/// - Parameter response: Подготовленные к отображению данные.
+	func present(response: OpenFileModel.Response)
 }
 
 final class OpenFilePresenter: IOpenFilePresenter {
+	// MARK: - Dependencies
+	private weak var viewController: IOpenFileViewController! // swiftlint:disable:this implicitly_unwrapped_optional
+
+	// MARK: - Initialization
+	init(viewController: IOpenFileViewController) {
+		self.viewController = viewController
+	}
+
+	// MARK: - Public methods
+	func present(response: OpenFileModel.Response) {
+	}
 }
