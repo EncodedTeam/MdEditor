@@ -6,12 +6,16 @@
 //  Copyright © 2024 EncodedTeam. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-protocol IAboutAssembler {
-	
-}
+final class AboutAssembler {
 
-final class AboutAssembler: IAboutAssembler {
-	
+	func assembly() -> AboutViewController {
+		let viewController = AboutViewController()
+		let presenter = AboutPresenter(viewController: viewController)
+		let interactor = AboutInteractor(presenter: presenter)
+		viewController.interactor = interactor
+		
+		return viewController
+	}
 }

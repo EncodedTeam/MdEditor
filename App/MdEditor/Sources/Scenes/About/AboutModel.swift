@@ -8,6 +8,14 @@
 
 import Foundation
 
-final class AboutModel {
+enum AboutModel {
+	struct Request {
+	}
 	
+	struct Response {
+	}
+	
+	struct ViewModel {
+		let fileData: String
+	}
 }

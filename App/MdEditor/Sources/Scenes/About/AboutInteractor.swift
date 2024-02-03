@@ -8,10 +8,25 @@
 
 import Foundation
 
-protocol IAboutInteractor {
-	
+protocol IAboutInteractor: AnyObject {
+	/// Событие на предоставление данных из файла about.
+	func fetchData()
 }
 
 final class AboutInteractor: IAboutInteractor {
 	
+	// MARK: - Dependencies
+	
+	private var presenter: IAboutPresenter?
+	
+	// MARK: - Initialization
+	
+	init(presenter: IAboutPresenter) {
+		self.presenter = presenter
+	}
+	
+	// MARK: - Public methods
+	
+	func fetchData() {
+	}
 }

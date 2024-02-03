@@ -9,9 +9,23 @@
 import Foundation
 
 protocol IAboutPresenter {
-	
+	func present(responce: AboutModel.Response)
 }
 
 final class AboutPresenter: IAboutPresenter {
 	
+	// MARK: - Dependencies
+	
+	private weak var viewController: IAboutViewController?
+	
+	// MARK: - Initialization
+	
+	init(viewController: IAboutViewController?) {
+		self.viewController = viewController
+	}
+	
+	// MARK: - Public methods
+	
+	func present(responce: AboutModel.Response) {
+	}
 }
