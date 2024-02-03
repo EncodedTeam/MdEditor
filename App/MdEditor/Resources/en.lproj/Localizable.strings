@@ -32,3 +32,9 @@
 "TodoList.TaskPriority.high" = "!!!";
 "TodoList.TaskPriority.medium" = "!!";
 "TodoList.TaskPriority.low" = "!";
+
+// MARK: - StartScreen strings
+"StartScreen.title" = "MDEditor";
+"StartScreen.newDocumentButtonTitle" = "New";
+"StartScreen.openButtonTitle" = "Open";
+"StartScreen.AboutButtonTitle" = "About";
