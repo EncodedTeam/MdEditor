@@ -96,4 +96,10 @@ final class MainCoordinator: BaseCoordinator {
 		let viewController = DocumentViewController(url: url)
 		navigationController.pushViewController(viewController, animated: true)
 	}
+	
+	func runAboutFlow() {
+		let coordinator = AboutCoordinator(navigationController: navigationController)
+		addDependency(coordinator)
+		coordinator.start()
+	}
 }
