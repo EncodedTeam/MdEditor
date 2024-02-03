@@ -24,7 +24,7 @@ final class AboutViewController: UIViewController {
 	
 	// MARK: - Private properties
 	
-	private var viewModel = AboutModel.ViewModel(fileData: "")
+	private var viewModel = AboutModel.ViewModel(fileData: "Text coming soon")
 	
 	private lazy var textViewFileAbout: UITextView = makeTextView()
 	private var constraints = [NSLayoutConstraint]()
@@ -46,6 +46,11 @@ final class AboutViewController: UIViewController {
 		setupUI()
 		interactor?.fetchData()
 	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		layout()
+	}
 }
 
 // MARK: - UI setup
@@ -53,19 +58,27 @@ final class AboutViewController: UIViewController {
 private extension AboutViewController {
 	
 	func setupUI() {
+		view.backgroundColor = Theme.backgroundColor
+		title = L10n.About.title
+		navigationItem.setHidesBackButton(true, animated: true)
+		navigationController?.navigationBar.prefersLargeTitles = true
+		
 		view.addSubview(textViewFileAbout)
 	}
 	
 	func makeTextView() -> UITextView {
 		let textView = UITextView(frame: .zero, textContainer: nil)
 		
-		textView.backgroundColor = Theme.backgroundColor
+		textView.backgroundColor = .gray
 		textView.contentInset = UIEdgeInsets(
 			top: Sizes.Padding.normal,
 			left: Sizes.Padding.normal,
 			bottom: Sizes.Padding.normal,
 			right: Sizes.Padding.normal
 		)
+		textView.backgroundColor = Theme.backgroundColor
+		textView.text = viewModel.fileData
+		textView.font = UIFont.systemFont(ofSize: Sizes.FontSizes.editorText)
 		textView.isScrollEnabled = true
 		textView.keyboardDismissMode = .onDrag
 		
