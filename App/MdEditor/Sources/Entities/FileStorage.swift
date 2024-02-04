@@ -86,4 +86,15 @@ final class FileStorage: IFileStorage {
 		}
 		return files
 	}
+
+	func loadFileBody(url: URL) -> String {
+		var text = ""
+		do {
+			text = try String(contentsOf: url, encoding: String.Encoding.utf8)
+		} catch {
+			text = "Failed to read text from \(url.lastPathComponent)"
+		}
+
+		return text
+	}
 }

@@ -119,7 +119,7 @@ private extension FileListViewController {
 		}
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.backButtonDisplayMode = .minimal
-		navigationController?.navigationBar.prefersLargeTitles = false
+		navigationItem.largeTitleDisplayMode = .never
 		navigationController?.navigationBar.tintColor = Theme.mainColor
 
 		tableView.dataSource = self

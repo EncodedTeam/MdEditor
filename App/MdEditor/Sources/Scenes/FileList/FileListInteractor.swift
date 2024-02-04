@@ -36,7 +36,7 @@ final class FileListInteractor: IFileListInteractor {
 		var responseData = [FileListModel.FileViewModel]()
 
 		var files: [File]
-		let storage = FileStorage()
+		let storage = FileStorage() // TODO: перенести зависимость в инит
 		do {
 			files = try storage.getFile(items: urls)
 		} catch {

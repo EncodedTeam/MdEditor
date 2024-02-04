@@ -91,14 +91,14 @@ final class MainCoordinator: BaseCoordinator {
 			if url.hasDirectoryPath {
 				self?.runFileListScene(urls: [url])
 			} else {
-				self?.runOpenFileScene(urls: [url])
+				self?.runOpenFileScene(url: url)
 			}
 		}
 		coordinator.start()
 	}
 
-	func runOpenFileScene(urls: [URL]) {
-		let viewController = DocumentViewController()
+	func runOpenFileScene(url: URL) {
+		let viewController = DocumentViewController(url: url)
 		navigationController.pushViewController(viewController, animated: true)
 	}
 }
