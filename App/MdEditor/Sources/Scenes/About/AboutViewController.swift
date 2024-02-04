@@ -24,9 +24,12 @@ final class AboutViewController: UIViewController {
 	
 	// MARK: - Private properties
 	
-	private var viewModel = AboutModel.ViewModel(fileData: "Text coming soon")
+	private var viewModel = AboutModel.ViewModel(fileData: "dsgdsgsd")
 	
-	private lazy var textViewFileAbout: UITextView = makeTextView()
+	private lazy var scrollView: UIScrollView = makeScrollView()
+	private lazy var labelAbout: UILabel = makeLabel()
+	private lazy var contentView: UIView = makeContentView()
+
 	private var constraints = [NSLayoutConstraint]()
 	
 	// MARK: - Initialization
@@ -62,27 +65,27 @@ private extension AboutViewController {
 		title = L10n.About.title
 		navigationItem.setHidesBackButton(true, animated: true)
 		navigationController?.navigationBar.prefersLargeTitles = true
-		
-		view.addSubview(textViewFileAbout)
 	}
 	
-	func makeTextView() -> UITextView {
-		let textView = UITextView(frame: .zero, textContainer: nil)
-		
-		textView.backgroundColor = .gray
-		textView.contentInset = UIEdgeInsets(
-			top: Sizes.Padding.normal,
-			left: Sizes.Padding.normal,
-			bottom: Sizes.Padding.normal,
-			right: Sizes.Padding.normal
-		)
-		textView.backgroundColor = Theme.backgroundColor
-		textView.text = viewModel.fileData
-		textView.font = UIFont.systemFont(ofSize: Sizes.FontSizes.editorText)
-		textView.isScrollEnabled = true
-		textView.keyboardDismissMode = .onDrag
-		
-		return textView
+	func makeLabel() -> UILabel {
+		let label = UILabel()
+		label.text = viewModel.fileData
+		label.numberOfLines = 0
+		label.font = UIFont.systemFont(ofSize: Sizes.FontSizes.editorText)
+		label.translatesAutoresizingMaskIntoConstraints = false
+		return label
+	}
+	
+	func makeScrollView() -> UIScrollView {
+		let scrollView = UIScrollView()
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
+		return scrollView
+	}
+	
+	func makeContentView() -> UIView {
+		let contentView = UIView()
+		contentView.translatesAutoresizingMaskIntoConstraints = false
+		return contentView
 	}
 }
 
@@ -91,16 +94,28 @@ private extension AboutViewController {
 private extension AboutViewController {
 	
 	func layout() {
+		view.addSubview(scrollView)
+		scrollView.addSubview(contentView)
+		contentView.addSubview(labelAbout)
+		
 		NSLayoutConstraint.deactivate(constraints)
 		
-		textViewFileAbout.translatesAutoresizingMaskIntoConstraints = false
-		
-		let safeArea = view.safeAreaLayoutGuide
 		let newConstraints = [
-			textViewFileAbout.topAnchor.constraint(equalTo: safeArea.topAnchor),
-			textViewFileAbout.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-			textViewFileAbout.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-			textViewFileAbout.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+			scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+			scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+			scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+			scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+			
+			contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+			contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+			contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+			contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+			contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+			
+			labelAbout.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Sizes.Padding.normal),
+			labelAbout.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Sizes.Padding.normal),
+			labelAbout.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Sizes.Padding.normal),
+			labelAbout.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Sizes.Padding.normal)
 		]
 		
 		NSLayoutConstraint.activate(newConstraints)
