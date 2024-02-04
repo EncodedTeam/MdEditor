@@ -25,7 +25,7 @@ final class OpenFileCoordinator: BaseCoordinator {
 
 	// MARK: - BaseCoordinator methods
 	override func start() {
-		showOpenFilesScene(url: self.url)
+		showOpenFilesScene(url: url)
 	}
 }
 

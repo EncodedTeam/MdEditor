@@ -29,7 +29,8 @@ final class MainCoordinator: BaseCoordinator {
 			return
 		}
 #endif
-		runLoginFlow()
+//		runLoginFlow()
+		runLoginTestingFlow()
 	}
 
 	func runLoginFlow() {
@@ -54,5 +55,36 @@ final class MainCoordinator: BaseCoordinator {
 		let coordinator = EditorCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 		coordinator.start()
+	}
+
+	func runLoginTestingFlow() {
+		let coordinator = LoginCoordinator(navigationController: navigationController)
+		addDependency(coordinator)
+
+		coordinator.finishFlow = { [weak self] in
+			let bundleUrl = Bundle.main.bundleURL
+			let docsURL = bundleUrl.appendingPathComponent("Documents.bundle")
+			self?.runOpenFileScene(url: docsURL)
+		}
+
+		coordinator.start()
+	}
+
+	func runOpenFileScene(url: URL) {
+		let coordinator = OpenFileCoordinator(navigationController: navigationController, url: url)
+		addDependency(coordinator)
+		coordinator.enterDirectoryFlow = { [weak self] url in
+			if url.hasDirectoryPath {
+				self?.runOpenFileScene(url: url)
+			} else {
+				self?.runDocumentScene(url: url)
+			}
+		}
+		coordinator.start()
+	}
+
+	func runDocumentScene(url: URL) {
+		let viewController = DocumentViewController()
+		navigationController.pushViewController(viewController, animated: true)
 	}
 }

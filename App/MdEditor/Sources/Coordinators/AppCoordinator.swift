@@ -29,19 +29,11 @@ final class AppCoordinator: BaseCoordinator {
 	// MARK: - Internal methods
 
 	override func start() {
-		let bundleUrl = Bundle.main.bundleURL
-		let docsURL = bundleUrl.appendingPathComponent("Documents.bundle")
-
-		runMainFLow(url: docsURL)
+		runMainFLow()
 	}
 
-	func runMainFLow(url: URL) {
-//		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: taskmanager)
-		let coordinator = OpenFileCoordinator(navigationController: navigationController, url: url)
-		coordinator.enterDirectoryFlow = { [weak self] url in
-			self?.runMainFLow(url: url)
-		}
-
+	func runMainFLow() {
+		let coordinator = MainCoordinator(navigationController: navigationController, taskManager: taskmanager)
 		addDependency(coordinator)
 		coordinator.start()
 	}

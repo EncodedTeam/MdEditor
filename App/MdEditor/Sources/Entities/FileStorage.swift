@@ -18,6 +18,8 @@ final class FileStorage: IFileStorage {
 
 	// MARK: - Public methods
 	func scan(url: URL) throws -> [File] {
+		guard url.hasDirectoryPath else { return [] }
+
 		var files: [File] = []
 		let contents = try fileManager.contentsOfDirectory(
 			at: url,

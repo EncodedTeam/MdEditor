@@ -108,6 +108,7 @@ private extension OpenFileViewController {
 		view.backgroundColor = Theme.backgroundColor
 		title = url.lastPathComponent
 		navigationItem.setHidesBackButton(false, animated: true)
+		navigationItem.backButtonDisplayMode = .minimal
 		navigationController?.navigationBar.prefersLargeTitles = false
 
 		tableView.dataSource = self
