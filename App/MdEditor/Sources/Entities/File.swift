@@ -24,7 +24,7 @@ struct File {
 	func getFormattedSize(with size: UInt64) -> String {
 		var convertedValue = Double(size)
 		var multiplyFactor = 0
-		let tokens = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+		let tokens = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
 		while convertedValue > 1024 {
 			convertedValue /= 1024
 			multiplyFactor += 1
@@ -39,13 +39,9 @@ struct File {
 	func getFormattedAttributes() -> String {
 		let formattedSize = getFormattedSize()
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "yyyy.MM.dd HH:mm:ss"
+		dateFormatter.dateFormat = "dd.MM.yy HH:mm"
 
-		if isDir {
-			return "<dir> – \(dateFormatter.string(from: modificationDate))\n\(formattedSize)"
-		} else {
-			return "\"\(ext)\" – \(dateFormatter.string(from: modificationDate))\n\(formattedSize)"
-		}
+		return "\(dateFormatter.string(from: modificationDate))\n\(formattedSize)"
 	}
 
 	func loadFileBody() -> String {

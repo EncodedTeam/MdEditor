@@ -42,9 +42,16 @@ enum Sizes {
 			static let normal: CGFloat = 8
 			static let double: CGFloat = 16
 		}
-		enum ImageSize {
+		enum Image {
 			static let width: CGFloat = 30
 			static let height: CGFloat = 30
+		}
+		enum Text {
+			static let ratioWidth: CGFloat = 0.5
+			static let numberOfLines = 3
+		}
+		enum SecondaryText {
+			static let numberOfLines = 3
 		}
 	}
 }

@@ -36,11 +36,13 @@ class FileItemTableViewCell: UITableViewCell {
 
 	// MARK: - Public methods
 	func configure(with file: OpenFileModel.FileViewModel) {
-		var imageName = "doc.text.fill"
+		var imageName = Theme.ImageIcon.unknown
+		tintColor = .darkGray
 		if file.isDir {
-			imageName = "folder.fill"
+			imageName = Theme.ImageIcon.directory
 			tintColor = Theme.tintColor
 		} else {
+			imageName = Theme.ImageIcon.file
 			tintColor = Theme.accentColor
 		}
 		imageViewIcon.image = UIImage(systemName: imageName)
@@ -63,7 +65,7 @@ private extension FileItemTableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = Theme.textColor
 		label.lineBreakMode = .byTruncatingMiddle
-		label.numberOfLines = 1
+		label.numberOfLines = Sizes.Cell.Text.numberOfLines
 
 		// Accessibility: Font
 		label.font = UIFont.preferredFont(forTextStyle: .caption1)
@@ -77,7 +79,7 @@ private extension FileItemTableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = Theme.secondaryTextColor
 		label.textAlignment = .right
-		label.numberOfLines = 2
+		label.numberOfLines = Sizes.Cell.SecondaryText.numberOfLines
 
 		// Accessibility: Font
 		label.font = UIFont.preferredFont(forTextStyle: .caption2)
@@ -97,18 +99,18 @@ private extension FileItemTableViewCell {
 
 	func layout() {
 		let newConstraints = [
-			imageViewIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
+			imageViewIcon.centerYAnchor.constraint(equalTo: labelText.centerYAnchor),
 			imageViewIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Sizes.Cell.Padding.normal),
-			imageViewIcon.heightAnchor.constraint(equalToConstant: Sizes.Cell.ImageSize.height),
+			imageViewIcon.heightAnchor.constraint(equalToConstant: Sizes.Cell.Image.height),
 			imageViewIcon.widthAnchor.constraint(equalTo: imageViewIcon.heightAnchor),
 
 			labelText.topAnchor.constraint(equalTo: topAnchor, constant: Sizes.Cell.Padding.normal),
 			labelText.leadingAnchor.constraint(equalTo: imageViewIcon.trailingAnchor, constant: Sizes.Cell.Padding.normal),
-			labelText.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Sizes.Cell.Padding.normal),
+			labelText.widthAnchor.constraint(equalTo: widthAnchor, multiplier: Sizes.Cell.Text.ratioWidth),
 
-			labelSecondaryText.topAnchor.constraint(equalTo: labelText.bottomAnchor, constant: Sizes.Cell.Padding.half),
-			labelSecondaryText.leadingAnchor.constraint(equalTo: labelText.leadingAnchor),
-			labelSecondaryText.trailingAnchor.constraint(equalTo: labelText.trailingAnchor),
+			labelSecondaryText.topAnchor.constraint(equalTo: labelText.topAnchor),
+			labelSecondaryText.leadingAnchor.constraint(equalTo: labelText.trailingAnchor, constant: Sizes.Cell.Padding.half),
+			labelSecondaryText.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Sizes.Cell.Padding.normal),
 			labelSecondaryText.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Sizes.Cell.Padding.normal)
 		]
 		NSLayoutConstraint.activate(newConstraints)

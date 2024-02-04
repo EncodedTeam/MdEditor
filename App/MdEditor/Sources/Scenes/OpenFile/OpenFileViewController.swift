@@ -55,17 +55,13 @@ private extension OpenFileViewController {
 	func getFileForIndex(_ index: Int) -> OpenFileModel.FileViewModel {
 		viewModel.data[index]
 	}
-
-	func getURLForIndex(_ index: Int) -> URL {
-		viewModel.data[index].url
-	}
 }
 
 // MARK: - UITableViewDelegate
 extension OpenFileViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let fileViewModel = getFileForIndex(indexPath.row)
-		let request = OpenFileModel.Request(title: fileViewModel.name, url: fileViewModel.url)
+		let selectedFileURL = getFileForIndex(indexPath.row).url
+		let request = OpenFileModel.Request(url: selectedFileURL)
 		interactor?.didFileSelected(request: request)
 	}
 }
@@ -110,7 +106,7 @@ private extension OpenFileViewController {
 	/// Настройка UI экрана
 	func setupUI() {
 		view.backgroundColor = Theme.backgroundColor
-		title = "Choose File..."
+		title = url.lastPathComponent
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationController?.navigationBar.prefersLargeTitles = false
 
