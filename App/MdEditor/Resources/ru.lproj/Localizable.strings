@@ -39,3 +39,6 @@
 "StartScreen.newDocumentButtonTitle" = "Создать";
 "StartScreen.openButtonTitle" = "Открыть";
 "StartScreen.AboutButtonTitle" = "О нас";
+
+// MARK: - FileList strings
+"FileList.title" = "Обзор...";

@@ -38,3 +38,6 @@
 "StartScreen.newDocumentButtonTitle" = "New";
 "StartScreen.openButtonTitle" = "Open";
 "StartScreen.AboutButtonTitle" = "About";
+
+// MARK: - FileList strings
+"FileList.title" = "Searching...";

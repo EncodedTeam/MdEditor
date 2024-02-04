@@ -113,13 +113,14 @@ private extension FileListViewController {
 	func setupUI() {
 		view.backgroundColor = Theme.backgroundColor
 		if firstShow {
-			title = "Обзор..."
+			title = L10n.FileList.title
 		} else {
-			title = urls.first?.lastPathComponent ?? "Обзор..."
+			title = urls.first?.lastPathComponent ?? L10n.FileList.title
 		}
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.backButtonDisplayMode = .minimal
 		navigationController?.navigationBar.prefersLargeTitles = false
+		navigationController?.navigationBar.tintColor = Theme.mainColor
 
 		tableView.dataSource = self
 		tableView.delegate = self

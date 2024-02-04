@@ -29,7 +29,7 @@ final class MainCoordinator: BaseCoordinator {
 			return
 		}
 #endif
-//		runLoginFlow()
+//		runLoginFlow() // TODO: change flow
 		runLoginTestingFlow()
 	}
 
@@ -57,6 +57,7 @@ final class MainCoordinator: BaseCoordinator {
 		coordinator.start()
 	}
 
+	// TODO: change flow
 	func runLoginTestingFlow() {
 		let coordinator = LoginCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
