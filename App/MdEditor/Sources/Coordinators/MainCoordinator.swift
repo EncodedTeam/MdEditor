@@ -62,28 +62,41 @@ final class MainCoordinator: BaseCoordinator {
 		addDependency(coordinator)
 
 		coordinator.finishFlow = { [weak self] in
-			let bundleUrl = Bundle.main.bundleURL
-			let docsURL = bundleUrl.appendingPathComponent("Documents.bundle")
-			self?.runOpenFileScene(url: docsURL)
+			var urls: [URL] = []
+
+			let bundleUrl = Bundle.main.resourceURL
+			if let docsURL = bundleUrl?.appendingPathComponent("Documents.bundle") {
+				urls.append(docsURL)
+			}
+
+			if let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+				urls.append(homeURL)
+			}
+
+			self?.runFileListScene(urls: urls, firstShow: true)
 		}
 
 		coordinator.start()
 	}
 
-	func runOpenFileScene(url: URL) {
-		let coordinator = OpenFileCoordinator(navigationController: navigationController, url: url)
+	func runFileListScene(urls: [URL], firstShow: Bool = false) {
+		let coordinator = FileListCoordinator(
+			navigationController: navigationController,
+			urls: urls,
+			firstShow: firstShow
+		)
 		addDependency(coordinator)
-		coordinator.enterDirectoryFlow = { [weak self] url in
+		coordinator.selectFile = { [weak self] url in
 			if url.hasDirectoryPath {
-				self?.runOpenFileScene(url: url)
+				self?.runFileListScene(urls: [url])
 			} else {
-				self?.runDocumentScene(url: url)
+				self?.runOpenFileScene(urls: [url])
 			}
 		}
 		coordinator.start()
 	}
 
-	func runDocumentScene(url: URL) {
+	func runOpenFileScene(urls: [URL]) {
 		let viewController = DocumentViewController()
 		navigationController.pushViewController(viewController, animated: true)
 	}

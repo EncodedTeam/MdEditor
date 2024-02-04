@@ -1,5 +1,5 @@
 //
-//  OpenFileViewController.swift
+//  FileListViewController.swift
 //  MdEditor
 //
 //  Created by Aksilont on 31.01.2024.
@@ -9,24 +9,26 @@
 import UIKit
 
 /// Протокол экрана открытия файла
-protocol IOpenFileViewController: AnyObject {
+protocol IFileListViewController: AnyObject {
 	/// Метод отрисовки информации на экране.
 	/// - Parameter viewModel: данные для отрисовки на экране.
-	func render(viewModel: OpenFileModel.ViewModel)
+	func render(viewModel: FileListModel.ViewModel)
 }
 
-final class OpenFileViewController: UIViewController {
+final class FileListViewController: UIViewController {
 	// MARK: - Dependencies
-	var interactor: IOpenFileInteractor?
+	var interactor: IFileListInteractor?
 
 	// MARK: - Private properties
 	private lazy var tableView: UITableView = makeTableView()
-	private var viewModel = OpenFileModel.ViewModel(data: [])
-	private let url: URL
+	private var viewModel = FileListModel.ViewModel(data: [])
+	private let urls: [URL]
+	private var firstShow: Bool
 
 	// MARK: - Initiazlization
-	init(url: URL) {
-		self.url = url
+	init(urls: [URL], firstShow: Bool) {
+		self.urls = urls
+		self.firstShow = firstShow
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -42,7 +44,11 @@ final class OpenFileViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		interactor?.fetchData(url: url)
+		if firstShow {
+			interactor?.fetchStartData(urls: urls)
+		} else if let url = urls.first {
+			interactor?.fetchData(url: url)
+		}
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -51,23 +57,23 @@ final class OpenFileViewController: UIViewController {
 	}
 }
 
-private extension OpenFileViewController {
-	func getFileForIndex(_ index: Int) -> OpenFileModel.FileViewModel {
+private extension FileListViewController {
+	func getFileForIndex(_ index: Int) -> FileListModel.FileViewModel {
 		viewModel.data[index]
 	}
 }
 
 // MARK: - UITableViewDelegate
-extension OpenFileViewController: UITableViewDelegate {
+extension FileListViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let selectedFileURL = getFileForIndex(indexPath.row).url
-		let request = OpenFileModel.Request(url: selectedFileURL)
+		let request = FileListModel.Request(url: selectedFileURL)
 		interactor?.didFileSelected(request: request)
 	}
 }
 
 // MARK: - UITableViewDataSource
-extension OpenFileViewController: UITableViewDataSource {
+extension FileListViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		viewModel.data.count
 	}
@@ -96,7 +102,7 @@ extension OpenFileViewController: UITableViewDataSource {
 }
 
 // MARK: - Setup UI
-private extension OpenFileViewController {
+private extension FileListViewController {
 	func makeTableView() -> UITableView {
 		let tableView = UITableView()
 		tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +112,11 @@ private extension OpenFileViewController {
 	/// Настройка UI экрана
 	func setupUI() {
 		view.backgroundColor = Theme.backgroundColor
-		title = url.lastPathComponent
+		if firstShow {
+			title = "Обзор..."
+		} else {
+			title = urls.first?.lastPathComponent ?? "Обзор..."
+		}
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.backButtonDisplayMode = .minimal
 		navigationController?.navigationBar.prefersLargeTitles = false
@@ -123,7 +133,7 @@ private extension OpenFileViewController {
 }
 
 // MARK: - Layout UI
-private extension OpenFileViewController {
+private extension FileListViewController {
 	func layout() {
 		let newConstraints = [
 			tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -135,9 +145,9 @@ private extension OpenFileViewController {
 	}
 }
 
-// MARK: - IOpenFileViewController
-extension OpenFileViewController: IOpenFileViewController {
-	func render(viewModel: OpenFileModel.ViewModel) {
+// MARK: - IFileListViewController
+extension FileListViewController: IFileListViewController {
+	func render(viewModel: FileListModel.ViewModel) {
 		self.viewModel = viewModel
 		tableView.reloadData()
 	}

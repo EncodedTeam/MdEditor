@@ -1,5 +1,5 @@
 //
-//  OpenFileModel.swift
+//  FileListModel.swift
 //  MdEditor
 //
 //  Created by Aksilont on 31.01.2024.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OpenFileModel {
+enum FileListModel {
 	struct FileViewModel {
 		let url: URL
 		let name: String

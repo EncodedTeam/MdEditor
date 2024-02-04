@@ -60,4 +60,30 @@ final class FileStorage: IFileStorage {
 
 		return files
 	}
+
+	func getFile(items: [URL]) throws -> [File] {
+		var files: [File] = []
+		for item in items {
+			guard item.hasDirectoryPath else { continue }
+
+			let attributes = try fileManager.attributesOfItem(atPath: item.relativePath)
+			let creationDate = (attributes[FileAttributeKey.creationDate] as? Date) ?? Date()
+			let modificationDate = (attributes[FileAttributeKey.modificationDate] as? Date) ?? Date()
+
+			let nestedFiles = try scan(url: item)
+			let size = nestedFiles.reduce(into: 0) { partialResult, nextFile in
+				partialResult += nextFile.size
+			}
+			let directory = File(
+				url: item,
+				isDir: true,
+				nestedFiles: nestedFiles,
+				creationDate: creationDate,
+				modificationDate: modificationDate,
+				size: size
+			)
+			files.append(directory)
+		}
+		return files
+	}
 }

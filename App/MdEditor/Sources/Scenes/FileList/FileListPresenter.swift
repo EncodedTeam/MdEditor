@@ -1,5 +1,5 @@
 //
-//  OpenFilePresenter.swift
+//  FileListPresenter.swift
 //  MdEditor
 //
 //  Created by Aksilont on 31.01.2024.
@@ -8,30 +8,30 @@
 
 import Foundation
 
-protocol IOpenFilePresenter {
+protocol IFileListPresenter {
 	/// Отображение экрана со списком заданий.
 	/// - Parameter response: Подготовленные к отображению данные.
-	func present(response: OpenFileModel.Response)
+	func present(response: FileListModel.Response)
 
 	func didFileSelected(response: URL)
 }
 
-typealias OpenFileClosure = (URL) -> Void
+typealias FileListClosure = (URL) -> Void
 
-final class OpenFilePresenter: IOpenFilePresenter {
+final class FileListPresenter: IFileListPresenter {
 	// MARK: - Dependencies
-	private weak var viewController: IOpenFileViewController?
-	private var openFileClosure: OpenFileClosure?
+	private weak var viewController: IFileListViewController?
+	private var openFileClosure: FileListClosure?
 
 	// MARK: - Initialization
-	init(viewController: IOpenFileViewController, openFileClosure: OpenFileClosure?) {
+	init(viewController: IFileListViewController, openFileClosure: FileListClosure?) {
 		self.viewController = viewController
 		self.openFileClosure = openFileClosure
 	}
 
 	// MARK: - Public methods
-	func present(response: OpenFileModel.Response) {
-		let viewModel = OpenFileModel.ViewModel(data: response.data)
+	func present(response: FileListModel.Response) {
+		let viewModel = FileListModel.ViewModel(data: response.data)
 		viewController?.render(viewModel: viewModel)
 	}
 
