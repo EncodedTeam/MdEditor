@@ -21,12 +21,28 @@ final class OpenFileViewController: UIViewController {
 
 	// MARK: - Private properties
 	private lazy var tableView: UITableView = makeTableView()
-	private var viewModel = TodoListModel.ViewModel(tasksBySections: [])
+	private var viewModel = OpenFileModel.ViewModel(data: [])
+	private let url: URL
 
+	// MARK: - Initiazlization
+	init(url: URL) {
+		self.url = url
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
 	// MARK: - Lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		interactor?.fetchData(url: url)
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -42,7 +58,7 @@ extension OpenFileViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension OpenFileViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		10
+		viewModel.data.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -52,6 +68,7 @@ extension OpenFileViewController: UITableViewDataSource {
 		) as? FileItemTableViewCell else {
 			return UITableViewCell()
 		}
+		cell.selectionStyle = .none
 
 		// Accessibility: Identifier
 		cell.accessibilityIdentifier = AccessibilityIdentifier.OpenFile.cell(
@@ -59,10 +76,15 @@ extension OpenFileViewController: UITableViewDataSource {
 			row: indexPath.row
 		).description
 
-		cell.selectionStyle = .none
-		cell.configure()
+		let file = getFileForIndex(indexPath.row)
+
+		cell.configure(with: file)
 
 		return cell
+	}
+
+	func getFileForIndex(_ index: Int) -> OpenFileModel.FileViewModel {
+		viewModel.data[index]
 	}
 }
 
@@ -108,5 +130,7 @@ private extension OpenFileViewController {
 // MARK: - IOpenFileViewController
 extension OpenFileViewController: IOpenFileViewController {
 	func render(viewModel: OpenFileModel.ViewModel) {
+		self.viewModel = viewModel
+		tableView.reloadData()
 	}
 }

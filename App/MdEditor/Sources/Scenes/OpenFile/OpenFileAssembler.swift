@@ -12,7 +12,10 @@ final class OpenFileAssembler {
 	/// Сборка модуля открытия файла
 	/// - Returns: `OpenFileViewController`
 	func assembly() -> OpenFileViewController {
-		let viewController = OpenFileViewController()
+		let bundleUrl = Bundle.main.bundleURL
+		let docsURL = bundleUrl.appendingPathComponent("Documents.bundle")
+
+		let viewController = OpenFileViewController(url: docsURL)
 		let presenter = OpenFilePresenter(viewController: viewController)
 		let worker = OpenFileWorker()
 		let interactor = OpenFileInteractor(presenter: presenter, worker: worker)

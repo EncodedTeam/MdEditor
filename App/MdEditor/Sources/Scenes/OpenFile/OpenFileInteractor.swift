@@ -9,14 +9,17 @@
 import Foundation
 
 protocol IOpenFileInteractor {
-	/// Открывает выбранный файл
-	/// - Parameter request: `OpenFileModel.Request`
-	func openFile(request: OpenFileModel.Request)
+	/// Событие на предоставление информации для списка файлов.
+	func fetchData(url: URL)
+
+	/// Событие, что файл бы выбран
+	/// - Parameter request: Запрос, содержащий информацию о выбранном файле.
+	func didFileSelected(request: OpenFileModel.Request)
 }
 
 final class OpenFileInteractor: IOpenFileInteractor {
 	// MARK: - Dependencies
-	private var presenter: IOpenFilePresenter?
+	private var presenter: IOpenFilePresenter
 	private var worker: IOpenFileWorker
 
 	// MARK: - Initialization
@@ -26,6 +29,31 @@ final class OpenFileInteractor: IOpenFileInteractor {
 	}
 
 	// MARK: - Public methods
-	func openFile(request: OpenFileModel.Request) {
+	func fetchData(url: URL) {
+		var responseData = [OpenFileModel.FileViewModel]()
+
+		var files: [File]
+		let storage = FileStorage()
+		do {
+			files = try storage.scan(url: url)
+		} catch {
+			fatalError("No files")
+		}
+
+		let responseFiles = files.map { file in
+			OpenFileModel.FileViewModel(
+				url: file.url,
+				name: file.name,
+				isDir: file.isDir,
+				description: file.getFormattedAttributes()
+			)
+		}
+		responseData.append(contentsOf: responseFiles)
+
+		let response = OpenFileModel.Response(data: responseData)
+		presenter.present(response: response)
+	}
+
+	func didFileSelected(request: OpenFileModel.Request) {
 	}
 }

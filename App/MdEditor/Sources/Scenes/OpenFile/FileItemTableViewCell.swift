@@ -35,10 +35,15 @@ class FileItemTableViewCell: UITableViewCell {
 	}
 
 	// MARK: - Public methods
-	func configure() {
-		imageViewIcon.image = UIImage(systemName: "doc.text.fill")
-		labelText.text = "FileName.md"
-		labelSecondaryText.text = "some general info some general info some general info"
+	func configure(with file: OpenFileModel.FileViewModel) {
+		var imageName = "doc.text.fill"
+		if file.isDir {
+			imageName = "folder.fill"
+			tintColor = Theme.tintColor
+		}
+		imageViewIcon.image = UIImage(systemName: imageName)
+		labelText.text = file.name
+		labelSecondaryText.text = file.description
 	}
 }
 

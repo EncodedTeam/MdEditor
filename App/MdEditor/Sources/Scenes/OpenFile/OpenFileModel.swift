@@ -9,7 +9,22 @@
 import Foundation
 
 enum OpenFileModel {
-	struct Request { }
-	struct Response { }
-	struct ViewModel { }
+	struct FileViewModel {
+		let url: URL
+		let name: String
+		let isDir: Bool
+		let description: String
+	}
+
+	struct Request {
+		let url: URL
+	}
+
+	struct Response {
+		let data: [FileViewModel]
+	}
+	
+	struct ViewModel { 
+		let data: [FileViewModel]
+	}
 }

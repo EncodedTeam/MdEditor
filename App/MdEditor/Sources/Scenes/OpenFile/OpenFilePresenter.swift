@@ -25,5 +25,7 @@ final class OpenFilePresenter: IOpenFilePresenter {
 
 	// MARK: - Public methods
 	func present(response: OpenFileModel.Response) {
+		let viewModel = OpenFileModel.ViewModel(data: response.data)
+		viewController.render(viewModel: viewModel)
 	}
 }
