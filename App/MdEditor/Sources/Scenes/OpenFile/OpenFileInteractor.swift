@@ -55,5 +55,6 @@ final class OpenFileInteractor: IOpenFileInteractor {
 	}
 
 	func didFileSelected(request: OpenFileModel.Request) {
+		presenter.didFileSelected(response: request.url)
 	}
 }

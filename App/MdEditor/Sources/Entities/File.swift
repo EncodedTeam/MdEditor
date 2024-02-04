@@ -53,7 +53,7 @@ struct File {
 		do {
 			text = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
 		} catch {
-			print("Failed to read text from \(name)")
+			text = "Failed to read text from \(name)"
 		}
 		return text
 	}

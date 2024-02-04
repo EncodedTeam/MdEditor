@@ -17,6 +17,7 @@ enum OpenFileModel {
 	}
 
 	struct Request {
+		let title: String
 		let url: URL
 	}
 

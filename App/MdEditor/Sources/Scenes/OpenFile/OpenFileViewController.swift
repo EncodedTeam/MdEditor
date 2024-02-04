@@ -51,8 +51,23 @@ final class OpenFileViewController: UIViewController {
 	}
 }
 
+private extension OpenFileViewController {
+	func getFileForIndex(_ index: Int) -> OpenFileModel.FileViewModel {
+		viewModel.data[index]
+	}
+
+	func getURLForIndex(_ index: Int) -> URL {
+		viewModel.data[index].url
+	}
+}
+
 // MARK: - UITableViewDelegate
 extension OpenFileViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let fileViewModel = getFileForIndex(indexPath.row)
+		let request = OpenFileModel.Request(title: fileViewModel.name, url: fileViewModel.url)
+		interactor?.didFileSelected(request: request)
+	}
 }
 
 // MARK: - UITableViewDataSource
@@ -76,15 +91,11 @@ extension OpenFileViewController: UITableViewDataSource {
 			row: indexPath.row
 		).description
 
-		let file = getFileForIndex(indexPath.row)
+		let fileViewModel = getFileForIndex(indexPath.row)
 
-		cell.configure(with: file)
+		cell.configure(with: fileViewModel)
 
 		return cell
-	}
-
-	func getFileForIndex(_ index: Int) -> OpenFileModel.FileViewModel {
-		viewModel.data[index]
 	}
 }
 

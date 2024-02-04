@@ -12,22 +12,30 @@ final class OpenFileCoordinator: BaseCoordinator {
 	// MARK: - Dependencies
 	private let navigationController: UINavigationController
 
+	private let url: URL
+
+	var finishFlow: (() -> Void)?
+	var enterDirectoryFlow: ((URL) -> Void)?
+
 	// MARK: - Initialization
-	init(navigationController: UINavigationController) {
+	init(navigationController: UINavigationController, url: URL) {
 		self.navigationController = navigationController
+		self.url = url
 	}
 
 	// MARK: - BaseCoordinator methods
 	override func start() {
-		showOpenFilesScene()
+		showOpenFilesScene(url: self.url)
 	}
 }
 
 // MARK: - Private methods
 private extension OpenFileCoordinator {
-	private func showOpenFilesScene() {
+	private func showOpenFilesScene(url: URL) {
 		let assembler = OpenFileAssembler()
-		let viewController = assembler.assembly()
+		let viewController = assembler.assembly(url: url) { [weak self] url in
+			self?.enterDirectoryFlow?(url)
+		}
 		navigationController.pushViewController(viewController, animated: true)
 	}
 }

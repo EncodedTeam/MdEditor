@@ -40,6 +40,8 @@ class FileItemTableViewCell: UITableViewCell {
 		if file.isDir {
 			imageName = "folder.fill"
 			tintColor = Theme.tintColor
+		} else {
+			tintColor = Theme.accentColor
 		}
 		imageViewIcon.image = UIImage(systemName: imageName)
 		labelText.text = file.name
