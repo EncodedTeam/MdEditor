@@ -72,11 +72,11 @@ final class MainCoordinator: BaseCoordinator {
 		}
 		
 		coordinator.openAboutSceen = { [weak self] in
-			if let fileUrl = Bundle.main.url(forResource: "about", withExtension: "") {
-				self?.runOpenDocumentScene(url: fileUrl, editable: false)
+			let bundleUrl = Bundle.main.resourceURL
+			if let fileURL = bundleUrl?.appendingPathComponent("Documents.bundle/about.md") {
+				self?.runOpenDocumentScene(url: fileURL, editable: false)
 			}
 		}
-
 		coordinator.start()
 	}
 
@@ -98,10 +98,6 @@ final class MainCoordinator: BaseCoordinator {
 		coordinator.start()
 	}
 
-	func runOpenDocumentScene1(url: URL) {  // TODO: del
-		let viewController = DocumentViewController(url: url)
-		navigationController.pushViewController(viewController, animated: true)
-	}
 	
 	func runOpenDocumentScene(url: URL, editable: Bool = true) {
 		let coordinator = AboutCoordinator(

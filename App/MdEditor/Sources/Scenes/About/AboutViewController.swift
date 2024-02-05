@@ -111,7 +111,8 @@ private extension AboutViewController {
 		
 		textView.backgroundColor = Theme.backgroundColor
 		textView.isScrollEnabled = true
-		textView.font = UIFont.systemFont(ofSize: Sizes.FontSizes.editorText)
+		textView.font = UIFont.preferredFont(forTextStyle: .body)
+		textView.adjustsFontForContentSizeCategory = true
 		textView.keyboardDismissMode = .onDrag
 		textView.isEditable = editable
 		textView.translatesAutoresizingMaskIntoConstraints = false
@@ -131,7 +132,7 @@ private extension AboutViewController {
 		
 		let safeArea = view.safeAreaLayoutGuide
 		let newConstraints = [
-			textViewEditor.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: Sizes.Padding.half),
+			textViewEditor.topAnchor.constraint(equalTo: safeArea.topAnchor),
 			textViewEditor.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Sizes.Padding.half),
 			textViewEditor.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Sizes.Padding.half),
 			textViewEditor.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: Sizes.Padding.normal)
