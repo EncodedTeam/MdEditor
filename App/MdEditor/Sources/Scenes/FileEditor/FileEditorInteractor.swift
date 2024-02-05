@@ -36,7 +36,7 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	
 	func fetchData() {
 		let title = url.lastPathComponent
-		let fileData = fileStorage?.loadFileBody(url: url) ?? "" // TODO: сделать алерт при ошибке
+		let fileData = fileStorage?.loadFileBody(url: url) ?? ""
 		presenter?.present(responce: FileEditorModel.Response(
 			title: title,
 			fileData: fileData
