@@ -14,14 +14,14 @@ final class StartScreenAssembler {
 		openFileClosure: OpenFileListClosure?,
 		openAboutClosure: OpenAboutClosure?
 	) -> StartScreenViewController {
-		let docsRepository = DocsRepositoryStub()
+		let fileStorage = FileStorage()
 		let viewController = StartScreenViewController()
 		let presenter = StartScreenPresenter(
 			viewController: viewController,
 			openFileClosure: openFileClosure,
 			openAboutClosure: openAboutClosure
 		)
-		let interactor = StartScreenInteractor(presenter: presenter, docsRepository: docsRepository)
+		let interactor = StartScreenInteractor(presenter: presenter, fileStorage: fileStorage)
 
 		viewController.interactor = interactor
 

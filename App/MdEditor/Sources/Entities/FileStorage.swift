@@ -6,16 +6,17 @@
 //  Copyright © 2024 EncodedTeam. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol IFileStorage {
 	func scan(url: URL) throws -> [File]
 	func getFilesFrom(_ items: [URL]) throws -> [File]
 	func loadFileBody(url: URL) -> String
+	func getAllDocs() -> [Document]
 }
 
 final class FileStorage: IFileStorage {
-	// MARK: - Private methods
+	// MARK: - Private properties
 	private let fileManager = FileManager.default
 
 	// MARK: - Public methods
@@ -99,4 +100,41 @@ final class FileStorage: IFileStorage {
 
 		return text
 	}
+	/// Возвращает массив всех документов в приложении
+	func getAllDocs() -> [Document] {
+		var docs: [Document] = []
+		let bundleUrl = Bundle.main.bundleURL
+		let docsURL = bundleUrl.appendingPathComponent("Documents.bundle")
+
+		func processDirectory(at directoryURL: URL) {
+			do {
+				let contents = try fileManager.contentsOfDirectory(
+					at: directoryURL,
+					includingPropertiesForKeys: nil,
+					options: .skipsHiddenFiles
+				)
+
+				for item in contents {
+					if item.hasDirectoryPath {
+						processDirectory(at: item)
+					} else if item.pathExtension == "md" {
+						let fileName = item.lastPathComponent
+						let preview = UIImage(randomColorWithSize: CGSize(width: 150, height: 250))
+						docs.append(Document(fileName: fileName, preview: preview))
+					}
+				}
+			} catch let error as NSError {
+				fatalError(error.localizedDescription)
+			}
+		}
+
+		processDirectory(at: docsURL)
+
+		return docs
+	}
+}
+
+struct Document {
+	let fileName: String
+	let preview: UIImage?
 }

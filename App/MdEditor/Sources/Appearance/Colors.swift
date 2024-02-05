@@ -62,5 +62,6 @@ enum Theme {
 		static let unknown = "questionmark.app.dashed"
 		static let directory = "folder.fill"
 		static let file = "doc.text.fill"
+		static let aboutUs = "info.bubble.fill"
 	}
 }
