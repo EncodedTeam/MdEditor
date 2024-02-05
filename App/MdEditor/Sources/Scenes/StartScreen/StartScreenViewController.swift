@@ -188,12 +188,21 @@ private extension StartScreenViewController {
 		NSLayoutConstraint.deactivate(constraints)
 
 		let newConstraints = [
-			collectionViewDocs.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Sizes.Padding.normal),
-			collectionViewDocs.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Sizes.Padding.normal),
+			collectionViewDocs.topAnchor.constraint(
+				equalTo: view.safeAreaLayoutGuide.topAnchor,
+				constant: Sizes.Padding.normal
+			),
+			collectionViewDocs.leadingAnchor.constraint(
+				equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+				constant: Sizes.Padding.normal
+			),
 			collectionViewDocs.widthAnchor.constraint(equalTo: view.widthAnchor),
 			collectionViewDocs.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: Sizes.S.heightMultiplier),
 
-			stackViewButttons.topAnchor.constraint(equalTo: collectionViewDocs.bottomAnchor, constant: Sizes.Padding.normal),
+			stackViewButttons.topAnchor.constraint(
+				equalTo: collectionViewDocs.bottomAnchor,
+				constant: Sizes.Padding.normal
+			),
 			stackViewButttons.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
 			stackViewButttons.trailingAnchor.constraint(equalTo: view.centerXAnchor)
 		]

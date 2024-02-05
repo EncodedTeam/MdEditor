@@ -25,7 +25,6 @@ extension UIImage {
 			randomColor.setFill()
 			context.fill(CGRect(origin: .zero, size: size))
 		}
-		self.init(cgImage: image.cgImage!)
+		self.init(cgImage: image.cgImage!) // swiftlint:disable:this force_unwrapping
 	}
 }
-

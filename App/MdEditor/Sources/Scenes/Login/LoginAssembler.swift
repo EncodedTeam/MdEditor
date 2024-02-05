@@ -19,8 +19,6 @@ final class LoginAssembler {
 		if CommandLine.isUITesting {
 			worker = StubLoginWorker()
 		} else {
-			// TODO: change worker
-//			worker = LoginWorker()
 			worker = TestingLoginWorker()
 		}
 		let interactor = LoginInteractor(presenter: presenter, worker: worker)
