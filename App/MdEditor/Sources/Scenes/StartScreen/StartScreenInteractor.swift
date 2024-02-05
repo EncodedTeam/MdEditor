@@ -10,6 +10,8 @@ import Foundation
 
 protocol IStartScreenInteractor {
 	func fetchData()
+	func openFileList()
+	func openAbout()
 }
 
 final class StartScreenInteractor: IStartScreenInteractor {
@@ -40,4 +42,11 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		presenter?.present(response: response)
 	}
 
+	func openFileList() {
+		presenter?.openFileList()
+	}
+
+	func openAbout() {
+		presenter?.openAbout()
+	}
 }

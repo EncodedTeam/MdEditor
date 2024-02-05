@@ -10,10 +10,17 @@ import Foundation
 
 final class StartScreenAssembler {
 
-	func assembly() -> StartScreenViewController {
+	func assembly(
+		openFileClosure: OpenFileListClosure?,
+		openAboutClosure: OpenAboutClosure?
+	) -> StartScreenViewController {
 		let docsRepository = DocsRepositoryStub()
 		let viewController = StartScreenViewController()
-		let presenter = StartScreenPresenter(viewController: viewController)
+		let presenter = StartScreenPresenter(
+			viewController: viewController,
+			openFileClosure: openFileClosure,
+			openAboutClosure: openAboutClosure
+		)
 		let interactor = StartScreenInteractor(presenter: presenter, docsRepository: docsRepository)
 
 		viewController.interactor = interactor

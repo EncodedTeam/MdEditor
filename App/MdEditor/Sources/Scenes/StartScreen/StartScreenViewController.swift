@@ -108,6 +108,9 @@ private extension StartScreenViewController {
 
 		interactor?.fetchData()
 		
+		buttonOpen.addTarget(self, action: #selector(buttonOpenAction), for: .touchUpInside)
+		buttonAbout.addTarget(self, action: #selector(buttonAboutAction), for: .touchUpInside)
+
 		collectionViewDocs.dataSource = self
 		collectionViewDocs.delegate = self
 		view.addSubview(collectionViewDocs)
@@ -187,5 +190,18 @@ private extension StartScreenViewController {
 		NSLayoutConstraint.activate(newConstraints)
 
 		constraints = newConstraints
+	}
+}
+
+// MARK: - Actions
+private extension StartScreenViewController {
+	@objc
+	func buttonOpenAction(_ sender: UIButton) {
+		interactor?.openFileList()
+	}
+
+	@objc
+	func buttonAboutAction(_ sender: UIButton) {
+		interactor?.openAbout()
 	}
 }

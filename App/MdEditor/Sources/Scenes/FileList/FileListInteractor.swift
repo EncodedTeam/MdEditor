@@ -25,10 +25,12 @@ protocol IFileListInteractor {
 final class FileListInteractor: IFileListInteractor {
 	// MARK: - Dependencies
 	private var presenter: IFileListPresenter
+	private var storage: IFileStorage
 
 	// MARK: - Initialization
-	init(presenter: IFileListPresenter) {
+	init(presenter: IFileListPresenter, storage: IFileStorage) {
 		self.presenter = presenter
+		self.storage = storage
 	}
 
 	// MARK: - Public methods
@@ -36,9 +38,9 @@ final class FileListInteractor: IFileListInteractor {
 		var responseData = [FileListModel.FileViewModel]()
 
 		var files: [File]
-		let storage = FileStorage() // TODO: перенести зависимость в инит
+		
 		do {
-			files = try storage.getFile(items: urls)
+			files = try storage.getFilesFrom(urls)
 		} catch {
 			fatalError("No files")
 		}

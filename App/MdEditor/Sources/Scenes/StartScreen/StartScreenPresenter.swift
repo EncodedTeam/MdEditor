@@ -10,7 +10,12 @@ import Foundation
 
 protocol IStartScreenPresenter {
 	func present(response: StartScreenModel.Response)
+	func openFileList()
+	func openAbout()
 }
+
+typealias OpenFileListClosure = () -> Void
+typealias OpenAboutClosure = () -> Void
 
 final class StartScreenPresenter: IStartScreenPresenter {
 
@@ -18,11 +23,18 @@ final class StartScreenPresenter: IStartScreenPresenter {
 
 	private weak var viewController: IStartScreenViewController?
 
+	private var openFileListClosure: OpenFileListClosure?
+	private var openAboutClosure: OpenAboutClosure?
 
 	// MARK: - Initialization
-
-	init(viewController: IStartScreenViewController?) {
+	init(
+		viewController: IStartScreenViewController?,
+		openFileClosure: OpenFileListClosure?,
+		openAboutClosure: OpenAboutClosure?
+	) {
 		self.viewController = viewController
+		self.openFileListClosure = openFileClosure
+		self.openAboutClosure = openAboutClosure
 	}
 
 	// MARK: - Public methods
@@ -32,6 +44,14 @@ final class StartScreenPresenter: IStartScreenPresenter {
 		let viewModel = StartScreenModel.ViewModel(documents: docs)
 
 		viewController?.render(with: viewModel)
+	}
+
+	func openFileList() {
+		openFileListClosure?()
+	}
+
+	func openAbout() {
+		openAboutClosure?()
 	}
 
 	// MARK: - Private methods
