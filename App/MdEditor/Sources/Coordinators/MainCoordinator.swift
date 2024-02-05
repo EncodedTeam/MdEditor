@@ -97,8 +97,13 @@ final class MainCoordinator: BaseCoordinator {
 		navigationController.pushViewController(viewController, animated: true)
 	}
 	
-	func runAboutFlow() {
-		let coordinator = AboutCoordinator(navigationController: navigationController)
+	func runAboutScene(url: URL, editable: Bool?) {
+		let coordinator = AboutCoordinator(
+			navigationController: navigationController,
+			fileStorage: FileStorage(),
+			url: url,
+			editable: editable ?? true
+		)
 		addDependency(coordinator)
 		coordinator.start()
 	}

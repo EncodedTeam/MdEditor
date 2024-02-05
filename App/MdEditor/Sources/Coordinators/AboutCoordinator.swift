@@ -13,11 +13,17 @@ final class AboutCoordinator: ICoordinator {
 	// MARK: - Dependencies
 	
 	private let navigationController: UINavigationController
+	private let fileStorage: IFileStorage
+	private let url: URL
+	private let editable: Bool
 	
 	// MARK: - Initialization
 	
-	init(navigationController: UINavigationController) {
+	init(navigationController: UINavigationController, fileStorage: IFileStorage, url: URL, editable: Bool) {
 		self.navigationController = navigationController
+		self.fileStorage = fileStorage
+		self.url = url
+		self.editable = editable
 	}
 	
 	// MARK: - Internal methods
@@ -30,7 +36,7 @@ final class AboutCoordinator: ICoordinator {
 	
 	private func showAboutScene() {
 		let assembler = AboutAssembler()
-		let viewController = assembler.assembly()
+		let viewController = assembler.assembly(fileStorage: fileStorage, url: url, editable: editable)
 		navigationController.pushViewController(viewController, animated: true)
 	}
 }

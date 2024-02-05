@@ -18,15 +18,24 @@ final class AboutInteractor: IAboutInteractor {
 	// MARK: - Dependencies
 	
 	private var presenter: IAboutPresenter?
+	private var fileStorage: IFileStorage?
+	
+	// MARK: - Private properties
+	
+	private var url: URL
 	
 	// MARK: - Initialization
 	
-	init(presenter: IAboutPresenter) {
+	init(presenter: IAboutPresenter, fileStorage: IFileStorage, url: URL) {
 		self.presenter = presenter
+		self.fileStorage = fileStorage
+		self.url = url
 	}
 	
 	// MARK: - Public methods
 	
 	func fetchData() {
+		let fileData = fileStorage?.loadFileBody(url: url) ?? ""
+		presenter?.present(responce: AboutModel.Response(fileData: fileData))
 	}
 }

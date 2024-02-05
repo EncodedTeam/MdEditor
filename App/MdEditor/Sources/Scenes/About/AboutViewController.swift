@@ -24,7 +24,9 @@ final class AboutViewController: UIViewController {
 	
 	// MARK: - Private properties
 	
-	private var viewModel = AboutModel.ViewModel(fileData: "dsgdsgsd")
+	private var viewModel = AboutModel.ViewModel(fileData: "")
+	
+	private var editable: Bool
 	
 	private lazy var scrollView: UIScrollView = makeScrollView()
 	private lazy var labelAbout: UILabel = makeLabel()
@@ -34,7 +36,8 @@ final class AboutViewController: UIViewController {
 	
 	// MARK: - Initialization
 	
-	init() {
+	init(editable: Bool) {
+		self.editable = editable
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -128,6 +131,6 @@ private extension AboutViewController {
 
 extension AboutViewController: IAboutViewController {
 	func render(viewModel: AboutModel.ViewModel) {
-//		self.viewModel = viewModel
+		self.viewModel = viewModel
 	}
 }

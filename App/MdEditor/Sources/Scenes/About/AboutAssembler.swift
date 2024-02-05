@@ -10,10 +10,10 @@ import UIKit
 
 final class AboutAssembler {
 
-	func assembly() -> AboutViewController {
-		let viewController = AboutViewController()
+	func assembly(fileStorage: IFileStorage, url: URL, editable: Bool) -> AboutViewController {
+		let viewController = AboutViewController(editable: editable)
 		let presenter = AboutPresenter(viewController: viewController)
-		let interactor = AboutInteractor(presenter: presenter)
+		let interactor = AboutInteractor(presenter: presenter, fileStorage: fileStorage, url: url)
 		viewController.interactor = interactor
 		
 		return viewController
