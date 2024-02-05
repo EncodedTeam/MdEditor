@@ -116,8 +116,6 @@ private extension StartScreenViewController {
 		navigationController?.navigationBar.prefersLargeTitles = true
 		view.backgroundColor = Theme.backgroundColor
 
-		buttonNew.configuration?.imagePadding = Sizes.Padding.semiNormal
-
 		interactor?.fetchData()
 		
 		buttonOpen.addTarget(self, action: #selector(buttonOpenAction), for: .touchUpInside)
@@ -158,6 +156,7 @@ private extension StartScreenViewController {
 		configuration.title = title
 		configuration.baseForegroundColor = Theme.mainColor
 		configuration.image = UIImage(systemName: systemImageName)
+		configuration.imageReservation = Sizes.M.imageWidth
 		configuration.imagePadding = Sizes.Padding.half
 
 		button.configuration = configuration
@@ -207,7 +206,7 @@ private extension StartScreenViewController {
 				constant: Sizes.Padding.normal
 			),
 			stackViewButttons.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-			stackViewButttons.trailingAnchor.constraint(equalTo: view.centerXAnchor)
+			stackViewButttons.trailingAnchor.constraint(equalTo: view.trailingAnchor)
 		]
 
 		NSLayoutConstraint.activate(newConstraints)

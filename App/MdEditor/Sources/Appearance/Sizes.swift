@@ -25,18 +25,21 @@ enum Sizes {
 		static let width: CGFloat = 200
 		static let height: CGFloat = 50
 		static let widthMultiplier: CGFloat = 0.9
+		static let imageWidth: CGFloat = 50
 	}
 
 	enum M {
 		static let width: CGFloat = 100
 		static let height: CGFloat = 40
 		static let heightMultiplier: CGFloat = 0.8
+		static let imageWidth: CGFloat = 40
 	}
 
 	enum S {
 		static let width: CGFloat = 80
 		static let height: CGFloat = 30
 		static let heightMultiplier: CGFloat = 0.25
+		static let imageWidth: CGFloat = 30
 	}
 
 	enum Cell {
