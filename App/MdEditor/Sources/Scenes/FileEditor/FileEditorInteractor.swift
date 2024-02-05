@@ -8,16 +8,16 @@
 
 import Foundation
 
-protocol IAboutInteractor: AnyObject {
+protocol IFileEditorInteractor: AnyObject {
 	/// Событие на предоставление данных из файла about.
 	func fetchData()
 }
 
-final class AboutInteractor: IAboutInteractor {
+final class FileEditorInteractor: IFileEditorInteractor {
 	
 	// MARK: - Dependencies
 	
-	private var presenter: IAboutPresenter?
+	private var presenter: IFileEditorPresenter?
 	private var fileStorage: IFileStorage?
 	
 	// MARK: - Private properties
@@ -26,7 +26,7 @@ final class AboutInteractor: IAboutInteractor {
 	
 	// MARK: - Initialization
 	
-	init(presenter: IAboutPresenter, fileStorage: IFileStorage, url: URL) {
+	init(presenter: IFileEditorPresenter, fileStorage: IFileStorage, url: URL) {
 		self.presenter = presenter
 		self.fileStorage = fileStorage
 		self.url = url
@@ -37,7 +37,7 @@ final class AboutInteractor: IAboutInteractor {
 	func fetchData() {
 		let title = url.lastPathComponent
 		let fileData = fileStorage?.loadFileBody(url: url) ?? "" // TODO: сделать алерт при ошибке
-		presenter?.present(responce: AboutModel.Response(
+		presenter?.present(responce: FileEditorModel.Response(
 			title: title,
 			fileData: fileData
 		))

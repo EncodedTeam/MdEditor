@@ -1,5 +1,5 @@
 //
-//  AboutCoordinator.swift
+//  FileEditorCoordinator.swift
 //  MdEditor
 //
 //  Created by Aleksey Efimov on 03.02.2024.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class AboutCoordinator: ICoordinator {
+final class FileEditorCoordinator: ICoordinator {
 	
 	// MARK: - Dependencies
 	
@@ -32,13 +32,13 @@ final class AboutCoordinator: ICoordinator {
 	// MARK: - Internal methods
 	
 	func start() {
-		showAboutScene()
+		showFileEdilorScene()
 	}
 	
 	// MARK: - Private methods
 	
-	private func showAboutScene() {
-		let assembler = AboutAssembler()
+	private func showFileEdilorScene() {
+		let assembler = FileEditorAssembler()
 		let viewController = assembler.assembly(fileStorage: fileStorage, url: url, editable: editable)
 		navigationController.pushViewController(viewController, animated: true)
 	}

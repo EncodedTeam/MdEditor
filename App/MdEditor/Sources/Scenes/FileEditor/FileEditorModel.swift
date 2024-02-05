@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum AboutModel {
+enum FileEditorModel {
 
 	struct Response {
 		let title: String

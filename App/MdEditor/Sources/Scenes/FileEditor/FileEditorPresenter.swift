@@ -8,28 +8,28 @@
 
 import Foundation
 
-protocol IAboutPresenter {
-	func present(responce: AboutModel.Response)
+protocol IFileEditorPresenter {
+	func present(responce: FileEditorModel.Response)
 }
 
-final class AboutPresenter: IAboutPresenter {
+final class FileEditorPresenter: IFileEditorPresenter {
 	
 	// MARK: - Dependencies
 	
-	private weak var viewController: IAboutViewController?
+	private weak var viewController: IFileEditorViewController?
 	
 	// MARK: - Initialization
 	
-	init(viewController: IAboutViewController?) {
+	init(viewController: IFileEditorViewController?) {
 		self.viewController = viewController
 	}
 	
 	// MARK: - Public methods
 	
-	func present(responce: AboutModel.Response) {
+	func present(responce: FileEditorModel.Response) {
 		let title = responce.title
 		let fileData = responce.fileData
-		viewController?.render(viewModel: AboutModel.ViewModel(
+		viewController?.render(viewModel: FileEditorModel.ViewModel(
 			title: title,
 			fileData: fileData
 		))

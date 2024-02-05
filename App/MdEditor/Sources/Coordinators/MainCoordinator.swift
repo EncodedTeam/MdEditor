@@ -74,7 +74,7 @@ final class MainCoordinator: BaseCoordinator {
 		coordinator.openAboutSceen = { [weak self] in
 			let bundleUrl = Bundle.main.resourceURL
 			if let fileURL = bundleUrl?.appendingPathComponent("Documents.bundle/about.md") {
-				self?.runOpenDocumentScene(url: fileURL, editable: false)
+				self?.runFileEditorScene(url: fileURL, editable: false)
 			}
 		}
 		coordinator.start()
@@ -92,14 +92,14 @@ final class MainCoordinator: BaseCoordinator {
 			if url.hasDirectoryPath {
 				self?.runFileListScene(urls: [url])
 			} else {
-				self?.runOpenDocumentScene(url: url)
+				self?.runFileEditorScene(url: url)
 			}
 		}
 		coordinator.start()
 	}
 
-	func runOpenDocumentScene(url: URL, editable: Bool = true) {
-		let coordinator = AboutCoordinator(
+	func runFileEditorScene(url: URL, editable: Bool = true) {
+		let coordinator = FileEditorCoordinator(
 			navigationController: navigationController,
 			fileStorage: FileStorage(),
 			url: url,

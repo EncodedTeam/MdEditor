@@ -9,22 +9,22 @@
 import UIKit
 
 /// Протокол экрана About.
-protocol IAboutViewController: AnyObject {
+protocol IFileEditorViewController: AnyObject {
 	
 	/// Метод отрисовки информации на экране.
 	/// - Parameter viewModel: данные для отрисовки на экране.
-	func render(viewModel: AboutModel.ViewModel)
+	func render(viewModel: FileEditorModel.ViewModel)
 }
 
-final class AboutViewController: UIViewController {
+final class FileEditorViewController: UIViewController {
 	
 	// MARK: - Dependencies
 	
-	var interactor: IAboutInteractor?
+	var interactor: IFileEditorInteractor?
 	
 	// MARK: - Private properties
 	
-	private var viewModel = AboutModel.ViewModel(title: "", fileData: "")
+	private var viewModel = FileEditorModel.ViewModel(title: "", fileData: "")
 	private var editable: Bool
 	
 	private lazy var textViewEditor: UITextView = makeTextView()
@@ -58,13 +58,15 @@ final class AboutViewController: UIViewController {
 
 // MARK: - Action
 
-private extension AboutViewController {
+private extension FileEditorViewController {
 	@objc
 	func updateTextView(notification: Notification) {
-		// swiftlint:disable all
 		let userInfo = notification.userInfo
+		// swiftlint:disable force_cast
+		// swiftlint:disable force_unwrapping
 		let keyboardScreenEndFrame = (userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-		// swiftlint:enable all
+		// swiftlint:enable force_cast
+		// swiftlint:enable force_unwrapping
 		let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, to: view.window)
 		
 		if notification.name == UIResponder.keyboardWillHideNotification {
@@ -84,7 +86,7 @@ private extension AboutViewController {
 
 // MARK: - UI setup
 
-private extension AboutViewController {
+private extension FileEditorViewController {
 	
 	func setupUI() {
 		title = viewModel.title == "about.md" ? L10n.About.title : viewModel.title
@@ -126,7 +128,7 @@ private extension AboutViewController {
 
 // MARK: - Layout UI
 
-private extension AboutViewController {
+private extension FileEditorViewController {
 	
 	func layout() {
 		view.addSubview(textViewEditor)
@@ -149,8 +151,8 @@ private extension AboutViewController {
 
 // MARK: - IMainViewController
 
-extension AboutViewController: IAboutViewController {
-	func render(viewModel: AboutModel.ViewModel) {
+extension FileEditorViewController: IFileEditorViewController {
+	func render(viewModel: FileEditorModel.ViewModel) {
 		self.viewModel = viewModel
 	}
 }
