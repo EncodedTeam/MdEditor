@@ -38,7 +38,7 @@
 "About.title" = "О приложении";
 
 // MARK: - StartScreen strings
-"StartScreen.title" = "MDEditor";
+"StartScreen.title" = "MdEditor";
 "StartScreen.newDocumentButtonTitle" = "Создать";
 "StartScreen.openButtonTitle" = "Открыть";
 "StartScreen.AboutButtonTitle" = "О нас";

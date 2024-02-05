@@ -19,20 +19,20 @@ final class StartScreenInteractor: IStartScreenInteractor {
 	// MARK: - Dependencies
 
 	private var presenter: IStartScreenPresenter?
-	private var docsRepository: IDocsRepository
+	private var fileStorage: IFileStorage
 
 	// MARK: - Initialization
 
-	init(presenter: IStartScreenPresenter?, docsRepository: IDocsRepository) {
+	init(presenter: IStartScreenPresenter?, fileStorage: IFileStorage) {
 		self.presenter = presenter
-		self.docsRepository = docsRepository
+		self.fileStorage = fileStorage
 	}
 
 	// MARK: - Public methods
 
 	func fetchData() {
-		let docsFromRepository = docsRepository.getDocs()
-		let documents = docsFromRepository.map { document in
+		let docsFromStorage = fileStorage.getAllDocs()
+		let documents = docsFromStorage.map { document in
 			StartScreenModel.Document(
 				fileName: document.fileName,
 				preview: ImageData(data: document.preview?.pngData())

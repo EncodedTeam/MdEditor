@@ -37,7 +37,7 @@
 "About.title" = "About";
 
 // MARK: - StartScreen strings
-"StartScreen.title" = "MDEditor";
+"StartScreen.title" = "MdEditor";
 "StartScreen.newDocumentButtonTitle" = "New";
 "StartScreen.openButtonTitle" = "Open";
 "StartScreen.AboutButtonTitle" = "About";
