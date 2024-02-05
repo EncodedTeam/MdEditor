@@ -29,7 +29,8 @@ final class MainCoordinator: BaseCoordinator {
 			return
 		}
 #endif
-		runLoginFlow()
+//		runLoginFlow() // TODO: change flow
+		runLoginTestingFlow()
 	}
 
 	func runLoginFlow() {
@@ -54,5 +55,50 @@ final class MainCoordinator: BaseCoordinator {
 		let coordinator = EditorCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 		coordinator.start()
+	}
+
+	// TODO: change flow
+	func runLoginTestingFlow() {
+		let coordinator = LoginCoordinator(navigationController: navigationController)
+		addDependency(coordinator)
+
+		coordinator.finishFlow = { [weak self] in
+			var urls: [URL] = []
+
+			let bundleUrl = Bundle.main.resourceURL
+			if let docsURL = bundleUrl?.appendingPathComponent("Documents.bundle") {
+				urls.append(docsURL)
+			}
+
+			if let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+				urls.append(homeURL)
+			}
+
+			self?.runFileListScene(urls: urls, firstShow: true)
+		}
+
+		coordinator.start()
+	}
+
+	func runFileListScene(urls: [URL], firstShow: Bool = false) {
+		let coordinator = FileListCoordinator(
+			navigationController: navigationController,
+			urls: urls,
+			firstShow: firstShow
+		)
+		addDependency(coordinator)
+		coordinator.selectFile = { [weak self] url in
+			if url.hasDirectoryPath {
+				self?.runFileListScene(urls: [url])
+			} else {
+				self?.runOpenFileScene(url: url)
+			}
+		}
+		coordinator.start()
+	}
+
+	func runOpenFileScene(url: URL) {
+		let viewController = DocumentViewController(url: url)
+		navigationController.pushViewController(viewController, animated: true)
 	}
 }

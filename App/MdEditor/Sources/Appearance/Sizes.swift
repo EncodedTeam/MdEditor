@@ -35,5 +35,24 @@ enum Sizes {
 		static let width: CGFloat = 80
 		static let height: CGFloat = 30
 	}
+
+	enum Cell {
+		enum Padding {
+			static let half: CGFloat = 4
+			static let normal: CGFloat = 8
+			static let double: CGFloat = 16
+		}
+		enum Image {
+			static let width: CGFloat = 30
+			static let height: CGFloat = 30
+		}
+		enum Text {
+			static let ratioWidth: CGFloat = 0.5
+			static let numberOfLines = 3
+		}
+		enum SecondaryText {
+			static let numberOfLines = 3
+		}
+	}
 }
 // swiftlint:enable type_name
