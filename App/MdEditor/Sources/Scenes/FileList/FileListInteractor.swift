@@ -37,20 +37,21 @@ final class FileListInteractor: IFileListInteractor {
 	func fetchStartData(urls: [URL]) {
 		var responseData = [FileListModel.FileViewModel]()
 
-		var files: [File]
+		var directories: [File]
 		
 		do {
-			files = try storage.getFilesFrom(urls)
+			directories = try storage.getDirectoriesFrom(urls)
 		} catch {
 			fatalError("No files")
 		}
 
-		let responseFiles = files.map { file in
+		let responseFiles = directories.map { file in
 			FileListModel.FileViewModel(
 				url: file.url,
 				name: file.name,
 				isDir: file.isDir,
-				description: file.getFormattedAttributes()
+				description: file.getFormattedAttributes(), 
+				isEmpty: file.nestedFiles.isEmpty
 			)
 		}
 
@@ -76,7 +77,8 @@ final class FileListInteractor: IFileListInteractor {
 				url: file.url,
 				name: file.name,
 				isDir: file.isDir,
-				description: file.getFormattedAttributes()
+				description: file.getFormattedAttributes(), 
+				isEmpty: file.nestedFiles.isEmpty
 			)
 		}
 		responseData.append(contentsOf: responseFiles)

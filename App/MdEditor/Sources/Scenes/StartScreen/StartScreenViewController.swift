@@ -150,13 +150,13 @@ private extension StartScreenViewController {
 		return collectionView
 	}
 
-	func makeButton(with title: String, and systemImageName: String) -> UIButton {
+	func makeButton(with title: String, and image: UIImage?) -> UIButton {
 		let button = UIButton()
 
 		var configuration = UIButton.Configuration.plain()
 		configuration.title = title
 		configuration.baseForegroundColor = Theme.mainColor
-		configuration.image = UIImage(systemName: systemImageName)
+		configuration.image = image
 		configuration.imageReservation = Sizes.M.imageWidth
 		configuration.imagePadding = Sizes.Padding.half
 

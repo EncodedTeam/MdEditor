@@ -125,6 +125,7 @@ private extension FileListViewController {
 		tableView.dataSource = self
 		tableView.delegate = self
 		tableView.register(FileItemTableViewCell.self, forCellReuseIdentifier: FileItemTableViewCell.cellIdentifier)
+		tableView.backgroundColor = Theme.backgroundColor
 
 		// Accessibility: Identifier
 		tableView.accessibilityIdentifier = AccessibilityIdentifier.FileList.tableView.description
@@ -137,9 +138,9 @@ private extension FileListViewController {
 private extension FileListViewController {
 	func layout() {
 		let newConstraints = [
-			tableView.topAnchor.constraint(equalTo: view.topAnchor),
-			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+			tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+			tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
 			tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(newConstraints)

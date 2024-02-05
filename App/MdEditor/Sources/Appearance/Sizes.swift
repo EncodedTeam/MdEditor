@@ -53,8 +53,8 @@ enum Sizes {
 			static let double: CGFloat = 16
 		}
 		enum Image {
-			static let width: CGFloat = 30
-			static let height: CGFloat = 30
+			static let width: CGFloat = 40
+			static let height: CGFloat = 40
 		}
 		enum Text {
 			static let ratioWidth: CGFloat = 0.5

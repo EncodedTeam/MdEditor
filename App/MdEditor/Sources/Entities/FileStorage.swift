@@ -8,11 +8,35 @@
 
 import UIKit
 
+enum ResourceBundle {
+	static let documents: String = "Documents.bundle"
+	static let about: String = "about.md"
+}
+
+/// Протокол для файлового хранилища
 protocol IFileStorage {
+	/// Сканирует файл и директории
+	/// - Parameter url: директория для сканирования
+	/// - Returns: массив `File`
 	func scan(url: URL) throws -> [File]
-	func getFilesFrom(_ items: [URL]) throws -> [File]
+	
+	/// Получить все валоженные директории из переданного массива `URL`
+	/// - Parameter items: массив директорий
+	/// - Returns: массив `File`
+	func getDirectoriesFrom(_ items: [URL]) throws -> [File]
+	
+	/// Получить содержимое файла
+	/// - Parameter url: путь к файлу
+	/// - Returns: строка
 	func loadFileBody(url: URL) -> String
+	
+	/// Получить все файлы
+	/// - Returns: массив файлов
 	func getAllDocs() -> [Document]
+
+	/// Получить стандартные директории
+	/// - Returns: массив `URL` директорий
+	func getDefaultUrls() -> [URL]
 }
 
 final class FileStorage: IFileStorage {
@@ -64,7 +88,7 @@ final class FileStorage: IFileStorage {
 		return files
 	}
 
-	func getFilesFrom(_ items: [URL]) throws -> [File] {
+	func getDirectoriesFrom(_ items: [URL]) throws -> [File] {
 		var files: [File] = []
 		for item in items {
 			guard item.hasDirectoryPath else { continue }
@@ -103,8 +127,7 @@ final class FileStorage: IFileStorage {
 	/// Возвращает массив всех документов в приложении
 	func getAllDocs() -> [Document] {
 		var docs: [Document] = []
-		let bundleUrl = Bundle.main.bundleURL
-		let docsURL = bundleUrl.appendingPathComponent("Documents.bundle")
+		let urls = getDefaultUrls()
 
 		func processDirectory(at directoryURL: URL) {
 			do {
@@ -128,9 +151,21 @@ final class FileStorage: IFileStorage {
 			}
 		}
 
-		processDirectory(at: docsURL)
+		urls.forEach(processDirectory)
 
 		return docs
+	}
+	
+	func getDefaultUrls() -> [URL] {
+		var urls: [URL] = []
+		let bundleUrl = Bundle.main.resourceURL
+		if let docsURL = bundleUrl?.appendingPathComponent(ResourceBundle.documents) {
+			urls.append(docsURL)
+		}
+		if let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+			urls.append(homeURL)
+		}
+		return urls
 	}
 }
 
