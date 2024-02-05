@@ -22,7 +22,7 @@ final class RecentDocumentCell: UICollectionViewCell {
 	let label: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .center
-		label.textColor = .white
+		label.textColor = Theme.mainColor
 		return label
 	}()
 
@@ -47,7 +47,7 @@ final class RecentDocumentCell: UICollectionViewCell {
 			imageView.topAnchor.constraint(equalTo: topAnchor),
 			imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
 			imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-			imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Sizes.Padding.double),
+			imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: Sizes.M.heightMultiplier),
 
 			label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Sizes.Padding.half),
 			label.leadingAnchor.constraint(equalTo: leadingAnchor),
