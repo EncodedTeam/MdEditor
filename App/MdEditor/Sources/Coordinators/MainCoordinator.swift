@@ -98,7 +98,6 @@ final class MainCoordinator: BaseCoordinator {
 		coordinator.start()
 	}
 
-	
 	func runOpenDocumentScene(url: URL, editable: Bool = true) {
 		let coordinator = AboutCoordinator(
 			navigationController: navigationController,

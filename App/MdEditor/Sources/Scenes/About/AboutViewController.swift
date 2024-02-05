@@ -89,6 +89,9 @@ private extension AboutViewController {
 	func setupUI() {
 		title = viewModel.title == "about.md" ? L10n.About.title : viewModel.title
 		view.backgroundColor = Theme.backgroundColor
+		navigationItem.setHidesBackButton(false, animated: true)
+		navigationItem.largeTitleDisplayMode = .never
+		navigationController?.navigationBar.tintColor = Theme.mainColor
 		
 		textViewEditor.text = viewModel.fileData
 		

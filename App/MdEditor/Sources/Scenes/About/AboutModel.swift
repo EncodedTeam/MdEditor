@@ -9,9 +9,7 @@
 import Foundation
 
 enum AboutModel {
-	struct Request {
-	}
-	
+
 	struct Response {
 		let title: String
 		let fileData: String
