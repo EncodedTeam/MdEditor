@@ -10,6 +10,8 @@ import Foundation
 
 protocol IFileStorage {
 	func scan(url: URL) throws -> [File]
+	func getFilesFrom(_ items: [URL]) throws -> [File]
+	func loadFileBody(url: URL) -> String
 }
 
 final class FileStorage: IFileStorage {
@@ -61,7 +63,7 @@ final class FileStorage: IFileStorage {
 		return files
 	}
 
-	func getFile(items: [URL]) throws -> [File] {
+	func getFilesFrom(_ items: [URL]) throws -> [File] {
 		var files: [File] = []
 		for item in items {
 			guard item.hasDirectoryPath else { continue }

@@ -12,12 +12,14 @@ final class MainCoordinator: BaseCoordinator {
 
 	private let navigationController: UINavigationController
 	private let taskManager: ITaskManager
+	private let storage: IFileStorage
 
 	// MARK: - Initialization
 	
-	init(navigationController: UINavigationController, taskManager: ITaskManager) {
+	init(navigationController: UINavigationController, taskManager: ITaskManager, storage: IFileStorage) {
 		self.navigationController = navigationController
 		self.taskManager = taskManager
+		self.storage = storage
 	}
 
 	// MARK: - Internal methods
@@ -29,8 +31,7 @@ final class MainCoordinator: BaseCoordinator {
 			return
 		}
 #endif
-//		runLoginFlow() // TODO: change flow
-		runLoginTestingFlow()
+		runLoginFlow()
 	}
 
 	func runLoginFlow() {
@@ -54,15 +55,8 @@ final class MainCoordinator: BaseCoordinator {
 	func runEditorFlow() {
 		let coordinator = EditorCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
-		coordinator.start()
-	}
 
-	// TODO: change flow
-	func runLoginTestingFlow() {
-		let coordinator = LoginCoordinator(navigationController: navigationController)
-		addDependency(coordinator)
-
-		coordinator.finishFlow = { [weak self] in
+		coordinator.openFileListSceen = { [weak self] in
 			var urls: [URL] = []
 
 			let bundleUrl = Bundle.main.resourceURL
@@ -84,20 +78,21 @@ final class MainCoordinator: BaseCoordinator {
 		let coordinator = FileListCoordinator(
 			navigationController: navigationController,
 			urls: urls,
-			firstShow: firstShow
+			firstShow: firstShow,
+			storage: storage
 		)
 		addDependency(coordinator)
 		coordinator.selectFile = { [weak self] url in
 			if url.hasDirectoryPath {
 				self?.runFileListScene(urls: [url])
 			} else {
-				self?.runOpenFileScene(url: url)
+				self?.runOpenDocumentScene(url: url)
 			}
 		}
 		coordinator.start()
 	}
 
-	func runOpenFileScene(url: URL) {
+	func runOpenDocumentScene(url: URL) {
 		let viewController = DocumentViewController(url: url)
 		navigationController.pushViewController(viewController, animated: true)
 	}

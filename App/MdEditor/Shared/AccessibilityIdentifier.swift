@@ -63,7 +63,7 @@ enum AccessibilityIdentifier {
 		}
 	}
 
-	enum OpenFile: CustomStringConvertible {
+	enum FileList: CustomStringConvertible {
 		case tableView
 		case section(index: Int)
 		case cell(section: Int, row: Int)
@@ -71,11 +71,11 @@ enum AccessibilityIdentifier {
 		var description: String {
 			switch self {
 			case .tableView:
-				return "OpenFileViewController.tableView"
+				return "FileListViewController.tableView"
 			case .section(let index):
-				return "OpenFileViewController.section-\(index)"
+				return "FileListViewController.section-\(index)"
 			case .cell(let section, let row):
-				return "OpenFileViewController.cell-\(section)-\(row)"
+				return "FileListViewController.cell-\(section)-\(row)"
 			}
 		}
 	}

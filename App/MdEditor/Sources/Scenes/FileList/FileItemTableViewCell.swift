@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FileItemTableViewCell: UITableViewCell {
+final class FileItemTableViewCell: UITableViewCell {
 	static let cellIdentifier = "FileItemCell"
 
 	// MARK: - Private properties

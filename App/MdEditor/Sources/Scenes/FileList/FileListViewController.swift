@@ -23,7 +23,7 @@ final class FileListViewController: UIViewController {
 	private lazy var tableView: UITableView = makeTableView()
 	private var viewModel = FileListModel.ViewModel(data: [])
 	private let urls: [URL]
-	private var firstShow: Bool
+	private let firstShow: Bool
 
 	// MARK: - Initiazlization
 	init(urls: [URL], firstShow: Bool) {
@@ -88,7 +88,7 @@ extension FileListViewController: UITableViewDataSource {
 		cell.selectionStyle = .none
 
 		// Accessibility: Identifier
-		cell.accessibilityIdentifier = AccessibilityIdentifier.OpenFile.cell(
+		cell.accessibilityIdentifier = AccessibilityIdentifier.FileList.cell(
 			section: indexPath.section,
 			row: indexPath.row
 		).description
@@ -127,7 +127,7 @@ private extension FileListViewController {
 		tableView.register(FileItemTableViewCell.self, forCellReuseIdentifier: FileItemTableViewCell.cellIdentifier)
 
 		// Accessibility: Identifier
-		tableView.accessibilityIdentifier = AccessibilityIdentifier.OpenFile.tableView.description
+		tableView.accessibilityIdentifier = AccessibilityIdentifier.FileList.tableView.description
 
 		view.addSubview(tableView)
 	}
