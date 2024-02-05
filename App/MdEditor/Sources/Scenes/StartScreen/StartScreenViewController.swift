@@ -104,6 +104,7 @@ private extension StartScreenViewController {
 		title = L10n.StartScreen.title
 		navigationItem.setHidesBackButton(true, animated: true)
 		navigationController?.navigationBar.prefersLargeTitles = true
+		navigationItem.backButtonDisplayMode = .minimal
 		view.backgroundColor = Theme.backgroundColor
 
 		interactor?.fetchData()

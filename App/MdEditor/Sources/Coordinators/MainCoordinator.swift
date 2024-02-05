@@ -70,7 +70,13 @@ final class MainCoordinator: BaseCoordinator {
 
 			self?.runFileListScene(urls: urls, firstShow: true)
 		}
-
+		
+		coordinator.openAboutSceen = { [weak self] in
+			let bundleUrl = Bundle.main.resourceURL
+			if let fileURL = bundleUrl?.appendingPathComponent("Documents.bundle/about.md") {
+				self?.runFileEditorScene(url: fileURL, editable: false)
+			}
+		}
 		coordinator.start()
 	}
 
@@ -86,14 +92,20 @@ final class MainCoordinator: BaseCoordinator {
 			if url.hasDirectoryPath {
 				self?.runFileListScene(urls: [url])
 			} else {
-				self?.runOpenDocumentScene(url: url)
+				self?.runFileEditorScene(url: url)
 			}
 		}
 		coordinator.start()
 	}
 
-	func runOpenDocumentScene(url: URL) {
-		let viewController = DocumentViewController(url: url)
-		navigationController.pushViewController(viewController, animated: true)
+	func runFileEditorScene(url: URL, editable: Bool = true) {
+		let coordinator = FileEditorCoordinator(
+			navigationController: navigationController,
+			fileStorage: FileStorage(),
+			url: url,
+			editable: editable
+		)
+		addDependency(coordinator)
+		coordinator.start()
 	}
 }
