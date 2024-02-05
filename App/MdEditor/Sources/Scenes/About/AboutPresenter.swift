@@ -27,7 +27,11 @@ final class AboutPresenter: IAboutPresenter {
 	// MARK: - Public methods
 	
 	func present(responce: AboutModel.Response) {
+		let title = responce.title
 		let fileData = responce.fileData
-		viewController?.render(viewModel: AboutModel.ViewModel(fileData: fileData))
+		viewController?.render(viewModel: AboutModel.ViewModel(
+			title: title,
+			fileData: fileData
+		))
 	}
 }

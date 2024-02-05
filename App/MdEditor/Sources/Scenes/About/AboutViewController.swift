@@ -24,13 +24,10 @@ final class AboutViewController: UIViewController {
 	
 	// MARK: - Private properties
 	
-	private var viewModel = AboutModel.ViewModel(fileData: "")
-	
+	private var viewModel = AboutModel.ViewModel(title: "", fileData: "")
 	private var editable: Bool
 	
-	private lazy var scrollView: UIScrollView = makeScrollView()
-	private lazy var labelAbout: UILabel = makeLabel()
-	private lazy var contentView: UIView = makeContentView()
+	private lazy var textViewEditor: UITextView = makeTextView()
 
 	private var constraints = [NSLayoutConstraint]()
 	
@@ -49,8 +46,8 @@ final class AboutViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		setupUI()
 		interactor?.fetchData()
+		setupUI()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -59,36 +56,67 @@ final class AboutViewController: UIViewController {
 	}
 }
 
+// MARK: - Action
+
+private extension AboutViewController {
+	@objc
+	func updateTextView(notification: Notification) {
+		// swiftlint:disable all
+		let userInfo = notification.userInfo
+		let keyboardScreenEndFrame = (userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+		// swiftlint:enable all
+		let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, to: view.window)
+		
+		if notification.name == UIResponder.keyboardWillHideNotification {
+			textViewEditor.contentInset = UIEdgeInsets.zero
+		} else {
+			textViewEditor.contentInset = UIEdgeInsets(
+				top: 0,
+				left: 0,
+				bottom: keyboardViewEndFrame.height,
+				right: 0
+			)
+			textViewEditor.scrollIndicatorInsets = textViewEditor.contentInset
+		}
+		textViewEditor.scrollRangeToVisible(textViewEditor.selectedRange)
+	}
+}
+
 // MARK: - UI setup
 
 private extension AboutViewController {
 	
 	func setupUI() {
+		title = viewModel.title == "about.md" ? L10n.About.title : viewModel.title
 		view.backgroundColor = Theme.backgroundColor
-		title = L10n.About.title
-		navigationItem.setHidesBackButton(true, animated: true)
-		navigationController?.navigationBar.prefersLargeTitles = true
+		
+		textViewEditor.text = viewModel.fileData
+		
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(updateTextView),
+			name: UIResponder.keyboardDidHideNotification,
+			object: nil
+		)
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(updateTextView),
+			name: UIResponder.keyboardWillShowNotification,
+			object: nil
+		)
 	}
 	
-	func makeLabel() -> UILabel {
-		let label = UILabel()
-		label.text = viewModel.fileData
-		label.numberOfLines = 0
-		label.font = UIFont.systemFont(ofSize: Sizes.FontSizes.editorText)
-		label.translatesAutoresizingMaskIntoConstraints = false
-		return label
-	}
-	
-	func makeScrollView() -> UIScrollView {
-		let scrollView = UIScrollView()
-		scrollView.translatesAutoresizingMaskIntoConstraints = false
-		return scrollView
-	}
-	
-	func makeContentView() -> UIView {
-		let contentView = UIView()
-		contentView.translatesAutoresizingMaskIntoConstraints = false
-		return contentView
+	func makeTextView() -> UITextView {
+		let textView = UITextView(frame: .zero, textContainer: nil)
+		
+		textView.backgroundColor = Theme.backgroundColor
+		textView.isScrollEnabled = true
+		textView.font = UIFont.systemFont(ofSize: Sizes.FontSizes.editorText)
+		textView.keyboardDismissMode = .onDrag
+		textView.isEditable = editable
+		textView.translatesAutoresizingMaskIntoConstraints = false
+		
+		return textView
 	}
 }
 
@@ -97,28 +125,16 @@ private extension AboutViewController {
 private extension AboutViewController {
 	
 	func layout() {
-		view.addSubview(scrollView)
-		scrollView.addSubview(contentView)
-		contentView.addSubview(labelAbout)
+		view.addSubview(textViewEditor)
 		
 		NSLayoutConstraint.deactivate(constraints)
 		
+		let safeArea = view.safeAreaLayoutGuide
 		let newConstraints = [
-			scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-			scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-			scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-			scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-			
-			contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-			contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-			contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-			contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-			contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
-			
-			labelAbout.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Sizes.Padding.normal),
-			labelAbout.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Sizes.Padding.normal),
-			labelAbout.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Sizes.Padding.normal),
-			labelAbout.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Sizes.Padding.normal)
+			textViewEditor.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: Sizes.Padding.half),
+			textViewEditor.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Sizes.Padding.half),
+			textViewEditor.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Sizes.Padding.half),
+			textViewEditor.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: Sizes.Padding.normal)
 		]
 		
 		NSLayoutConstraint.activate(newConstraints)

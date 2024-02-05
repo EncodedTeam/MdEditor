@@ -34,6 +34,9 @@
 "TodoList.TaskPriority.medium" = "!!";
 "TodoList.TaskPriority.low" = "!";
 
+// MARK: - TodoList strings
+"About.title" = "О приложении";
+
 // MARK: - StartScreen strings
 "StartScreen.title" = "MDEditor";
 "StartScreen.newDocumentButtonTitle" = "Создать";

@@ -15,7 +15,7 @@ enum Sizes {
 	static let topInset: CGFloat = 180.0
 
 	enum FontSizes {
-		static let editorText: CGFloat = 20
+		static let editorText: CGFloat = 18
 	}
 	
 	enum Padding {

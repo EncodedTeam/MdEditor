@@ -13,10 +13,12 @@ enum AboutModel {
 	}
 	
 	struct Response {
+		let title: String
 		let fileData: String
 	}
 	
 	struct ViewModel {
+		let title: String
 		let fileData: String
 	}
 }

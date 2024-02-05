@@ -14,6 +14,9 @@ final class AboutCoordinator: ICoordinator {
 	
 	private let navigationController: UINavigationController
 	private let fileStorage: IFileStorage
+	
+	// MARK: - Private properties
+	
 	private let url: URL
 	private let editable: Bool
 	

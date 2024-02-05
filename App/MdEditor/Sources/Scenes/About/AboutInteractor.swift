@@ -35,7 +35,11 @@ final class AboutInteractor: IAboutInteractor {
 	// MARK: - Public methods
 	
 	func fetchData() {
-		let fileData = fileStorage?.loadFileBody(url: url) ?? ""
-		presenter?.present(responce: AboutModel.Response(fileData: fileData))
+		let title = url.lastPathComponent
+		let fileData = fileStorage?.loadFileBody(url: url) ?? "" // TODO: сделать алерт при ошибке
+		presenter?.present(responce: AboutModel.Response(
+			title: title,
+			fileData: fileData
+		))
 	}
 }
