@@ -116,6 +116,8 @@ private extension StartScreenViewController {
 		navigationController?.navigationBar.prefersLargeTitles = true
 		view.backgroundColor = Theme.backgroundColor
 
+		buttonNew.configuration?.imagePadding = Sizes.Padding.semiNormal
+
 		interactor?.fetchData()
 		
 		buttonOpen.addTarget(self, action: #selector(buttonOpenAction), for: .touchUpInside)
@@ -123,6 +125,7 @@ private extension StartScreenViewController {
 
 		collectionViewDocs.dataSource = self
 		collectionViewDocs.delegate = self
+
 		view.addSubview(collectionViewDocs)
 		view.addSubview(stackViewButttons)
 	}
