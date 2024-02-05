@@ -36,16 +36,14 @@ final class FileItemTableViewCell: UITableViewCell {
 
 	// MARK: - Public methods
 	func configure(with file: FileListModel.FileViewModel) {
-		var imageName = Theme.ImageIcon.unknown
 		tintColor = .darkGray
 		if file.isDir {
-			imageName = Theme.ImageIcon.directory
+			imageViewIcon.image = Theme.ImageIcon.directory
 			tintColor = Theme.tintColor
 		} else {
-			imageName = Theme.ImageIcon.file
+			imageViewIcon.image = Theme.ImageIcon.file
 			tintColor = Theme.accentColor
 		}
-		imageViewIcon.image = UIImage(systemName: imageName)
 		labelText.text = file.name
 		labelSecondaryText.text = file.description
 	}
@@ -68,7 +66,7 @@ private extension FileItemTableViewCell {
 		label.numberOfLines = Sizes.Cell.Text.numberOfLines
 
 		// Accessibility: Font
-		label.font = UIFont.preferredFont(forTextStyle: .caption1)
+		label.font = UIFont.preferredFont(forTextStyle: .body)
 		label.adjustsFontForContentSizeCategory = true
 		
 		return label
@@ -107,6 +105,7 @@ private extension FileItemTableViewCell {
 			labelText.topAnchor.constraint(equalTo: topAnchor, constant: Sizes.Cell.Padding.normal),
 			labelText.leadingAnchor.constraint(equalTo: imageViewIcon.trailingAnchor, constant: Sizes.Cell.Padding.normal),
 			labelText.widthAnchor.constraint(equalTo: widthAnchor, multiplier: Sizes.Cell.Text.ratioWidth),
+			labelText.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Sizes.Cell.Padding.normal),
 
 			labelSecondaryText.topAnchor.constraint(equalTo: labelText.topAnchor),
 			labelSecondaryText.leadingAnchor.constraint(equalTo: labelText.trailingAnchor, constant: Sizes.Cell.Padding.half),
