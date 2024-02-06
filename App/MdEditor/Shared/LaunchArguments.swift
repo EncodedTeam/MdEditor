@@ -10,11 +10,14 @@ import Foundation
 
 enum LaunchArguments {
 	static let isUItesting = "-isUITesting"
-	static let appLanguage = ["-AppleLanguages", "(en)"]
+	static let skipLogin = "-skipLogin"
 }
 
-extension ProcessInfo {
-	var isUITesting: Bool {
-		return arguments.contains(LaunchArguments.isUItesting)
+extension CommandLine {
+	static var isUITesting: Bool {
+		return CommandLine.arguments.contains(LaunchArguments.isUItesting)
+	}
+	static var skipLogin: Bool {
+		return CommandLine.arguments.contains(LaunchArguments.skipLogin)
 	}
 }

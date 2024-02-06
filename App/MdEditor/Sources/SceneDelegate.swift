@@ -18,7 +18,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		guard let scene = (scene as? UIWindowScene) else { return }
 		let window = UIWindow(windowScene: scene)
 
-		appCoordinator = AppCoordinator(window: window, taskManager: buildTaskManager())
+		appCoordinator = AppCoordinator(
+			window: window,
+			taskManager: buildTaskManager(),
+			storage: buildStorage()
+		)
 		appCoordinator.start()
 
 		self.window = window
@@ -29,14 +33,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func buildTaskManager() -> ITaskManager {
 		let taskManager = TaskManager()
 		var repository: ITaskRepository
-		if ProcessInfo.processInfo.isUITesting {
+		if CommandLine.isUITesting {
 			repository = TaskRepositoryStub()
 		} else {
-			repository = TaskRepositoryStub() /// В реальной ситуации данные подгружаются из хранилища или сети
+			repository = TaskRepositoryStub() // В реальной ситуации данные подгружаются из хранилища или сети
 		}
 		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
 		orderedTaskManager.addTasks(tasks: repository.getTasks())
 
 		return orderedTaskManager
+	}
+
+	private func buildStorage() -> IFileStorage {
+		FileStorage()
 	}
 }

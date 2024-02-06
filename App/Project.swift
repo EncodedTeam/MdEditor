@@ -35,14 +35,14 @@ let project = Project(
 	name: ProjectSettings.projectName,
 	organizationName: ProjectSettings.organizationName,
 	options: .options(
-		defaultKnownRegions: ["Base", "ru"],
-		developmentRegion: "Base",
+		defaultKnownRegions: ["Base", "en", "ru"],
+		developmentRegion: "en",
 		disableBundleAccessors: true,
 		disableSynthesizedResourceAccessors: false
 	),
 	packages: [
 		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
-		.local(path: .relativeToManifest("../Packages/DataStructuresPackage"))
+		.local(path: .relativeToManifest("../Packages/DataStructuresPackage")),
 	],
 	targets: [
 		Target(
@@ -109,30 +109,14 @@ let project = Project(
 			shared: true,
 			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)Tests"]),
 			testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
-			runAction: .runAction(
-				executable: "\(ProjectSettings.projectName)Tests",
-				arguments: .init(
-					launchArguments: [
-						.init(name: "-AppleLanguages", isEnabled: true),
-						.init(name: "(en)", isEnabled: true)
-					]
-				)
-			)
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)Tests")
 		),
 		Scheme(
 			name: "\(ProjectSettings.projectName)UITests",
 			shared: true,
 			buildAction: .buildAction(targets: ["\(ProjectSettings.projectName)UITests"]),
 			testAction: .targets(["\(ProjectSettings.projectName)UITests"]),
-			runAction: .runAction(
-				executable: "\(ProjectSettings.projectName)UITests",
-				arguments: .init(
-					launchArguments: [
-						.init(name: "-AppleLanguages", isEnabled: true),
-						.init(name: "(en)", isEnabled: true)
-					]
-				)
-			)
+			runAction: .runAction(executable: "\(ProjectSettings.projectName)UITests")
 		)
 	]
 )
