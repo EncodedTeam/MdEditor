@@ -10,12 +10,8 @@ import Foundation
 
 protocol IFileListInteractor {
 	/// Событие на предоставление информации для списка файлов.
-	/// - Parameter url: Адрес конректного файла
-	func fetchData(url: URL)
-	
-	/// Событие на предоставление стартовых директорий
-	/// - Parameter urls: Массив адресов стартовых директорий
-	func fetchStartData(urls: [URL])
+	/// - Parameter urls: Адреса файлов
+	func fetchData(urls: [URL])
 
 	/// Событие, что файл бы выбран
 	/// - Parameter request: Запрос, содержащий информацию о выбранном файле.
@@ -26,6 +22,7 @@ final class FileListInteractor: IFileListInteractor {
 	// MARK: - Dependencies
 	private var presenter: IFileListPresenter
 	private var storage: IFileStorage
+	let storageService = FileStorageService()
 
 	// MARK: - Initialization
 	init(presenter: IFileListPresenter, storage: IFileStorage) {
@@ -34,57 +31,40 @@ final class FileListInteractor: IFileListInteractor {
 	}
 
 	// MARK: - Public methods
-	func fetchStartData(urls: [URL]) {
-		var responseData = [FileListModel.FileViewModel]()
-
-		var directories: [File]
-		
-		do {
-			directories = try storage.getDirectoriesFrom(urls)
-		} catch {
-			fatalError("No files")
+	func fetchData(urls: [URL]) {
+		Task {
+			let result = await storageService.fetchData(urls: urls)
+			switch result {
+			case .success(let files):
+				await updateUI(with: files)
+			case .failure(let error):
+				fatalError(error.localizedDescription)
+			}
 		}
 
-		let responseFiles = directories.map { file in
-			FileListModel.FileViewModel(
-				url: file.url,
-				name: file.name,
-				isDir: file.isDir,
-				description: file.getFormattedAttributes(), 
-				isEmpty: file.nestedFiles.isEmpty
-			)
-		}
-
-		responseData.append(contentsOf: responseFiles)
-
-		let response = FileListModel.Response(data: responseData)
-		presenter.present(response: response)
+//		Task {
+//			let result = await storageService.fetchRecent(count: 5, with: urls)
+//			switch result {
+//			case .success(let files):
+//				await updateUI(with: files)
+//			case .failure(let error):
+//				fatalError(error.localizedDescription)
+//			}
+//		}
 	}
 
-	func fetchData(url: URL) {
-		var responseData = [FileListModel.FileViewModel]()
-
-		var files: [File]
-		let storage = FileStorage()
-		do {
-			files = try storage.scan(url: url)
-		} catch {
-			fatalError("No files")
-		}
-
+	@MainActor
+	func updateUI(with files: [FileSystemEntity]) {
 		let responseFiles = files.map { file in
 			FileListModel.FileViewModel(
 				url: file.url,
 				name: file.name,
 				isDir: file.isDir,
-				description: file.getFormattedAttributes(), 
-				isEmpty: file.nestedFiles.isEmpty
+				description: file.getFormattedAttributes()
 			)
 		}
-		responseData.append(contentsOf: responseFiles)
-
-		let response = FileListModel.Response(data: responseData)
-		presenter.present(response: response)
+		let response = FileListModel.Response(data: responseFiles)
+		self.presenter.present(response: response)
 	}
 
 	func didFileSelected(request: FileListModel.Request) {

@@ -23,12 +23,10 @@ final class FileListViewController: UIViewController {
 	private lazy var tableView: UITableView = makeTableView()
 	private var viewModel = FileListModel.ViewModel(data: [])
 	private let urls: [URL]
-	private let firstShow: Bool
 
 	// MARK: - Initiazlization
-	init(urls: [URL], firstShow: Bool) {
+	init(urls: [URL]) {
 		self.urls = urls
-		self.firstShow = firstShow
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -44,11 +42,7 @@ final class FileListViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		if firstShow {
-			interactor?.fetchStartData(urls: urls)
-		} else if let url = urls.first {
-			interactor?.fetchData(url: url)
-		}
+		interactor?.fetchData(urls: urls)
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -112,11 +106,7 @@ private extension FileListViewController {
 	/// Настройка UI экрана
 	func setupUI() {
 		view.backgroundColor = Theme.backgroundColor
-		if firstShow {
-			title = L10n.FileList.title
-		} else {
-			title = urls.first?.lastPathComponent ?? L10n.FileList.title
-		}
+		title = urls.first?.lastPathComponent ?? L10n.FileList.title
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.backButtonDisplayMode = .minimal
 		navigationItem.largeTitleDisplayMode = .never

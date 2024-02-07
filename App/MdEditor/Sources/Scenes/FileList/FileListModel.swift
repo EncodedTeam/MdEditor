@@ -14,7 +14,6 @@ enum FileListModel {
 		let name: String
 		let isDir: Bool
 		let description: String
-		let isEmpty: Bool
 	}
 
 	struct Request {

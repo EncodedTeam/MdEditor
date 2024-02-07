@@ -57,7 +57,7 @@ final class MainCoordinator: BaseCoordinator {
 		addDependency(coordinator)
 
 		coordinator.openFileListScene = { [weak self] in
-			var urls: [URL] = self?.storage.getDefaultUrls() ?? []
+			let urls: [URL] = self?.storage.getDefaultUrls() ?? []
 			self?.runFileListScene(urls: urls, firstShow: true)
 		}
 		
@@ -76,7 +76,6 @@ final class MainCoordinator: BaseCoordinator {
 		let coordinator = FileListCoordinator(
 			navigationController: navigationController,
 			urls: urls,
-			firstShow: firstShow,
 			storage: storage
 		)
 		addDependency(coordinator)
