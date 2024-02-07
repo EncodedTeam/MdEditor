@@ -8,11 +8,6 @@
 
 import UIKit
 
-enum ResourceBundle {
-	static let documents: String = "Documents.bundle"
-	static let about: String = "about.md"
-}
-
 /// Протокол для файлового хранилища
 protocol IFileStorage {
 	/// Сканирует файл и директории
@@ -159,7 +154,7 @@ final class FileStorage: IFileStorage {
 	func getDefaultUrls() -> [URL] {
 		var urls: [URL] = []
 		let bundleUrl = Bundle.main.resourceURL
-		if let docsURL = bundleUrl?.appendingPathComponent(ResourceBundle.documents) {
+		if let docsURL = bundleUrl?.appendingPathComponent(ResourcesBundle.documents) {
 			urls.append(docsURL)
 		}
 		if let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {

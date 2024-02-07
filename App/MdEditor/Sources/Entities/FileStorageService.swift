@@ -8,6 +8,23 @@
 
 import Foundation
 
+enum ResourcesBundle {
+	static let documents: String = "Documents.bundle"
+	static let about: String = "about.md"
+
+	static var defaultsUrls: [URL] {
+		var urls: [URL] = []
+		let bundleUrl = Bundle.main.resourceURL
+		if let docsURL = bundleUrl?.appendingPathComponent(documents) {
+			urls.append(docsURL)
+		}
+		if let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+			urls.append(homeURL)
+		}
+		return urls
+	}
+}
+
 enum StorageError: Error {
 	case errorURL
 	case errorFetching

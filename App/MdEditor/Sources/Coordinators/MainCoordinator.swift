@@ -57,22 +57,21 @@ final class MainCoordinator: BaseCoordinator {
 		addDependency(coordinator)
 
 		coordinator.openFileListScene = { [weak self] in
-			let urls: [URL] = self?.storage.getDefaultUrls() ?? []
-			self?.runFileListScene(urls: urls, firstShow: true)
+			self?.runFileListScene(urls: ResourcesBundle.defaultsUrls)
 		}
 		
 		coordinator.openAboutScene = { [weak self] in
 			let bundleUrl = Bundle.main.resourceURL
 			if let fileURL = bundleUrl?
-				.appendingPathComponent(ResourceBundle.documents)
-				.appendingPathComponent(ResourceBundle.about) {
+				.appendingPathComponent(ResourcesBundle.documents)
+				.appendingPathComponent(ResourcesBundle.about) {
 				self?.runFileEditorScene(url: fileURL, editable: false)
 			}
 		}
 		coordinator.start()
 	}
 
-	func runFileListScene(urls: [URL], firstShow: Bool = false) {
+	func runFileListScene(urls: [URL]) {
 		let coordinator = FileListCoordinator(
 			navigationController: navigationController,
 			urls: urls,
