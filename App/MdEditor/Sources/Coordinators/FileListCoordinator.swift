@@ -14,13 +14,13 @@ final class FileListCoordinator: BaseCoordinator {
 
 	// MARK: - Private properties
 	private let urls: [URL]
-	private let storage: IFileStorage
+	private let storage: IStorageService
 
 	// MARK: - Public properties
 	var selectFile: ((URL) -> Void)?
 
 	// MARK: - Initialization
-	init(navigationController: UINavigationController, urls: [URL], storage: IFileStorage) {
+	init(navigationController: UINavigationController, urls: [URL], storage: IStorageService) {
 		self.navigationController = navigationController
 		self.urls = urls
 		self.storage = storage

@@ -6,7 +6,7 @@
 //  Copyright © 2024 EncodedTeam. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct FileSystemEntity {
 	var url: URL
@@ -19,6 +19,7 @@ struct FileSystemEntity {
 	var ext: String { url.pathExtension }
 	var parent: String? { url.pathComponents.dropLast().last }
 	var path: String { url.relativePath }
+	var preview: UIImage { UIImage(randomColorWithSize: CGSize(width: 150, height: 250)) }
 
 	func getFormattedSize(with size: UInt64) -> String {
 		var convertedValue = Double(size)
@@ -41,16 +42,6 @@ struct FileSystemEntity {
 		dateFormatter.dateFormat = "dd.MM.yy HH:mm"
 
 		return "\(dateFormatter.string(from: modificationDate))\n\(formattedSize)"
-	}
-
-	func loadFileBody() -> String {
-		var text = ""
-		do {
-			text = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
-		} catch {
-			text = "Failed to read text from \(name)"
-		}
-		return text
 	}
 }
 

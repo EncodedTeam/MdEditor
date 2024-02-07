@@ -35,6 +35,7 @@ enum StorageError: Error {
 protocol IStorageService {
 	func fetchData(urls: [URL]) async -> Result<[FileSystemEntity], StorageError>
 	func fetchRecent(count: Int?, with urls: [URL]) async -> Result<[FileSystemEntity], StorageError>
+	func loadFileBody(url: URL) async -> String
 }
 
 actor FileStorageService: IStorageService {
@@ -66,6 +67,17 @@ actor FileStorageService: IStorageService {
 		} catch {
 			return .failure(.errorFetching)
 		}
+	}
+
+	func loadFileBody(url: URL) -> String {
+		var text = ""
+		do {
+			text = try String(contentsOf: url, encoding: String.Encoding.utf8)
+		} catch {
+			text = "Failed to read text from \(url.lastPathComponent)"
+		}
+
+		return text
 	}
 }
 

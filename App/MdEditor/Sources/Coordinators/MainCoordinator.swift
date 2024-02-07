@@ -12,11 +12,11 @@ final class MainCoordinator: BaseCoordinator {
 
 	private let navigationController: UINavigationController
 	private let taskManager: ITaskManager
-	private let storage: IFileStorage
+	private let storage: IStorageService
 
 	// MARK: - Initialization
 	
-	init(navigationController: UINavigationController, taskManager: ITaskManager, storage: IFileStorage) {
+	init(navigationController: UINavigationController, taskManager: ITaskManager, storage: IStorageService) {
 		self.navigationController = navigationController
 		self.taskManager = taskManager
 		self.storage = storage
@@ -91,7 +91,7 @@ final class MainCoordinator: BaseCoordinator {
 	func runFileEditorScene(url: URL, editable: Bool = true) {
 		let coordinator = FileEditorCoordinator(
 			navigationController: navigationController,
-			fileStorage: FileStorage(),
+			fileStorage: storage,
 			url: url,
 			editable: editable
 		)

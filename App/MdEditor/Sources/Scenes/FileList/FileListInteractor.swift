@@ -21,11 +21,10 @@ protocol IFileListInteractor {
 final class FileListInteractor: IFileListInteractor {
 	// MARK: - Dependencies
 	private var presenter: IFileListPresenter
-	private var storage: IFileStorage
-	let storageService = FileStorageService()
+	private var storage: IStorageService
 
 	// MARK: - Initialization
-	init(presenter: IFileListPresenter, storage: IFileStorage) {
+	init(presenter: IFileListPresenter, storage: IStorageService) {
 		self.presenter = presenter
 		self.storage = storage
 	}
@@ -33,7 +32,7 @@ final class FileListInteractor: IFileListInteractor {
 	// MARK: - Public methods
 	func fetchData(urls: [URL]) {
 		Task {
-			let result = await storageService.fetchData(urls: urls)
+			let result = await storage.fetchData(urls: urls)
 			switch result {
 			case .success(let files):
 				await updateUI(with: files)
@@ -64,7 +63,7 @@ final class FileListInteractor: IFileListInteractor {
 			)
 		}
 		let response = FileListModel.Response(data: responseFiles)
-		self.presenter.present(response: response)
+		presenter.present(response: response)
 	}
 
 	func didFileSelected(request: FileListModel.Request) {

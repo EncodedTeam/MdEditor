@@ -13,7 +13,7 @@ final class FileListAssembler {
 	/// - Returns: `FileListViewController`
 	func assembly(
 		urls: [URL],
-		storage: IFileStorage,
+		storage: IStorageService,
 		openFileClosure: FileListClosure?
 	) -> FileListViewController {
 		let viewController = FileListViewController(urls: urls)

@@ -66,6 +66,7 @@ final class StartScreenViewController: UIViewController {
 extension StartScreenViewController: IStartScreenViewController {
 	func render(with viewModel: StartScreenModel.ViewModel) {
 		self.viewModel = viewModel
+		collectionViewDocs.reloadData()
 	}
 }
 
@@ -99,7 +100,7 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		layout collectionViewLayout: UICollectionViewLayout,
 		sizeForItemAt indexPath: IndexPath
 	) -> CGSize {
-		let width = collectionView.frame.width / 4
+		let width = collectionView.frame.width / 3
 		let height = collectionView.frame.height
 
 		return CGSize(width: width, height: height)

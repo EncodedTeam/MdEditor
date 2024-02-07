@@ -89,7 +89,7 @@ private extension FileEditorViewController {
 private extension FileEditorViewController {
 	
 	func setupUI() {
-		title = viewModel.title == "about.md" ? L10n.About.title : viewModel.title
+		title = viewModel.title == ResourcesBundle.about ? L10n.About.title : viewModel.title
 		view.backgroundColor = Theme.backgroundColor
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.largeTitleDisplayMode = .never
@@ -154,5 +154,9 @@ private extension FileEditorViewController {
 extension FileEditorViewController: IFileEditorViewController {
 	func render(viewModel: FileEditorModel.ViewModel) {
 		self.viewModel = viewModel
+		UIView.animate(withDuration: 0.3) { [weak self] in
+			self?.textViewEditor.text = viewModel.fileData
+			self?.title = viewModel.title == ResourcesBundle.about ? L10n.About.title : viewModel.title
+		}
 	}
 }
