@@ -34,15 +34,6 @@ final class FileEditorInteractor: IFileEditorInteractor {
 
 	// MARK: - Public methods
 
-	//	func fetchData() {
-	//		let title = url.lastPathComponent
-	//		let fileData = fileStorage?.loadFileBody(url: url) ?? ""
-	//		presenter?.present(responce: FileEditorModel.Response(
-	//			title: title,
-	//			fileData: fileData
-	//		))
-	//	}
-
 	func fetchData() {
 		Task {
 			let title = url.lastPathComponent

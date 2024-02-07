@@ -40,16 +40,6 @@ final class FileListInteractor: IFileListInteractor {
 				fatalError(error.localizedDescription)
 			}
 		}
-
-//		Task {
-//			let result = await storageService.fetchRecent(count: 5, with: urls)
-//			switch result {
-//			case .success(let files):
-//				await updateUI(with: files)
-//			case .failure(let error):
-//				fatalError(error.localizedDescription)
-//			}
-//		}
 	}
 
 	@MainActor
