@@ -63,7 +63,7 @@ final class MainCoordinator: BaseCoordinator {
 		coordinator.openAboutScene = { [weak self] in
 			let bundleUrl = Bundle.main.resourceURL
 			if let fileURL = bundleUrl?
-				.appendingPathComponent(ResourcesBundle.documents)
+				.appendingPathComponent(ResourcesBundle.assets)
 				.appendingPathComponent(ResourcesBundle.about) {
 				self?.runFileEditorScene(url: fileURL, editable: false)
 			}

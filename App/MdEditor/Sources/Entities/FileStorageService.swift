@@ -9,13 +9,13 @@
 import Foundation
 
 enum ResourcesBundle {
-	static let documents: String = "Documents.bundle"
+	static let assets: String = "Assets"
 	static let about: String = "about.md"
 
 	static var defaultsUrls: [URL] {
 		var urls: [URL] = []
 		let bundleUrl = Bundle.main.resourceURL
-		if let docsURL = bundleUrl?.appendingPathComponent(documents) {
+		if let docsURL = bundleUrl?.appendingPathComponent(assets) {
 			urls.append(docsURL)
 		}
 		if let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
