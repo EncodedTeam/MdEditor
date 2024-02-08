@@ -13,9 +13,9 @@ struct FileSystemEntity {
 	var isDir = false
 	var creationDate = Date()
 	var modificationDate = Date()
-	var size: UInt64 = 0
+	var size: UInt64 = .zero
 
-	var name: String { url.lastPathComponent }
+	var name: String { url.lastPathComponent.replacingOccurrences(of: ".\(ext)", with: "") }
 	var ext: String { url.pathExtension }
 	var parent: String? { url.pathComponents.dropLast().last }
 	var path: String { url.relativePath }
@@ -39,9 +39,13 @@ struct FileSystemEntity {
 	func getFormattedAttributes() -> String {
 		let formattedSize = getFormattedSize()
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "dd.MM.yy HH:mm"
+		dateFormatter.dateFormat = L10n.FileList.dateFormat
 
-		return "\(dateFormatter.string(from: modificationDate))\n\(formattedSize)"
+		if isDir {
+			return "\(dateFormatter.string(from: modificationDate)) | <dir>"
+		} else {
+			return "\"\(ext)\" – \(dateFormatter.string(from: modificationDate)) | \(formattedSize)"
+		}
 	}
 }
 
