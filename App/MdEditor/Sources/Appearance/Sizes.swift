@@ -31,7 +31,7 @@ enum Sizes {
 	enum M {
 		static let width: CGFloat = 100
 		static let height: CGFloat = 40
-		static let heightMultiplier: CGFloat = 0.8
+		static let heightMultiplier: CGFloat = 0.7
 		static let imageWidth: CGFloat = 40
 	}
 

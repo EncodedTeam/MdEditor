@@ -34,7 +34,9 @@ final class StartScreenViewController: UIViewController {
 	)
 	private lazy var stackViewButttons: UIStackView = makeStackViewButtons()
 
-	private var constraints = [NSLayoutConstraint]()
+	private var commonConstraints: [NSLayoutConstraint] = []
+	private var narrowConstraints: [NSLayoutConstraint] = []
+	private var wideConstraints: [NSLayoutConstraint] = []
 
 	private var viewModel = StartScreenModel.ViewModel(documents: [])
 
@@ -53,11 +55,19 @@ final class StartScreenViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+		setupConstraints()
 	}
 
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		layout()
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		if UIDevice.current.orientation.isLandscape {
+			NSLayoutConstraint.deactivate(narrowConstraints)
+			NSLayoutConstraint.activate(wideConstraints)
+		} else {
+			NSLayoutConstraint.deactivate(wideConstraints)
+			NSLayoutConstraint.activate(narrowConstraints)
+		}
+		collectionViewDocs.collectionViewLayout.invalidateLayout()
 	}
 }
 
@@ -100,9 +110,12 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		layout collectionViewLayout: UICollectionViewLayout,
 		sizeForItemAt indexPath: IndexPath
 	) -> CGSize {
-		let width = collectionView.frame.width / 3
+		var multiplier: CGFloat = 3
+		if UIDevice.current.orientation.isLandscape {
+			multiplier = 5
+		}
+		let width = view.frame.width / multiplier
 		let height = collectionView.frame.height
-
 		return CGSize(width: width, height: height)
 	}
 }
@@ -188,11 +201,8 @@ private extension StartScreenViewController {
 // MARK: - Layout
 
 private extension StartScreenViewController {
-
-	func layout() {
-		NSLayoutConstraint.deactivate(constraints)
-
-		let newConstraints = [
+	func setupConstraints() {
+		commonConstraints = [
 			collectionViewDocs.topAnchor.constraint(
 				equalTo: view.safeAreaLayoutGuide.topAnchor,
 				constant: Sizes.Padding.normal
@@ -202,7 +212,6 @@ private extension StartScreenViewController {
 				constant: Sizes.Padding.normal
 			),
 			collectionViewDocs.widthAnchor.constraint(equalTo: view.widthAnchor),
-			collectionViewDocs.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: Sizes.S.heightMultiplier),
 
 			stackViewButttons.topAnchor.constraint(
 				equalTo: collectionViewDocs.bottomAnchor,
@@ -212,9 +221,26 @@ private extension StartScreenViewController {
 			stackViewButttons.trailingAnchor.constraint(equalTo: view.trailingAnchor)
 		]
 
-		NSLayoutConstraint.activate(newConstraints)
+		narrowConstraints = [
+			collectionViewDocs.heightAnchor.constraint(
+				equalTo: view.heightAnchor,
+				multiplier: Sizes.S.heightMultiplier
+			)
+		]
 
-		constraints = newConstraints
+		wideConstraints = [
+			collectionViewDocs.heightAnchor.constraint(
+				equalTo: view.heightAnchor,
+				multiplier: Sizes.S.heightMultiplier
+			)
+		]
+
+		NSLayoutConstraint.activate(commonConstraints)
+		if UIDevice.current.orientation.isLandscape {
+			NSLayoutConstraint.activate(wideConstraints)
+		} else {
+			NSLayoutConstraint.activate(narrowConstraints)
+		}
 	}
 }
 
