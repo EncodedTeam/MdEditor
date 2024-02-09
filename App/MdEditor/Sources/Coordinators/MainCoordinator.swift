@@ -98,4 +98,14 @@ final class MainCoordinator: BaseCoordinator {
 		addDependency(coordinator)
 		coordinator.start()
 	}
+	
+	func runAboutScreenScene(url: URL) {
+		let coordinator = AboutScreenCoordinator(
+			navigationController: navigationController,
+			fileStorage: FileStorage(),
+			url: url
+		)
+		addDependency(coordinator)
+		coordinator.start()
+	}
 }
