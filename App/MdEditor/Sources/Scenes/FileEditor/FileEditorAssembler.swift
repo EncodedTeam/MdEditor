@@ -10,7 +10,7 @@ import UIKit
 
 final class FileEditorAssembler {
 
-	func assembly(fileStorage: IFileStorage, url: URL, editable: Bool) -> FileEditorViewController {
+	func assembly(fileStorage: IStorageService, url: URL, editable: Bool) -> FileEditorViewController {
 		let viewController = FileEditorViewController(editable: editable)
 		let presenter = FileEditorPresenter(viewController: viewController)
 		let interactor = FileEditorInteractor(presenter: presenter, fileStorage: fileStorage, url: url)

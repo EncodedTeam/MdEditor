@@ -13,8 +13,8 @@ final class FileEditorCoordinator: ICoordinator {
 	// MARK: - Dependencies
 	
 	private let navigationController: UINavigationController
-	private let fileStorage: IFileStorage
-	
+	private let fileStorage: IStorageService
+
 	// MARK: - Private properties
 	
 	private let url: URL
@@ -22,7 +22,7 @@ final class FileEditorCoordinator: ICoordinator {
 	
 	// MARK: - Initialization
 	
-	init(navigationController: UINavigationController, fileStorage: IFileStorage, url: URL, editable: Bool) {
+	init(navigationController: UINavigationController, fileStorage: IStorageService, url: URL, editable: Bool) {
 		self.navigationController = navigationController
 		self.fileStorage = fileStorage
 		self.url = url

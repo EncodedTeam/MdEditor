@@ -12,11 +12,11 @@ final class MainCoordinator: BaseCoordinator {
 
 	private let navigationController: UINavigationController
 	private let taskManager: ITaskManager
-	private let storage: IFileStorage
+	private let storage: IStorageService
 
 	// MARK: - Initialization
 	
-	init(navigationController: UINavigationController, taskManager: ITaskManager, storage: IFileStorage) {
+	init(navigationController: UINavigationController, taskManager: ITaskManager, storage: IStorageService) {
 		self.navigationController = navigationController
 		self.taskManager = taskManager
 		self.storage = storage
@@ -57,26 +57,24 @@ final class MainCoordinator: BaseCoordinator {
 		addDependency(coordinator)
 
 		coordinator.openFileListScene = { [weak self] in
-			var urls: [URL] = self?.storage.getDefaultUrls() ?? []
-			self?.runFileListScene(urls: urls, firstShow: true)
+			self?.runFileListScene(urls: ResourcesBundle.defaultsUrls)
 		}
 		
 		coordinator.openAboutScene = { [weak self] in
 			let bundleUrl = Bundle.main.resourceURL
 			if let fileURL = bundleUrl?
-				.appendingPathComponent(ResourceBundle.documents)
-				.appendingPathComponent(ResourceBundle.about) {
+				.appendingPathComponent(ResourcesBundle.assets)
+				.appendingPathComponent(ResourcesBundle.about) {
 				self?.runFileEditorScene(url: fileURL, editable: false)
 			}
 		}
 		coordinator.start()
 	}
 
-	func runFileListScene(urls: [URL], firstShow: Bool = false) {
+	func runFileListScene(urls: [URL]) {
 		let coordinator = FileListCoordinator(
 			navigationController: navigationController,
 			urls: urls,
-			firstShow: firstShow,
 			storage: storage
 		)
 		addDependency(coordinator)
@@ -93,7 +91,7 @@ final class MainCoordinator: BaseCoordinator {
 	func runFileEditorScene(url: URL, editable: Bool = true) {
 		let coordinator = FileEditorCoordinator(
 			navigationController: navigationController,
-			fileStorage: FileStorage(),
+			fileStorage: storage,
 			url: url,
 			editable: editable
 		)
