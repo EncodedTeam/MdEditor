@@ -18,7 +18,7 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	// MARK: - Dependencies
 	
 	private var presenter: IAboutScreenPresenter?
-	private var fileStorage: IFileStorage?
+	private var fileStorage: IStorageService?
 	
 	// MARK: - Private properties
 	
@@ -26,7 +26,7 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	
 	// MARK: - Initialization
 	
-	init(presenter: IAboutScreenPresenter, fileStorage: IFileStorage, url: URL) {
+	init(presenter: IAboutScreenPresenter, fileStorage: IStorageService, url: URL) {
 		self.presenter = presenter
 		self.fileStorage = fileStorage
 		self.url = url
@@ -35,8 +35,15 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	// MARK: - Public methods
 	
 	func fetchData() {
-		let title = url.lastPathComponent
-		let fileData = fileStorage?.loadFileBody(url: url) ?? ""
+		Task {
+			let title = url.lastPathComponent
+			let result = await fileStorage?.loadFileBody(url: url) ?? ""
+			await updateUI(with: title, fileData: result)
+		}
+	}
+	
+	@MainActor
+	func updateUI(with title: String, fileData: String) {
 		presenter?.present(responce: AboutScreenModel.Response(
 			title: title,
 			fileData: fileData

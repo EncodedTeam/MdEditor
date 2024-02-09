@@ -9,6 +9,9 @@
 import Foundation
 
 protocol IAboutScreenPresenter {
+	
+	/// Отображение экрана с текстом.
+	/// - Parameter response: Подготовленные к отображению данные.
 	func present(responce: AboutScreenModel.Response)
 }
 

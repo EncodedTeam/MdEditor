@@ -9,7 +9,7 @@
 import Foundation
 
 protocol IFileEditorInteractor: AnyObject {
-	/// Событие на предоставление данных из файла about.
+	/// Событие на предоставление данных из файла.
 	func fetchData()
 }
 

@@ -10,7 +10,7 @@ import Foundation
 
 final class AboutScreenAssembler {
 	
-	func assembly(fileStorage: IFileStorage, url: URL) -> AboutScreenViewController {
+	func assembly(fileStorage: IStorageService, url: URL) -> AboutScreenViewController {
 		let viewController = AboutScreenViewController()
 		let presenter = AboutScreenPresenter(viewController: viewController)
 		let interactor = AboutScreenInteractor(presenter: presenter, fileStorage: fileStorage, url: url)

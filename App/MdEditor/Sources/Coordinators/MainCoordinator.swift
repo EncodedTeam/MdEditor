@@ -65,7 +65,7 @@ final class MainCoordinator: BaseCoordinator {
 			if let fileURL = bundleUrl?
 				.appendingPathComponent(ResourcesBundle.assets)
 				.appendingPathComponent(ResourcesBundle.about) {
-				self?.runFileEditorScene(url: fileURL, editable: false)
+				self?.runAboutScreenScene(url: fileURL)
 			}
 		}
 		coordinator.start()
@@ -102,7 +102,7 @@ final class MainCoordinator: BaseCoordinator {
 	func runAboutScreenScene(url: URL) {
 		let coordinator = AboutScreenCoordinator(
 			navigationController: navigationController,
-			fileStorage: FileStorage(),
+			fileStorage: storage,
 			url: url
 		)
 		addDependency(coordinator)

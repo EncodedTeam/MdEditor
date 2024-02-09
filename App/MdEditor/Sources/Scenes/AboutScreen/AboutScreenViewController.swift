@@ -26,7 +26,9 @@ final class AboutScreenViewController: UIViewController {
 	
 	private var viewModel = AboutScreenModel.ViewModel(title: "", fileData: "")
 	
-	private lazy var textViewEditor: UITextView = makeTextView()
+	private lazy var labelFileBody: UILabel = makeLabel()
+	private lazy var viewContent: UIView = makeView()
+	private lazy var scrollView: UIScrollView = makeScrollView()
 	
 	private var constraints = [NSLayoutConstraint]()
 	
@@ -54,72 +56,42 @@ final class AboutScreenViewController: UIViewController {
 	}
 }
 
-// MARK: - Action
-
-private extension AboutScreenViewController {
-	@objc
-	func updateTextView(notification: Notification) {
-		let userInfo = notification.userInfo
-		// swiftlint:disable force_cast
-		// swiftlint:disable force_unwrapping
-		let keyboardScreenEndFrame = (userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-		// swiftlint:enable force_cast
-		// swiftlint:enable force_unwrapping
-		let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, to: view.window)
-		
-		if notification.name == UIResponder.keyboardWillHideNotification {
-			textViewEditor.contentInset = UIEdgeInsets.zero
-		} else {
-			textViewEditor.contentInset = UIEdgeInsets(
-				top: 0,
-				left: 0,
-				bottom: keyboardViewEndFrame.height,
-				right: 0
-			)
-			textViewEditor.scrollIndicatorInsets = textViewEditor.contentInset
-		}
-		textViewEditor.scrollRangeToVisible(textViewEditor.selectedRange)
-	}
-}
-
 // MARK: - UI setup
 
 private extension AboutScreenViewController {
 	
 	func setupUI() {
-		title = viewModel.title == "about.md" ? L10n.About.title : viewModel.title
+		title = L10n.About.title
 		view.backgroundColor = Theme.backgroundColor
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.largeTitleDisplayMode = .never
 		navigationController?.navigationBar.tintColor = Theme.mainColor
 		
-		textViewEditor.text = viewModel.fileData
-		
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(updateTextView),
-			name: UIResponder.keyboardDidHideNotification,
-			object: nil
-		)
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(updateTextView),
-			name: UIResponder.keyboardWillShowNotification,
-			object: nil
-		)
+		labelFileBody.text = viewModel.fileData
 	}
 	
-	func makeTextView() -> UITextView {
-		let textView = UITextView(frame: .zero, textContainer: nil)
+	func makeScrollView() -> UIScrollView {
+		let scrollView = UIScrollView(frame: .zero)
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
+		return scrollView
+	}
+	
+	func makeView() -> UIView {
+		let view = UIView()
+		view.translatesAutoresizingMaskIntoConstraints = false
+		return view
+	}
+	
+	func makeLabel() -> UILabel {
+		let label = UILabel()
+		label.backgroundColor = Theme.backgroundColor
+		label.numberOfLines = 0
 		
-		textView.backgroundColor = Theme.backgroundColor
-		textView.isScrollEnabled = true
-		textView.font = UIFont.preferredFont(forTextStyle: .body)
-		textView.adjustsFontForContentSizeCategory = true
-		textView.keyboardDismissMode = .onDrag
-		textView.translatesAutoresizingMaskIntoConstraints = false
-		
-		return textView
+		label.font = UIFont.preferredFont(forTextStyle: .body)
+		label.adjustsFontForContentSizeCategory = true
+		label.accessibilityIdentifier = AccessibilityIdentifier.AboutScreen.labelFileBody
+		label.translatesAutoresizingMaskIntoConstraints = false
+		return label
 	}
 }
 
@@ -128,16 +100,30 @@ private extension AboutScreenViewController {
 private extension AboutScreenViewController {
 	
 	func layout() {
-		view.addSubview(textViewEditor)
+		view.addSubview(scrollView)
+		scrollView.addSubview(viewContent)
+		viewContent.addSubview(labelFileBody)
 		
 		NSLayoutConstraint.deactivate(constraints)
 		
 		let safeArea = view.safeAreaLayoutGuide
+		
 		let newConstraints = [
-			textViewEditor.topAnchor.constraint(equalTo: safeArea.topAnchor),
-			textViewEditor.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Sizes.Padding.half),
-			textViewEditor.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Sizes.Padding.half),
-			textViewEditor.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: Sizes.Padding.normal)
+			scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+			scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+			scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+			scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+			
+			viewContent.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+			viewContent.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+			viewContent.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+			viewContent.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+			viewContent.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+			
+			labelFileBody.topAnchor.constraint(equalTo: viewContent.topAnchor),
+			labelFileBody.leadingAnchor.constraint(equalTo: viewContent.leadingAnchor, constant: Sizes.Padding.half),
+			labelFileBody.trailingAnchor.constraint(equalTo: viewContent.trailingAnchor, constant: -Sizes.Padding.half),
+			labelFileBody.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor)
 		]
 		
 		NSLayoutConstraint.activate(newConstraints)
@@ -150,6 +136,6 @@ private extension AboutScreenViewController {
 
 extension AboutScreenViewController: IAboutScreenViewController {
 	func render(viewModel: AboutScreenModel.ViewModel) {
-		self.viewModel = viewModel
+		self.labelFileBody.text = viewModel.fileData
 	}
 }

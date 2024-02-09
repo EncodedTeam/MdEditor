@@ -13,7 +13,7 @@ final class AboutScreenCoordinator: ICoordinator {
 	// MARK: - Dependencies
 	
 	private let navigationController: UINavigationController
-	private let fileStorage: IFileStorage
+	private let fileStorage: IStorageService
 	
 	// MARK: - Private properties
 	
@@ -21,7 +21,7 @@ final class AboutScreenCoordinator: ICoordinator {
 	
 	// MARK: - Initialization
 	
-	init(navigationController: UINavigationController, fileStorage: IFileStorage, url: URL) {
+	init(navigationController: UINavigationController, fileStorage: IStorageService, url: URL) {
 		self.navigationController = navigationController
 		self.fileStorage = fileStorage
 		self.url = url
