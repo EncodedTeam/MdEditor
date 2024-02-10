@@ -31,7 +31,7 @@ enum Sizes {
 	enum M {
 		static let width: CGFloat = 100
 		static let height: CGFloat = 40
-		static let heightMultiplier: CGFloat = 0.7
+		static let heightMultiplier: CGFloat = 0.8
 		static let imageWidth: CGFloat = 40
 	}
 
@@ -58,6 +58,20 @@ enum Sizes {
 		}
 		enum SecondaryText {
 			static let numberOfLines = 3
+		}
+	}
+
+	enum CollectionView {
+		enum Padding {
+			static let lineSpacing: CGFloat = 20
+		}
+
+		enum Multiplier {
+			static let vertical: CGFloat = 0.35
+			static let horizontal: CGFloat = 0.55
+
+			static let horizontalItems: CGFloat = 5
+			static let verticalItems: CGFloat = 3
 		}
 	}
 }

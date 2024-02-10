@@ -40,16 +40,6 @@ final class StartScreenViewController: UIViewController {
 
 	private var viewModel = StartScreenModel.ViewModel(documents: [])
 
-	// MARK: - Initialization
-
-	init() {
-		super.init(nibName: nil, bundle: nil)
-	}
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
 	// MARK: - Lifecycle
 
 	override func viewDidLoad() {
@@ -60,14 +50,13 @@ final class StartScreenViewController: UIViewController {
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
-		if UIDevice.current.orientation.isLandscape {
-			NSLayoutConstraint.deactivate(narrowConstraints)
-			NSLayoutConstraint.activate(wideConstraints)
-		} else {
-			NSLayoutConstraint.deactivate(wideConstraints)
-			NSLayoutConstraint.activate(narrowConstraints)
-		}
+		
+		updateConstraints()
 		collectionViewDocs.collectionViewLayout.invalidateLayout()
+		
+		coordinator.animate { [weak self] _ in
+			self?.navigationController?.navigationBar.sizeToFit()
+		}
 	}
 }
 
@@ -110,9 +99,9 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		layout collectionViewLayout: UICollectionViewLayout,
 		sizeForItemAt indexPath: IndexPath
 	) -> CGSize {
-		var multiplier: CGFloat = 3
+		var multiplier: CGFloat = Sizes.CollectionView.Multiplier.verticalItems
 		if UIDevice.current.orientation.isLandscape {
-			multiplier = 5
+			multiplier = Sizes.CollectionView.Multiplier.horizontalItems
 		}
 		let width = view.frame.width / multiplier
 		let height = collectionView.frame.height
@@ -148,7 +137,7 @@ private extension StartScreenViewController {
 	func makeCollectionView() -> UICollectionView {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
-		layout.minimumLineSpacing = 10
+		layout.minimumLineSpacing = Sizes.CollectionView.Padding.lineSpacing
 
 		let itemWidth = view.frame.width
 		let itemHeight = view.frame.height
@@ -176,7 +165,9 @@ private extension StartScreenViewController {
 		configuration.imagePadding = Sizes.Padding.half
 
 		button.configuration = configuration
-
+		button.contentHorizontalAlignment = .leading
+		
+		// Accessibility: Font
 		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
 		button.titleLabel?.adjustsFontForContentSizeCategory = true
 
@@ -211,35 +202,48 @@ private extension StartScreenViewController {
 				equalTo: view.safeAreaLayoutGuide.leadingAnchor,
 				constant: Sizes.Padding.normal
 			),
-			collectionViewDocs.widthAnchor.constraint(equalTo: view.widthAnchor),
+			collectionViewDocs.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
 			stackViewButttons.topAnchor.constraint(
 				equalTo: collectionViewDocs.bottomAnchor,
 				constant: Sizes.Padding.normal
 			),
-			stackViewButttons.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-			stackViewButttons.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+			stackViewButttons.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor)
 		]
 
 		narrowConstraints = [
 			collectionViewDocs.heightAnchor.constraint(
 				equalTo: view.heightAnchor,
-				multiplier: Sizes.S.heightMultiplier
+				multiplier: Sizes.CollectionView.Multiplier.vertical
 			)
 		]
 
 		wideConstraints = [
 			collectionViewDocs.heightAnchor.constraint(
 				equalTo: view.heightAnchor,
-				multiplier: Sizes.S.heightMultiplier
+				multiplier: Sizes.CollectionView.Multiplier.horizontal
 			)
 		]
 
 		NSLayoutConstraint.activate(commonConstraints)
 		if UIDevice.current.orientation.isLandscape {
 			NSLayoutConstraint.activate(wideConstraints)
+			stackViewButttons.axis = .horizontal
 		} else {
 			NSLayoutConstraint.activate(narrowConstraints)
+			stackViewButttons.axis = .vertical
+		}
+	}
+
+	func updateConstraints() {
+		if UIDevice.current.orientation.isLandscape {
+			NSLayoutConstraint.deactivate(narrowConstraints)
+			NSLayoutConstraint.activate(wideConstraints)
+			stackViewButttons.axis = .horizontal
+		} else {
+			NSLayoutConstraint.deactivate(wideConstraints)
+			NSLayoutConstraint.activate(narrowConstraints)
+			stackViewButttons.axis = .vertical
 		}
 	}
 }
