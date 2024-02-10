@@ -42,22 +42,25 @@ enum Sizes {
 		static let imageWidth: CGFloat = 30
 	}
 
-	enum Cell {
-		enum Padding {
-			static let half: CGFloat = 4
-			static let normal: CGFloat = 8
-			static let double: CGFloat = 16
-		}
-		enum Image {
-			static let width: CGFloat = 40
-			static let height: CGFloat = 40
-		}
-		enum Text {
-			static let ratioWidth: CGFloat = 0.5
-			static let numberOfLines = 3
-		}
-		enum SecondaryText {
-			static let numberOfLines = 3
+	enum TableView {
+		static let countRow = 10
+		enum Cell {
+			enum Padding {
+				static let half: CGFloat = 4
+				static let normal: CGFloat = 8
+				static let double: CGFloat = 16
+			}
+			enum Image {
+				static let width: CGFloat = 40
+				static let height: CGFloat = 40
+			}
+			enum Text {
+				static let ratioWidth: CGFloat = 0.5
+				static let numberOfLines = 3
+			}
+			enum SecondaryText {
+				static let numberOfLines = 3
+			}
 		}
 	}
 
@@ -67,11 +70,11 @@ enum Sizes {
 		}
 
 		enum Multiplier {
-			static let vertical: CGFloat = 0.35
-			static let horizontal: CGFloat = 0.55
+			static let vertical: CGFloat = 0.15
+			static let horizontal: CGFloat = 0.3
 
-			static let horizontalItems: CGFloat = 5
-			static let verticalItems: CGFloat = 3
+			static let horizontalItems: CGFloat = 10
+			static let verticalItems: CGFloat = 5
 		}
 	}
 }

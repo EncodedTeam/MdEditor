@@ -64,6 +64,10 @@ extension FileListViewController: UITableViewDelegate {
 		let request = FileListModel.Request(url: selectedFileURL)
 		interactor?.didFileSelected(request: request)
 	}
+	
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		tableView.bounds.height / 10
+	}
 }
 
 // MARK: - UITableViewDataSource
