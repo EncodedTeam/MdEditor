@@ -119,7 +119,9 @@ private extension StartScreenViewController {
 		view.backgroundColor = Theme.backgroundColor
 
 		interactor?.fetchData()
-		
+
+		buttonNew.configuration?.imagePadding += Sizes.Padding.half
+
 		buttonOpen.addTarget(self, action: #selector(buttonOpenAction), for: .touchUpInside)
 		buttonAbout.addTarget(self, action: #selector(buttonAboutAction), for: .touchUpInside)
 
@@ -158,7 +160,6 @@ private extension StartScreenViewController {
 		configuration.title = title
 		configuration.baseForegroundColor = Theme.mainColor
 		configuration.image = image
-		configuration.imageReservation = Sizes.M.imageWidth
 		configuration.imagePadding = Sizes.Padding.half
 
 		button.configuration = configuration
