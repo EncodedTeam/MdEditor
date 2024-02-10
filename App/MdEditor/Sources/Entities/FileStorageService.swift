@@ -11,6 +11,7 @@ import Foundation
 enum ResourcesBundle {
 	static let assets: String = "Assets"
 	static let about: String = "about.md"
+	static let extMD: String = "md"
 
 	static var defaultsUrls: [URL] {
 		var urls: [URL] = []
@@ -99,13 +100,8 @@ actor FileStorageService: IStorageService {
 // MARK: - Private methods
 private extension FileStorageService {
 	func scanFiles(with urls: [URL]) throws -> [FileSystemEntity] {
-		var files: [FileSystemEntity] = []
+		var files: [FileSystemEntity?] = []
 		for item in urls {
-			let attributes = try fileManager.attributesOfItem(atPath: item.relativePath)
-			let creationDate = (attributes[FileAttributeKey.creationDate] as? Date) ?? Date()
-			let modificationDate = (attributes[FileAttributeKey.modificationDate] as? Date) ?? Date()
-			let size = (attributes[FileAttributeKey.size] as? UInt64) ?? 0
-
 			if item.hasDirectoryPath {
 				let contents = try fileManager.contentsOfDirectory(
 					at: item,
@@ -117,19 +113,17 @@ private extension FileStorageService {
 					files.append(contentsOf: nestedFiles)
 				}
 			} else {
-				let file = FileSystemEntity(
-					url: item,
-					creationDate: creationDate,
-					modificationDate: modificationDate,
-					size: size
-				)
+				let file = try getEntity(from: item)
 				files.append(file)
 			}
 		}
-		return files
+		return files.compactMap { $0 }
 	}
 
-	func getEntity(from url: URL) throws -> FileSystemEntity {
+	func getEntity(from url: URL, with ext: [String] = [ResourcesBundle.extMD]) throws -> FileSystemEntity? {
+		// Если это файл и указано расширение - выполнить проверку на соответствие указанному расширению
+		if !ext.isEmpty, !url.hasDirectoryPath, !ext.contains(url.pathExtension) { return nil }
+
 		let attributes = try fileManager.attributesOfItem(atPath: url.relativePath)
 		let creationDate = (attributes[FileAttributeKey.creationDate] as? Date) ?? Date()
 		let modificationDate = (attributes[FileAttributeKey.modificationDate] as? Date) ?? Date()
@@ -145,16 +139,16 @@ private extension FileStorageService {
 	}
 
 	func fetchRoot(_ urls: [URL]) throws -> [FileSystemEntity] {
-		var files: [FileSystemEntity] = []
+		var files: [FileSystemEntity?] = []
 		for item in urls {
 			let entity = try getEntity(from: item)
 			files.append(entity)
 		}
-		return files
+		return files.compactMap { $0 }
 	}
 
 	func fetch(with url: URL) throws -> [FileSystemEntity] {
-		var files: [FileSystemEntity] = []
+		var files: [FileSystemEntity?] = []
 		if url.hasDirectoryPath {
 			let contents = try fileManager.contentsOfDirectory(
 				at: url,
@@ -169,6 +163,6 @@ private extension FileStorageService {
 			let entity = try getEntity(from: url)
 			files.append(entity)
 		}
-		return files
+		return files.compactMap { $0 }
 	}
 }

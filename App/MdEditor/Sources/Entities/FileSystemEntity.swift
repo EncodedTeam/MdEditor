@@ -16,6 +16,7 @@ struct FileSystemEntity {
 	var size: UInt64 = .zero
 
 	var name: String { url.lastPathComponent.replacingOccurrences(of: ".\(ext)", with: "") }
+	var fullName: String { url.lastPathComponent }
 	var ext: String { url.pathExtension }
 	var parent: String? { url.pathComponents.dropLast().last }
 	var path: String { url.relativePath }
