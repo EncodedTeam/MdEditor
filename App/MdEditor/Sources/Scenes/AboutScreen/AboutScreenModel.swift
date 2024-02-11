@@ -11,12 +11,10 @@ import Foundation
 enum AboutScreenModel {
 	
 	struct Response {
-		let title: String
 		let fileData: String
 	}
 	
 	struct ViewModel {
-		let title: String
 		let fileData: String
 	}
 }

@@ -81,6 +81,6 @@ enum AccessibilityIdentifier {
 	}
 	
 	enum AboutScreen {
-		static let labelFileBody = "AboutScreenViewController.labelFileBody"
+		static let labelFileData = "AboutScreenViewController.labelFileData"
 	}
 }

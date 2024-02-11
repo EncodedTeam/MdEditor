@@ -9,6 +9,7 @@
 import Foundation
 
 protocol IAboutScreenInteractor: AnyObject {
+	
 	/// Событие на предоставление данных из файла about.
 	func fetchData()
 }
@@ -44,9 +45,6 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	
 	@MainActor
 	func updateUI(with title: String, fileData: String) {
-		presenter?.present(responce: AboutScreenModel.Response(
-			title: title,
-			fileData: fileData
-		))
+		presenter?.present(responce: AboutScreenModel.Response(fileData: fileData))
 	}
 }

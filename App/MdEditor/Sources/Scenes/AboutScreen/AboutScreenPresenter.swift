@@ -10,7 +10,7 @@ import Foundation
 
 protocol IAboutScreenPresenter {
 	
-	/// Отображение экрана с текстом.
+	/// Отображение экрана About.
 	/// - Parameter response: Подготовленные к отображению данные.
 	func present(responce: AboutScreenModel.Response)
 }
@@ -30,11 +30,7 @@ final class AboutScreenPresenter: IAboutScreenPresenter {
 	// MARK: - Public methods
 	
 	func present(responce: AboutScreenModel.Response) {
-		let title = responce.title
 		let fileData = responce.fileData
-		viewController?.render(viewModel: AboutScreenModel.ViewModel(
-			title: title,
-			fileData: fileData
-		))
+		viewController?.render(viewModel: AboutScreenModel.ViewModel( fileData: fileData))
 	}
 }

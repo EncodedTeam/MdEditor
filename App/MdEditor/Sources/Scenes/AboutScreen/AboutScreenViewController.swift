@@ -24,9 +24,7 @@ final class AboutScreenViewController: UIViewController {
 	
 	// MARK: - Private properties
 	
-	private var viewModel = AboutScreenModel.ViewModel(title: "", fileData: "")
-	
-	private lazy var labelFileBody: UILabel = makeLabel()
+	private lazy var labelFileData: UILabel = makeLabel()
 	private lazy var viewContent: UIView = makeView()
 	private lazy var scrollView: UIScrollView = makeScrollView()
 	
@@ -46,8 +44,8 @@ final class AboutScreenViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		interactor?.fetchData()
 		setupUI()
+		interactor?.fetchData()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -66,8 +64,6 @@ private extension AboutScreenViewController {
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.largeTitleDisplayMode = .never
 		navigationController?.navigationBar.tintColor = Theme.mainColor
-		
-		labelFileBody.text = viewModel.fileData
 	}
 	
 	func makeScrollView() -> UIScrollView {
@@ -89,7 +85,8 @@ private extension AboutScreenViewController {
 		
 		label.font = UIFont.preferredFont(forTextStyle: .body)
 		label.adjustsFontForContentSizeCategory = true
-		label.accessibilityIdentifier = AccessibilityIdentifier.AboutScreen.labelFileBody
+		
+		label.accessibilityIdentifier = AccessibilityIdentifier.AboutScreen.labelFileData
 		label.translatesAutoresizingMaskIntoConstraints = false
 		return label
 	}
@@ -102,7 +99,7 @@ private extension AboutScreenViewController {
 	func layout() {
 		view.addSubview(scrollView)
 		scrollView.addSubview(viewContent)
-		viewContent.addSubview(labelFileBody)
+		viewContent.addSubview(labelFileData)
 		
 		NSLayoutConstraint.deactivate(constraints)
 		
@@ -120,10 +117,10 @@ private extension AboutScreenViewController {
 			viewContent.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
 			viewContent.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
 			
-			labelFileBody.topAnchor.constraint(equalTo: viewContent.topAnchor),
-			labelFileBody.leadingAnchor.constraint(equalTo: viewContent.leadingAnchor, constant: Sizes.Padding.half),
-			labelFileBody.trailingAnchor.constraint(equalTo: viewContent.trailingAnchor, constant: -Sizes.Padding.half),
-			labelFileBody.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor)
+			labelFileData.topAnchor.constraint(equalTo: viewContent.topAnchor),
+			labelFileData.leadingAnchor.constraint(equalTo: viewContent.leadingAnchor, constant: Sizes.Padding.half),
+			labelFileData.trailingAnchor.constraint(equalTo: viewContent.trailingAnchor, constant: -Sizes.Padding.half),
+			labelFileData.bottomAnchor.constraint(equalTo: viewContent.bottomAnchor)
 		]
 		
 		NSLayoutConstraint.activate(newConstraints)
@@ -136,6 +133,6 @@ private extension AboutScreenViewController {
 
 extension AboutScreenViewController: IAboutScreenViewController {
 	func render(viewModel: AboutScreenModel.ViewModel) {
-		self.labelFileBody.text = viewModel.fileData
+		self.labelFileData.text = viewModel.fileData
 	}
 }
