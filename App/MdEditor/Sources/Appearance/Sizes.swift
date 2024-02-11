@@ -70,8 +70,8 @@ enum Sizes {
 		}
 
 		enum Multiplier {
-			static let vertical: CGFloat = 0.15
-			static let horizontal: CGFloat = 0.3
+			static let vertical: CGFloat = 1 / 5
+			static let horizontal: CGFloat = 2 / 3
 
 			static let horizontalItems: CGFloat = 10
 			static let verticalItems: CGFloat = 5

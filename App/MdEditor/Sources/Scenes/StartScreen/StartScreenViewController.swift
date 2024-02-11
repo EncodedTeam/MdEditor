@@ -48,6 +48,11 @@ final class StartScreenViewController: UIViewController {
 		setupConstraints()
 	}
 
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		updateConstraints()
+	}
+
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		
@@ -99,12 +104,8 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		layout collectionViewLayout: UICollectionViewLayout,
 		sizeForItemAt indexPath: IndexPath
 	) -> CGSize {
-		var multiplier: CGFloat = Sizes.CollectionView.Multiplier.verticalItems
-		if UIDevice.current.orientation.isLandscape {
-			multiplier = Sizes.CollectionView.Multiplier.horizontalItems
-		}
-		let width = view.frame.width / multiplier
 		let height = collectionView.frame.height
+		let width = height * Sizes.CollectionView.Multiplier.horizontal
 		return CGSize(width: width, height: height)
 	}
 }
@@ -221,8 +222,8 @@ private extension StartScreenViewController {
 
 		wideConstraints = [
 			collectionViewDocs.heightAnchor.constraint(
-				equalTo: view.heightAnchor,
-				multiplier: Sizes.CollectionView.Multiplier.horizontal
+				equalTo: view.widthAnchor,
+				multiplier: Sizes.CollectionView.Multiplier.vertical
 			)
 		]
 
@@ -238,9 +239,13 @@ private extension StartScreenViewController {
 		if UIDevice.current.orientation.isLandscape {
 			NSLayoutConstraint.deactivate(narrowConstraints)
 			NSLayoutConstraint.activate(wideConstraints)
+			if stackViewButttons.frame.maxY > view.frame.maxY {
+				stackViewButttons.axis = .horizontal
+			}
 		} else {
 			NSLayoutConstraint.deactivate(wideConstraints)
 			NSLayoutConstraint.activate(narrowConstraints)
+			stackViewButttons.axis = .vertical
 		}
 	}
 }
