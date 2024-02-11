@@ -63,7 +63,7 @@ private extension FileItemTableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = Theme.textColor
 		label.lineBreakMode = .byTruncatingMiddle
-		label.numberOfLines = Sizes.Cell.Text.numberOfLines
+		label.setContentCompressionResistancePriority(.required, for: .vertical)
 
 		// Accessibility: Font
 		label.font = UIFont.preferredFont(forTextStyle: .body)
@@ -77,7 +77,7 @@ private extension FileItemTableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = Theme.secondaryTextColor
 		label.textAlignment = .right
-		label.numberOfLines = Sizes.Cell.SecondaryText.numberOfLines
+		label.setContentCompressionResistancePriority(.required, for: .vertical)
 
 		// Accessibility: Font
 		label.font = UIFont.preferredFont(forTextStyle: .caption2)
@@ -97,20 +97,44 @@ private extension FileItemTableViewCell {
 
 	func layout() {
 		let newConstraints = [
-			imageViewIcon.topAnchor.constraint(equalTo: topAnchor, constant: Sizes.Cell.Padding.double),
+			imageViewIcon.topAnchor.constraint(
+				equalTo: topAnchor,
+				constant: Sizes.TableView.Cell.Padding.double
+			),
 			imageViewIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-			imageViewIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Sizes.Cell.Padding.normal),
+			imageViewIcon.leadingAnchor.constraint(
+				equalTo: leadingAnchor,
+				constant: Sizes.TableView.Cell.Padding.normal
+			),
 			imageViewIcon.widthAnchor.constraint(equalTo: imageViewIcon.heightAnchor),
-			imageViewIcon.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Sizes.Cell.Padding.double),
+			imageViewIcon.bottomAnchor.constraint(
+				equalTo: bottomAnchor,
+				constant: -Sizes.TableView.Cell.Padding.double
+			),
 
-			labelText.topAnchor.constraint(equalTo: topAnchor, constant: Sizes.Cell.Padding.double),
-			labelText.leadingAnchor.constraint(equalTo: imageViewIcon.trailingAnchor, constant: Sizes.Cell.Padding.double),
-			labelText.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Sizes.Cell.Padding.normal),
+			labelText.topAnchor.constraint(
+				equalTo: topAnchor,
+				constant: Sizes.TableView.Cell.Padding.double
+			),
+			labelText.leadingAnchor.constraint(
+				equalTo: imageViewIcon.trailingAnchor,
+				constant: Sizes.TableView.Cell.Padding.double
+			),
+			labelText.trailingAnchor.constraint(
+				equalTo: trailingAnchor,
+				constant: -Sizes.TableView.Cell.Padding.normal
+			),
 
-			labelSecondaryText.topAnchor.constraint(equalTo: labelText.bottomAnchor, constant: Sizes.Cell.Padding.half),
+			labelSecondaryText.topAnchor.constraint(
+				equalTo: labelText.bottomAnchor,
+				constant: Sizes.TableView.Cell.Padding.half
+			),
 			labelSecondaryText.leadingAnchor.constraint(equalTo: labelText.leadingAnchor),
 			labelSecondaryText.trailingAnchor.constraint(equalTo: labelText.trailingAnchor),
-			labelSecondaryText.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Sizes.Cell.Padding.double)
+			labelSecondaryText.bottomAnchor.constraint(
+				equalTo: bottomAnchor,
+				constant: -Sizes.TableView.Cell.Padding.double
+			)
 		]
 		NSLayoutConstraint.activate(newConstraints)
 	}

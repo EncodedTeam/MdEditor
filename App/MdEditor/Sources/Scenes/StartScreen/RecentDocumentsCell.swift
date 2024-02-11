@@ -23,6 +23,12 @@ final class RecentDocumentCell: UICollectionViewCell {
 		let label = UILabel()
 		label.textAlignment = .center
 		label.textColor = Theme.mainColor
+		label.setContentCompressionResistancePriority(.required, for: .vertical)
+
+		// Accessibility: Font
+		label.font = UIFont.preferredFont(forTextStyle: .body)
+		label.adjustsFontForContentSizeCategory = true
+
 		return label
 	}()
 
@@ -47,11 +53,12 @@ final class RecentDocumentCell: UICollectionViewCell {
 			imageView.topAnchor.constraint(equalTo: topAnchor),
 			imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
 			imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-			imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: Sizes.M.heightMultiplier),
+			imageView.heightAnchor.constraint(lessThanOrEqualTo: heightAnchor),
 
 			label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Sizes.Padding.half),
 			label.leadingAnchor.constraint(equalTo: leadingAnchor),
-			label.trailingAnchor.constraint(equalTo: trailingAnchor)
+			label.trailingAnchor.constraint(equalTo: trailingAnchor),
+			label.bottomAnchor.constraint(equalTo: bottomAnchor)
 		])
 	}
 }
