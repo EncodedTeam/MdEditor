@@ -163,10 +163,11 @@ private extension StartScreenViewController {
 		configuration.baseForegroundColor = Theme.mainColor
 		configuration.image = image
 		configuration.imagePadding = Sizes.Padding.half
-
-		button.configuration = configuration
-		button.contentHorizontalAlignment = .leading
 		
+		configuration.contentInsets.leading = 0
+		
+		button.configuration = configuration
+
 		// Accessibility: Font
 		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
 		button.titleLabel?.adjustsFontForContentSizeCategory = true
@@ -208,7 +209,7 @@ private extension StartScreenViewController {
 				equalTo: collectionViewDocs.bottomAnchor,
 				constant: Sizes.Padding.normal
 			),
-			stackViewButttons.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor)
+			stackViewButttons.leadingAnchor.constraint(equalTo: collectionViewDocs.leadingAnchor)
 		]
 
 		narrowConstraints = [
@@ -228,10 +229,8 @@ private extension StartScreenViewController {
 		NSLayoutConstraint.activate(commonConstraints)
 		if UIDevice.current.orientation.isLandscape {
 			NSLayoutConstraint.activate(wideConstraints)
-			stackViewButttons.axis = .horizontal
 		} else {
 			NSLayoutConstraint.activate(narrowConstraints)
-			stackViewButttons.axis = .vertical
 		}
 	}
 
@@ -239,11 +238,9 @@ private extension StartScreenViewController {
 		if UIDevice.current.orientation.isLandscape {
 			NSLayoutConstraint.deactivate(narrowConstraints)
 			NSLayoutConstraint.activate(wideConstraints)
-			stackViewButttons.axis = .horizontal
 		} else {
 			NSLayoutConstraint.deactivate(wideConstraints)
 			NSLayoutConstraint.activate(narrowConstraints)
-			stackViewButttons.axis = .vertical
 		}
 	}
 }

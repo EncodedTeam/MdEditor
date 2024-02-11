@@ -63,7 +63,7 @@ private extension FileItemTableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = Theme.textColor
 		label.lineBreakMode = .byTruncatingMiddle
-		label.numberOfLines = Sizes.TableView.Cell.Text.numberOfLines
+		label.setContentCompressionResistancePriority(.required, for: .vertical)
 
 		// Accessibility: Font
 		label.font = UIFont.preferredFont(forTextStyle: .body)
@@ -77,7 +77,7 @@ private extension FileItemTableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = Theme.secondaryTextColor
 		label.textAlignment = .right
-		label.numberOfLines = Sizes.TableView.Cell.SecondaryText.numberOfLines
+		label.setContentCompressionResistancePriority(.required, for: .vertical)
 
 		// Accessibility: Font
 		label.font = UIFont.preferredFont(forTextStyle: .caption2)
