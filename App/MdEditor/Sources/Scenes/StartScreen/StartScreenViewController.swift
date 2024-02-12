@@ -12,7 +12,7 @@ protocol IStartScreenViewController: AnyObject {
 	func render(with viewModel: StartScreenModel.ViewModel)
 }
 
-final class StartScreenViewController: UIViewController {
+final class StartScreenViewController: UIViewController, Accessible {
 
 	// MARK: - Dependencies
 
@@ -46,6 +46,7 @@ final class StartScreenViewController: UIViewController {
 		super.viewDidLoad()
 		setupUI()
 		setupConstraints()
+		generateAccessibilityIdentifiers()
 	}
 
 	override func viewDidLayoutSubviews() {
