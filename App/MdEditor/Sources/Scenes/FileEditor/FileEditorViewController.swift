@@ -14,6 +14,10 @@ protocol IFileEditorViewController: AnyObject {
 	/// Метод отрисовки информации на экране.
 	/// - Parameter viewModel: данные для отрисовки на экране.
 	func render(viewModel: FileEditorModel.ViewModel)
+	
+	/// Метод обновления title страницы
+	/// - Parameter viewModel: данные для отрисовки на экране.
+	func updateTitle(viewModel: FileEditorModel.ViewModel)
 }
 
 final class FileEditorViewController: UIViewController {
@@ -46,8 +50,8 @@ final class FileEditorViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		interactor?.fetchData()
 		setupUI()
+		interactor?.fetchData()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -89,7 +93,6 @@ private extension FileEditorViewController {
 private extension FileEditorViewController {
 	
 	func setupUI() {
-		title = viewModel.title == "about.md" ? L10n.About.title : viewModel.title
 		view.backgroundColor = Theme.backgroundColor
 		navigationItem.setHidesBackButton(false, animated: true)
 		navigationItem.largeTitleDisplayMode = .never
@@ -116,8 +119,10 @@ private extension FileEditorViewController {
 		
 		textView.backgroundColor = Theme.backgroundColor
 		textView.isScrollEnabled = true
+		
 		textView.font = UIFont.preferredFont(forTextStyle: .body)
 		textView.adjustsFontForContentSizeCategory = true
+		
 		textView.keyboardDismissMode = .onDrag
 		textView.isEditable = editable
 		textView.translatesAutoresizingMaskIntoConstraints = false
@@ -140,7 +145,7 @@ private extension FileEditorViewController {
 			textViewEditor.topAnchor.constraint(equalTo: safeArea.topAnchor),
 			textViewEditor.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Sizes.Padding.half),
 			textViewEditor.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Sizes.Padding.half),
-			textViewEditor.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: Sizes.Padding.normal)
+			textViewEditor.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -Sizes.Padding.normal)
 		]
 		
 		NSLayoutConstraint.activate(newConstraints)
@@ -154,5 +159,11 @@ private extension FileEditorViewController {
 extension FileEditorViewController: IFileEditorViewController {
 	func render(viewModel: FileEditorModel.ViewModel) {
 		self.viewModel = viewModel
+		self.textViewEditor.text = viewModel.fileData
+	}
+	
+	func updateTitle(viewModel: FileEditorModel.ViewModel) {
+		self.viewModel = viewModel
+		self.title = viewModel.title
 	}
 }

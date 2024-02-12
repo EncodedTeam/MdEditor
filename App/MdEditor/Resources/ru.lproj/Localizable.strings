@@ -45,3 +45,4 @@
 
 // MARK: - FileList strings
 "FileList.title" = "Обзор...";
+"FileList.dateFormat" = "dd.MM.YYYY HH:mm:ss";
