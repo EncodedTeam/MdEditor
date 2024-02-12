@@ -148,7 +148,10 @@ private extension StartScreenViewController {
 		layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
 
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+		
 		collectionView.register(RecentDocumentCell.self, forCellWithReuseIdentifier: RecentDocumentCell.reuseIdentifier)
+		collectionView.accessibilityIdentifier = AccessibilityIdentifier.StartScreen.collectionView.description
+		
 		collectionView.isPagingEnabled = true
 		collectionView.showsHorizontalScrollIndicator = false
 		collectionView.backgroundColor = .clear
