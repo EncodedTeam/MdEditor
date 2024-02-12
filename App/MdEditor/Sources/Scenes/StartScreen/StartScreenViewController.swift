@@ -63,6 +63,11 @@ final class StartScreenViewController: UIViewController {
 			self?.navigationController?.navigationBar.sizeToFit()
 		}
 	}
+
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		collectionViewDocs.reloadData()
+	}
 }
 
 // MARK: - IStartScreenViewController
@@ -83,20 +88,16 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-		let cell = collectionView.dequeueReusableCell(
+		guard let cell = collectionView.dequeueReusableCell(
 			withReuseIdentifier: RecentDocumentCell.reuseIdentifier,
 			for: indexPath
-		) as? RecentDocumentCell
-		
-		if let imageData = viewModel.documents[indexPath.item].preview {
-			cell?.imageView.image = UIImage(data: imageData.data)
-		} else {
-			cell?.imageView.image = nil
+		) as? RecentDocumentCell else {
+			return UICollectionViewCell()
 		}
+		let document = viewModel.documents[indexPath.item]
+		cell.configure(with: document)
 
-		cell?.label.text = viewModel.documents[indexPath.item].fileName
-
-		return cell ?? UICollectionViewCell()
+		return cell
 	}
 
 	func collectionView(

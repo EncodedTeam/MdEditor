@@ -47,8 +47,8 @@ final class StartScreenInteractor: IStartScreenInteractor {
 	func updateUI(with files: [FileSystemEntity]) {
 		let documents = files.map { document in
 			StartScreenModel.Document(
-				fileName: document.name,
-				preview: ImageData(data: document.preview.pngData())
+				fileName: document.name, 
+				content: document.loadFileBody()
 			)
 		}
 		let response = StartScreenModel.Response(docs: documents)

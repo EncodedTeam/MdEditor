@@ -77,5 +77,13 @@ enum Sizes {
 			static let verticalItems: CGFloat = 5
 		}
 	}
+
+	enum Preview {
+		static let fontSize: CGFloat = 5
+		enum Padding {
+			static let width: CGFloat = 10
+			static let height: CGFloat = 10
+		}
+	}
 }
 // swiftlint:enable type_name

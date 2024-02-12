@@ -20,7 +20,6 @@ struct FileSystemEntity {
 	var ext: String { url.pathExtension }
 	var parent: String? { url.pathComponents.dropLast().last }
 	var path: String { url.relativePath }
-	var preview: UIImage { UIImage(randomColorWithSize: CGSize(width: 150, height: 250)) }
 
 	func getFormattedSize(with size: UInt64) -> String {
 		var convertedValue = Double(size)
@@ -47,6 +46,16 @@ struct FileSystemEntity {
 		} else {
 			return "\"\(ext)\" – \(dateFormatter.string(from: modificationDate)) | \(formattedSize)"
 		}
+	}
+
+	func loadFileBody() -> String {
+		var text = ""
+		do {
+			text = try String(contentsOf: url, encoding: String.Encoding.utf8)
+		} catch {
+			text = "Failed to read text from \(url.lastPathComponent)"
+		}
+		return text
 	}
 }
 
