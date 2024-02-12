@@ -9,7 +9,7 @@
 import Foundation
 
 protocol IFileEditorInteractor: AnyObject {
-	/// Событие на предоставление данных из файла about.
+	/// Событие на предоставление данных из файла.
 	func fetchData()
 }
 
@@ -35,11 +35,17 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	// MARK: - Public methods
 
 	func fetchData() {
+		let title = url.lastPathComponent
+		updateTitle(title: title)
 		Task {
 			let title = url.lastPathComponent
 			let result = await fileStorage?.loadFileBody(url: url) ?? ""
 			await updateUI(with: title, fileData: result)
 		}
+	}
+	
+	private func updateTitle(title: String) {
+		presenter?.presentTitle(responce: FileEditorModel.Response(title: title, fileData: ""))
 	}
 
 	@MainActor
