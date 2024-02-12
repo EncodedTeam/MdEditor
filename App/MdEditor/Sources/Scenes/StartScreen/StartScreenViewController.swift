@@ -12,7 +12,7 @@ protocol IStartScreenViewController: AnyObject {
 	func render(with viewModel: StartScreenModel.ViewModel)
 }
 
-final class StartScreenViewController: UIViewController {
+final class StartScreenViewController: UIViewController, Accessible {
 
 	// MARK: - Dependencies
 
@@ -46,6 +46,7 @@ final class StartScreenViewController: UIViewController {
 		super.viewDidLoad()
 		setupUI()
 		setupConstraints()
+		generateAccessibilityIdentifiers()
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -147,7 +148,10 @@ private extension StartScreenViewController {
 		layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
 
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+		
 		collectionView.register(RecentDocumentCell.self, forCellWithReuseIdentifier: RecentDocumentCell.reuseIdentifier)
+		collectionView.accessibilityIdentifier = AccessibilityIdentifier.StartScreen.collectionView.description
+		
 		collectionView.isPagingEnabled = true
 		collectionView.showsHorizontalScrollIndicator = false
 		collectionView.backgroundColor = .clear
