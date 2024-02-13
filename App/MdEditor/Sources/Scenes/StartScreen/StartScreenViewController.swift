@@ -67,7 +67,10 @@ final class StartScreenViewController: UIViewController, Accessible {
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
-		collectionViewDocs.reloadData()
+		
+		if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+			collectionViewDocs.reloadData()
+		}
 	}
 }
 
@@ -265,5 +268,9 @@ private extension StartScreenViewController {
 	@objc
 	func buttonAboutAction(_ sender: UIButton) {
 		interactor?.openAbout()
+	}
+
+	@objc func interfaceModeChanged() {
+		collectionViewDocs.reloadData()
 	}
 }
