@@ -14,8 +14,8 @@ final class StartScreenObject: BaseScreenObject {
 	private lazy var collectionView = app.collectionViews[AccessibilityIdentifier.StartScreen.collectionView.description]
 	private lazy var buttonNew = app.buttons[AccessibilityIdentifier.StartScreen.buttonNew.description]
 	private lazy var buttonOpen = app.buttons[AccessibilityIdentifier.StartScreen.buttonOpen.description]
-	private lazy var buttonAbout = app.buttons[AccessibilityIdentifier.StartScreen.buttonOpen.description]
-	
+	private lazy var buttonAbout = app.buttons[AccessibilityIdentifier.StartScreen.buttonAbout.description]
+
 	// MARK: - ScreenObject Methods
 	@discardableResult
 	func isStartScreen() -> Self {
