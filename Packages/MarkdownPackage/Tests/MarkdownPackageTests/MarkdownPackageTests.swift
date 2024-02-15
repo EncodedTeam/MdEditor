@@ -2,11 +2,46 @@ import XCTest
 @testable import MarkdownPackage
 
 final class MarkdownPackageTests: XCTestCase {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
+	func test_tokenize() {
+		let sut = Lexer()
 
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
-    }
+		let mdText = """
+		# Regexp
+
+		## Квантификаторы
+
+		###  Подзаголовок **3 уровня**
+
+		> Цитата! **жирный тект** цитаты!
+
+		**Это** -- **жирный тект**
+
+		С помощью квантификаторов мы можем указывать сколько раз должен повторяться тот или иной символ (ну или группа символов).
+
+		- **{n}** - символ повторяется ровно n раз
+		- **{m,n}** - символ повторяется в диапазоне от m до n раз
+		- **{m,}** - символ повторяется минимум m раз (от m и более)
+
+		1. **{n}** - символ повторяется ровно n раз
+		2. **{m,n}** - символ повторяется в диапазоне от m до n раз
+		3. **{m,}** - символ повторяется минимум m раз (от m и более)
+
+		## Lookahead и lookbehind (опережающая и ретроспективная проверки)
+
+		- **lookahead** - опережающая проверка - `X(?=Y)` - найти Х, при условии, что после него идет Y
+		- *негативная опрережающая проверка* - `Х(?!Y)`
+		- **lookbehind** - ретроспективная проверка - `(?<=Y)X` - найти Х, при условии, что до него идет Y
+		- ***негативная ретроспективная проверка*** - `(?<!Y)Xo`
+
+		ссылка: ввыв  [SwiftBook](https://swiftbook.org)  картинка ![SwiftBook](https://swiftbook.org)
+
+		![SwiftBook](https://swiftbook.org)
+		ntcn **{n}** - символ по**вто**ряется ровно n ***раз*** user:name@*domen.ru.net*
+		"""
+
+		let tokens = sut.tokenize(mdText)
+		print("-------------------------")
+		print("Tokens:")
+		print("-------------------------")
+	}
 }

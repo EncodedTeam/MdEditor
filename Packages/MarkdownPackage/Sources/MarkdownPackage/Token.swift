@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Token {
+public enum Token {
 	case header(level: Int, text: Text)
 	case blockQuote(level: Int, text: Text)
 	case paragraph(text: Text)
@@ -16,7 +16,7 @@ enum Token {
 	case lineBreak
 }
 
-struct Text {
+public struct Text {
 	let text: [Part]
 
 	enum Part {

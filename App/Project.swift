@@ -5,7 +5,7 @@ import ProjectDescription
 enum ProjectSettings {
 	public static var organizationName: String { "EncodedTeam" }
 	public static var projectName: String { "MdEditor" }
-	public static var targerVersion: String { "15.0" }
+	public static var targerVersion: String { "16.0" }
 	public static var bundleId: String { "com.\(organizationName).\(projectName)" }
 	public static var marketingVersion: String { "4.4.0" }
 	public static var currentProjectVersion: String { "2" }
