@@ -7,6 +7,8 @@ enum ProjectSettings {
 	public static var projectName: String { "MdEditor" }
 	public static var targerVersion: String { "15.0" }
 	public static var bundleId: String { "com.\(organizationName).\(projectName)" }
+	public static var marketingVersion: String { "4.4.0" }
+	public static var currentProjectVersion: String { "1" }
 }
 
 private var swiftLintTargetScript: TargetScript {
@@ -44,6 +46,12 @@ let project = Project(
 		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
 		.local(path: .relativeToManifest("../Packages/DataStructuresPackage"))
 	],
+	settings: .settings(
+		base: SettingsDictionary()
+			.appleGenericVersioningSystem()
+			.marketingVersion(ProjectSettings.marketingVersion)
+			.currentProjectVersion(ProjectSettings.currentProjectVersion)
+	),
 	targets: [
 		Target(
 			name: ProjectSettings.projectName,

@@ -20,7 +20,11 @@ final class FileStorageServiceTests: XCTestCase {
 		let files = try? result.get()
 		let fileName = files?.first?.fullName ?? ""
 
-		XCTAssertEqual(fileName, ResourcesBundle.about, "Directory Assets should contain \"\(ResourcesBundle.about)\"")
+		XCTAssertEqual(
+			fileName,
+			TestingData.sourceAboutFileName,
+			"Directory Assets should contain \"\(TestingData.sourceAboutFileName)\""
+		)
 	}
 
 	@MainActor
@@ -32,7 +36,10 @@ final class FileStorageServiceTests: XCTestCase {
 		let string = await sut.loadFileBody(url: source)
 		let checkContains = string.contains(necesseryText)
 
-		XCTAssertTrue(checkContains, "About.md should contain necessery text \"\(necesseryText)\"")
+		XCTAssertTrue(
+			checkContains,
+			"\(TestingData.sourceAboutFileName) should contain necessery text \"\(necesseryText)\""
+		)
 	}
 
 	@MainActor
@@ -79,6 +86,7 @@ private extension FileStorageServiceTests {
 		static let mainBundle = Bundle.main.bundleURL
 		static let sourceAssetsDirectory = mainBundle.appendingPathComponent(ResourcesBundle.assets)
 		static let sourceAboutFile = sourceAssetsDirectory.appendingPathComponent(ResourcesBundle.about)
+		static let sourceAboutFileName = ResourcesBundle.about
 		static let rootUrls = ResourcesBundle.defaultsUrls
 	}
 
