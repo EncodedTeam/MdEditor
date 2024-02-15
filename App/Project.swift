@@ -8,7 +8,7 @@ enum ProjectSettings {
 	public static var targerVersion: String { "15.0" }
 	public static var bundleId: String { "com.\(organizationName).\(projectName)" }
 	public static var marketingVersion: String { "4.4.0" }
-	public static var currentProjectVersion: String { "1" }
+	public static var currentProjectVersion: String { "2" }
 }
 
 private var swiftLintTargetScript: TargetScript {
@@ -44,7 +44,8 @@ let project = Project(
 	),
 	packages: [
 		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
-		.local(path: .relativeToManifest("../Packages/DataStructuresPackage"))
+		.local(path: .relativeToManifest("../Packages/DataStructuresPackage")),
+		.local(path: .relativeToManifest("../Packages/MarkdownPackage"))
 	],
 	settings: .settings(
 		base: SettingsDictionary()
@@ -68,7 +69,8 @@ let project = Project(
 			scripts: scripts,
 			dependencies: [
 				.package(product: "TaskManagerPackage", type: .runtime),
-				.package(product: "DataStructuresPackage", type: .runtime)
+				.package(product: "DataStructuresPackage", type: .runtime),
+				.package(product: "MarkdownPackage", type: .runtime)
 			]
 		),
 		Target(
