@@ -36,43 +36,69 @@ private extension Lexer {
 	}
 
 	func parseHeader(rawText: String) -> Token? {
-		let regex = /^(?<headerLevel>#{1,6})\s+(?<headerText>.+)/
+		if #available(iOS 16, macOS 13, *) {
+			let regex = /^(?<level>#{1,6})\s+(?<text>.+)/
 
-		if let match = rawText.wholeMatch(of: regex) {
-			let headerLevel = String(match.headerLevel).count
-			let headerText = parseString(String(match.headerText))
-			return .header(level: headerLevel, text: headerText)
+			if let match = rawText.wholeMatch(of: regex) {
+				let headerLevel = String(match.level).count
+				let headerText = parseString(String(match.text))
+				return .header(level: headerLevel, text: headerText)
+			}
+		} else {
+			let pattern = #"^(?<level>#{1,6})\s+(?<text>.+)"#
+			if let match = try? rawText.firstMatch(pattern: pattern) {
+				let rangeLevel = match.range(withName: "level")
+				let rangeText = match.range(withName: "text")
+				let headerLevel = rawText.substring(with: rangeLevel).count
+				let headerText = parseString(rawText.substring(with: rangeText))
+				return .header(level: headerLevel, text: headerText)
+			}
 		}
-
 		return nil
 	}
 	
 	func parseParagraph(rawText: String) -> Token? {
-		let regex = /^([^#>].*)/
-
-		if let match = rawText.wholeMatch(of: regex) {
-			let paragraphText = parseString(String(match.output.1))
-			return .paragraph(text: paragraphText)
+		if #available(iOS 16, macOS 13, *) {
+			let regex = /^(?<text>[^#>].*)/
+			if let match = rawText.wholeMatch(of: regex) {
+				let paragraphText = parseString(String(match.text))
+				return .paragraph(text: paragraphText)
+			}
+		} else {
+			let pattern = #"^(?<text>[^#>].*)"#
+			if let match = try? rawText.firstMatch(pattern: pattern) {
+				let rangeText = match.range(withName: "text")
+				let paragraphText = parseString(rawText.substring(with: rangeText))
+				return .paragraph(text: paragraphText)
+			}
 		}
 
 		return nil
 	}
 
 	func parseBlockquote(rawText: String) -> Token? {
-		let regex = /^(?<blockquoteLevel>>{1,6})\s+(?<blockquoteText>.+)/
-
-		if let match = rawText.wholeMatch(of: regex) {
-			let blockquoteLevel = String(match.blockquoteLevel).count
-			let blockquoteText = parseString(String(match.blockquoteText))
-			return .blockQuote(level: blockquoteLevel, text: blockquoteText)
+		if #available(iOS 16, macOS 13, *) {
+			let regex = /^(?<blockquoteLevel>>{1,6})\s+(?<blockquoteText>.+)/
+			if let match = rawText.wholeMatch(of: regex) {
+				let blockquoteLevel = String(match.blockquoteLevel).count
+				let blockquoteText = parseString(String(match.blockquoteText))
+				return .blockQuote(level: blockquoteLevel, text: blockquoteText)
+			}
+		} else {
+			let pattern = #"^(?<level>>{1,6})\s+(?<text>.+)"#
+			if let match = try? rawText.firstMatch(pattern: pattern) {
+				let rangeLevel = match.range(withName: "level")
+				let rangeText = match.range(withName: "text")
+				let blockquoteLevel = rawText.substring(with: rangeLevel).count
+				let blockquoteText = parseString(rawText.substring(with: rangeText))
+				return .blockQuote(level: blockquoteLevel, text: blockquoteText)
+			}
 		}
 
 		return nil
 	}
 
 	func parseString(_ rawText: String) -> Text {
-		Text(text: [.normal(text: rawText)])
+		TextParser().parse(rawText: rawText)
 	}
-
-
 }

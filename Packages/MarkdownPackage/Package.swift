@@ -5,7 +5,6 @@ import PackageDescription
 
 let package = Package(
     name: "MarkdownPackage",
-	platforms: [.iOS(.v16), .macOS(.v13)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -23,6 +22,8 @@ let package = Package(
     ]
 )
 
+// For #available(iOS 16, macOS 13, *)
+// Возможность использования Regex с литералами
 for target in package.targets {
 	target.swiftSettings = target.swiftSettings ?? []
 	target.swiftSettings?.append(

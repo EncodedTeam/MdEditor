@@ -2,10 +2,22 @@ import XCTest
 @testable import MarkdownPackage
 
 final class MarkdownPackageTests: XCTestCase {
-	func test_tokenize() {
+	func test_tokenize_shouldReturnElements() {
 		let sut = Lexer()
 
-		let mdText = """
+		let tokens = sut.tokenize(TestingData.mdText)
+
+		XCTAssertEqual(tokens.count, 31, "Tokens should contain 31 elements")
+
+		print("-------------------------")
+		print("Tokens:")
+		print("-------------------------")
+	}
+}
+
+private extension MarkdownPackageTests {
+	enum TestingData {
+		static let mdText = """
 		# Regexp
 
 		## Квантификаторы
@@ -38,10 +50,5 @@ final class MarkdownPackageTests: XCTestCase {
 		![SwiftBook](https://swiftbook.org)
 		ntcn **{n}** - символ по**вто**ряется ровно n ***раз*** user:name@*domen.ru.net*
 		"""
-
-		let tokens = sut.tokenize(mdText)
-		print("-------------------------")
-		print("Tokens:")
-		print("-------------------------")
 	}
 }
