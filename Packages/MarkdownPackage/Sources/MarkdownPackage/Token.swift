@@ -10,7 +10,11 @@ import Foundation
 public enum Token {
 	case header(level: Int, text: Text)
 	case blockQuote(level: Int, text: Text)
-	case paragraph(text: Text)
+	case codeBlockMarker(level: Int, lang: String)
+	case codeLine(text: String)
+	case unorderedListItem(level: Int, text: Text)
+	case orderedListItem(level: Int, text: Text)
+	case textLine(text: Text)
 	case link(url: String, text: String)
 	case image(url: String, size: Int)
 	case lineBreak

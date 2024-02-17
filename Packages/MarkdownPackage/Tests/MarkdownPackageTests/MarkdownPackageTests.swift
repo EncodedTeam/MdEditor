@@ -7,7 +7,7 @@ final class MarkdownPackageTests: XCTestCase {
 
 		let tokens = sut.tokenize(TestingData.mdText)
 
-		XCTAssertEqual(tokens.count, 31, "Tokens should contain 31 elements")
+		XCTAssertEqual(tokens.count, 35, "Tokens should contain 35 elements")
 
 		print("-------------------------")
 		print("Tokens:")
@@ -34,9 +34,12 @@ private extension MarkdownPackageTests {
 		- **{m,n}** - символ повторяется в диапазоне от m до n раз
 		- **{m,}** - символ повторяется минимум m раз (от m и более)
 
+		```md
 		1. **{n}** - символ повторяется ровно n раз
 		2. **{m,n}** - символ повторяется в диапазоне от m до n раз
 		3. **{m,}** - символ повторяется минимум m раз (от m и более)
+		## Lookahead и lookbehind **(опережающая и ретроспективная** проверки)
+		```
 
 		## Lookahead и lookbehind (опережающая и ретроспективная проверки)
 
@@ -45,9 +48,8 @@ private extension MarkdownPackageTests {
 		- **lookbehind** - ретроспективная проверка - `(?<=Y)X` - найти Х, при условии, что до него идет Y
 		- ***негативная ретроспективная проверка*** - `(?<!Y)Xo`
 
-		ссылка: ввыв  [SwiftBook](https://swiftbook.org)  картинка ![SwiftBook](https://swiftbook.org)
-
-		![SwiftBook](https://swiftbook.org)
+		ссылка: [SwiftBook](https://swiftbook.org) картинка ![SwiftBook](https://swiftbook.org)
+		
 		ntcn **{n}** - символ по**вто**ряется ровно n ***раз*** user:name@*domen.ru.net*
 		"""
 	}

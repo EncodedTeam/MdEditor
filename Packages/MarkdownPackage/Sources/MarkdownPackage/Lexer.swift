@@ -17,12 +17,23 @@ public final class Lexer: ILexer {
 	public func tokenize(_ input: String) -> [Token] {
 		let lines = input.components(separatedBy: .newlines)
 		var tokens: [Token?] = []
+		var inCodeBlock = false
 
 		for line in lines {
-			tokens.append(parseLineBreak(rawText: line))
-			tokens.append(parseHeader(rawText: line))
-			tokens.append(parseBlockquote(rawText: line))
-			tokens.append(parseParagraph(rawText: line))
+			if let codeBlockToken = parseCodeBlockMarker(rawText: line) {
+				tokens.append(codeBlockToken)
+				inCodeBlock.toggle()
+				continue
+			}
+			if !inCodeBlock {
+				tokens.append(parseLineBreak(rawText: line))
+				tokens.append(parseHeader(rawText: line))
+				tokens.append(parseBlockquote(rawText: line))
+				tokens.append(parseLink(rawText: line))
+				tokens.append(parseLextLine(rawText: line))
+			} else {
+				tokens.append(.codeLine(text: line))
+			}
 		}
 
 		return tokens.compactMap { $0 }
@@ -36,65 +47,57 @@ private extension Lexer {
 	}
 
 	func parseHeader(rawText: String) -> Token? {
-		if #available(iOS 16, macOS 13, *) {
-			let regex = /^(?<level>#{1,6})\s+(?<text>.+)/
-
-			if let match = rawText.wholeMatch(of: regex) {
-				let headerLevel = String(match.level).count
-				let headerText = parseString(String(match.text))
-				return .header(level: headerLevel, text: headerText)
-			}
-		} else {
-			let pattern = #"^(?<level>#{1,6})\s+(?<text>.+)"#
-			if let match = try? rawText.firstMatch(pattern: pattern) {
-				let rangeLevel = match.range(withName: "level")
-				let rangeText = match.range(withName: "text")
-				let headerLevel = rawText.substring(with: rangeLevel).count
-				let headerText = parseString(rawText.substring(with: rangeText))
-				return .header(level: headerLevel, text: headerText)
-			}
+		let pattern = #"^(?<level>#{1,6})\s+(?<text>.+)"#
+		if let match = rawText.firstMatch(pattern: pattern) {
+			let rangeLevel = match.range(withName: "level")
+			let rangeText = match.range(withName: "text")
+			let level = rawText.substring(with: rangeLevel).count
+			let text = parseString(rawText.substring(with: rangeText))
+			return .header(level: level, text: text)
 		}
 		return nil
 	}
 	
-	func parseParagraph(rawText: String) -> Token? {
-		if #available(iOS 16, macOS 13, *) {
-			let regex = /^(?<text>[^#>].*)/
-			if let match = rawText.wholeMatch(of: regex) {
-				let paragraphText = parseString(String(match.text))
-				return .paragraph(text: paragraphText)
-			}
-		} else {
-			let pattern = #"^(?<text>[^#>].*)"#
-			if let match = try? rawText.firstMatch(pattern: pattern) {
-				let rangeText = match.range(withName: "text")
-				let paragraphText = parseString(rawText.substring(with: rangeText))
-				return .paragraph(text: paragraphText)
-			}
+	func parseLextLine(rawText: String) -> Token? {
+		let pattern = #"^(?<text>[^#>].*)"#
+		if let match = rawText.firstMatch(pattern: pattern) {
+			let rangeText = match.range(withName: "text")
+			let text = parseString(rawText.substring(with: rangeText))
+			return .textLine(text: text)
 		}
-
 		return nil
 	}
 
 	func parseBlockquote(rawText: String) -> Token? {
-		if #available(iOS 16, macOS 13, *) {
-			let regex = /^(?<blockquoteLevel>>{1,6})\s+(?<blockquoteText>.+)/
-			if let match = rawText.wholeMatch(of: regex) {
-				let blockquoteLevel = String(match.blockquoteLevel).count
-				let blockquoteText = parseString(String(match.blockquoteText))
-				return .blockQuote(level: blockquoteLevel, text: blockquoteText)
-			}
-		} else {
-			let pattern = #"^(?<level>>{1,6})\s+(?<text>.+)"#
-			if let match = try? rawText.firstMatch(pattern: pattern) {
-				let rangeLevel = match.range(withName: "level")
-				let rangeText = match.range(withName: "text")
-				let blockquoteLevel = rawText.substring(with: rangeLevel).count
-				let blockquoteText = parseString(rawText.substring(with: rangeText))
-				return .blockQuote(level: blockquoteLevel, text: blockquoteText)
-			}
+		let pattern = #"^(?<level>>{1,6})\s+(?<text>.+)"#
+		if let match = rawText.firstMatch(pattern: pattern) {
+			let rangeLevel = match.range(withName: "level")
+			let rangeText = match.range(withName: "text")
+			let blockquoteLevel = rawText.substring(with: rangeLevel).count
+			let blockquoteText = parseString(rawText.substring(with: rangeText))
+			return .blockQuote(level: blockquoteLevel, text: blockquoteText)
 		}
+		return nil
+	}
 
+	func parseLink(rawText: String) -> Token? {
+		let pattern = #"[^!]\[(?<header>[^\\]+?)\]\((?<url>[^\\]+?)\)"#
+		if let match = rawText.firstMatch(pattern: pattern) {
+			let rangeHeader = match.range(withName: "header")
+			let rangeUrl = match.range(withName: "url")
+			let header = rawText.substring(with: rangeHeader)
+			let url = rawText.substring(with: rangeUrl)
+			return .link(url: url, text: header)
+		}
+		return nil
+	}
+	
+	func parseCodeBlockMarker(rawText: String) -> Token? {
+		let pattern = #"^`{3,6}(.*)"#
+		if let text = rawText.groups(for: pattern).last {
+			let level = rawText.filter { $0 == "`" }.count
+			return .codeBlockMarker(level: level, lang: text)
+		}
 		return nil
 	}
 
