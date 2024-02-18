@@ -27,7 +27,7 @@ public final class Document: BaseNode {
 public final class HeaderNode: BaseNode {
 	let level: Int
 
-	init(level: Int, children: [INode] = []) {
+	public init(level: Int, children: [INode] = []) {
 		self.level = level
 		super.init(children)
 	}
@@ -37,7 +37,7 @@ public final class HeaderNode: BaseNode {
 public final class BlockquoteNode: BaseNode {
 	let level: Int
 
-	init(level: Int, children: [INode] = []) {
+	public init(level: Int, children: [INode] = []) {
 		self.level = level
 		super.init(children)
 	}
@@ -100,7 +100,7 @@ public final class ImageNode: BaseNode {
 	let url: String
 	let size: String
 
-	init(url: String, size: String) {
+	public init(url: String, size: String) {
 		self.url = url
 		self.size = size
 	}
@@ -110,12 +110,21 @@ public final class ImageNode: BaseNode {
 public final class LineBreakNode: BaseNode {
 }
 
+// MARK: - Horizontal Line
+public final class HorizontalLineNode: BaseNode {
+	let level: Int
+	
+	public init(level: Int) {
+		self.level = level
+	}
+}
+
 // MARK: - Code Block
 public final class CodeBlockNode: BaseNode {
 	let level: Int
 	let language: String
 
-	init(level: Int, language: String, children: [INode] = []) {
+	public init(level: Int, language: String, children: [INode] = []) {
 		self.level = level
 		self.language = language
 		super.init(children)
@@ -126,7 +135,7 @@ public final class CodeBlockNode: BaseNode {
 public final class BulletedListNode: BaseNode {
 	let level: Int
 
-	init(level: Int, children: [INode] = []) {
+	public init(level: Int, children: [INode] = []) {
 		self.level = level
 		super.init(children)
 	}
@@ -135,7 +144,7 @@ public final class BulletedListNode: BaseNode {
 public final class BulletedListItem: BaseNode {
 	let marker: String
 
-	init(marker: String, children: [INode]) {
+	public init(marker: String, children: [INode]) {
 		self.marker = marker
 		super.init(children)
 	}
@@ -145,7 +154,7 @@ public final class BulletedListItem: BaseNode {
 public final class NumberedListNode: BaseNode {
 	let level: Int
 
-	init(level: Int, children: [INode] = []) {
+	public init(level: Int, children: [INode] = []) {
 		self.level = level
 		super.init(children)
 	}
@@ -154,7 +163,7 @@ public final class NumberedListNode: BaseNode {
 public final class NumberedListItem: BaseNode {
 	let marker: String
 
-	init(marker: String, children: [INode]) {
+	public init(marker: String, children: [INode]) {
 		self.marker = marker
 		super.init(children)
 	}

@@ -19,6 +19,7 @@ public final class Parser {
 			nodes.append(parseParagraph(tokens: &tempTokens))
 //			nodes.append(parseImage(tokens: &tempTokens))
 			nodes.append(parseLineBreak(tokens: &tempTokens))
+			nodes.append(parseHorizontalLine(tokens: &tempTokens))
 			nodes.append(parseCodeBlock(tokens: &tempTokens))
 			nodes.append(parseBulletedList(tokens: &tempTokens))
 			nodes.append(parseNumberedList(tokens: &tempTokens))
@@ -95,6 +96,17 @@ private extension Parser {
 		if case .lineBreak = token {
 			tokens.removeFirst()
 			return LineBreakNode()
+		}
+
+		return nil
+	}
+
+	func parseHorizontalLine(tokens: inout [Token]) -> HorizontalLineNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case let .horizontalLine(level: level) = token {
+			tokens.removeFirst()
+			return HorizontalLineNode(level: level)
 		}
 
 		return nil

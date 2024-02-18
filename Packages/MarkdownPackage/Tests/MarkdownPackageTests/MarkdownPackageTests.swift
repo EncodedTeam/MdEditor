@@ -22,7 +22,7 @@ private extension MarkdownPackageTests {
 	enum TestingData {
 		static let mdText = """
 		# Regexp
-
+		______________
 		## Квантификаторы
 
 		###  Подзаголовок **3 уровня**
@@ -53,7 +53,7 @@ private extension MarkdownPackageTests {
 			- *негативная опрережающая проверка* - `Х(?!Y)`
 			- **lookbehind** - ретроспективная проверка - `(?<=Y)X` - найти Х, при условии, что до него идет Y
 			- ***негативная ретроспективная проверка*** - `(?<!Y)Xo`
-
+		___
 		ссылка: [SwiftBook](https://swiftbook.org) картинка ![SwiftBook](https://swiftbook.org)
 		
 		ntcn **{n}** - символ по**вто**ряется ровно n ***раз*** user:name@*domen.ru.net*
