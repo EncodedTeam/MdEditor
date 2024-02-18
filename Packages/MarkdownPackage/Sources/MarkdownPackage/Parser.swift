@@ -20,6 +20,7 @@ public final class Parser {
 //			nodes.append(parseImage(tokens: &tempTokens))
 			nodes.append(parseLineBreak(tokens: &tempTokens))
 			nodes.append(parseCodeBlock(tokens: &tempTokens))
+			nodes.append(parseBulletedList(tokens: &tempTokens))
 
 			/// Очистим массив распарсенных нодов от nil
 			let parsedNodes = nodes.compactMap { $0 }
@@ -124,6 +125,33 @@ private extension Parser {
 
 		if !inlineCodeItems.isEmpty {
 			return CodeBlockNode(level: levelNode, language: languageNode, children: inlineCodeItems)
+		}
+
+		return nil
+	}
+
+	func parseBulletedList(tokens: inout [Token]) -> BulletedListNode? {
+		var listItems: [INode] = []
+		var startBlock = true
+		var levelNode = 0
+
+		while !tokens.isEmpty {
+			guard let token = tokens.first else { return nil }
+
+			if case let .bulletedListItem(level, text) = token {
+				tokens.removeFirst()
+				listItems.append(BulletedListItem(parseText(text)))
+				if startBlock {
+					levelNode = level
+					startBlock = false
+				}
+			} else {
+				break
+			}
+		}
+
+		if !listItems.isEmpty {
+			return BulletedListNode(level: levelNode, children: listItems)
 		}
 
 		return nil

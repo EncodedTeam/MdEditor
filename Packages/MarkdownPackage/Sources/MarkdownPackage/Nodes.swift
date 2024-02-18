@@ -102,7 +102,6 @@ public final class ImageNode: BaseNode {
 }
 
 public final class LineBreakNode: BaseNode {
-	public init() { }
 }
 
 public final class CodeBlockNode: BaseNode {
@@ -114,4 +113,16 @@ public final class CodeBlockNode: BaseNode {
 		self.language = language
 		super.init(children)
 	}
+}
+
+public final class BulletedListNode: BaseNode {
+	let level: Int
+
+	init(level: Int, children: [INode] = []) {
+		self.level = level
+		super.init(children)
+	}
+}
+
+public final class BulletedListItem: BaseNode {
 }
