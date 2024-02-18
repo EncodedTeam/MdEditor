@@ -19,7 +19,8 @@ public final class Parser {
 			nodes.append(parseParagraph(tokens: &tempTokens))
 //			nodes.append(parseImage(tokens: &tempTokens))
 			nodes.append(parseLineBreak(tokens: &tempTokens))
-			
+			nodes.append(parseCodeBlock(tokens: &tempTokens))
+
 			/// Очистим массив распарсенных нодов от nil
 			let parsedNodes = nodes.compactMap { $0 }
 
@@ -92,6 +93,37 @@ private extension Parser {
 		if case .lineBreak = token {
 			tokens.removeFirst()
 			return LineBreakNode()
+		}
+
+		return nil
+	}
+
+	func parseCodeBlock(tokens: inout [Token]) -> CodeBlockNode? {
+		var inlineCodeItems: [INode] = []
+		var startBlock = true
+		var levelNode = 0
+		var languageNode = ""
+
+		while !tokens.isEmpty {
+			guard let token = tokens.first else { return nil }
+
+			if case let .codeBlockMarker(level: level, lang: lang) = token {
+				tokens.removeFirst()
+				if startBlock {
+					levelNode = level
+					languageNode = lang
+					startBlock = false
+				}
+			} else if case let .codeLine(text: code) = token {
+				tokens.removeFirst()
+				inlineCodeItems.append(InlineCodeTextNode(code: code))
+			} else {
+				break
+			}
+		}
+
+		if !inlineCodeItems.isEmpty {
+			return CodeBlockNode(level: levelNode, language: languageNode, children: inlineCodeItems)
 		}
 
 		return nil

@@ -20,7 +20,6 @@ public class BaseNode: INode {
 }
 
 public final class Document: BaseNode {
-
 }
 
 public final class HeaderNode: BaseNode {
@@ -104,4 +103,15 @@ public final class ImageNode: BaseNode {
 
 public final class LineBreakNode: BaseNode {
 	public init() { }
+}
+
+public final class CodeBlockNode: BaseNode {
+	let level: Int
+	let language: String
+
+	init(level: Int, language: String, children: [INode] = []) {
+		self.level = level
+		self.language = language
+		super.init(children)
+	}
 }

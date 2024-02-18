@@ -25,17 +25,17 @@ public final class Lexer: ILexer {
 				continue
 			}
 
-			if let bulletedListItem = parseBulletedListItem(rawText: line) {
-				tokens.append(bulletedListItem)
-				continue
-			}
-
-			if let numberedListItem = parseNumberedListItem(rawText: line) {
-				tokens.append(numberedListItem)
-				continue
-			}
-
 			if !inCodeBlock {
+				if let bulletedListItem = parseBulletedListItem(rawText: line) {
+					tokens.append(bulletedListItem)
+					continue
+				}
+
+				if let numberedListItem = parseNumberedListItem(rawText: line) {
+					tokens.append(numberedListItem)
+					continue
+				}
+
 				tokens.append(parseLineBreak(rawText: line))
 				tokens.append(parseHeader(rawText: line))
 				tokens.append(parseBlockquote(rawText: line))
