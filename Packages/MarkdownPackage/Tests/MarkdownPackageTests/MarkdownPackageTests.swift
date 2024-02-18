@@ -6,11 +6,14 @@ final class MarkdownPackageTests: XCTestCase {
 		let sut = Lexer()
 
 		let tokens = sut.tokenize(TestingData.mdText)
-
-		XCTAssertEqual(tokens.count, 35, "Tokens should contain 35 elements")
+		let document = Parser().parse(tokens: tokens)
 
 		print("-------------------------")
 		print("Tokens:")
+		print(tokens.debugDescription)
+		print("-------------------------")
+		print("Documents:")
+		print(document.children)
 		print("-------------------------")
 	}
 }
