@@ -18,13 +18,23 @@ public final class Lexer: ILexer {
 		let lines = input.components(separatedBy: .newlines)
 		var tokens: [Token?] = []
 		var inCodeBlock = false
-
 		for line in lines {
 			if let codeBlockToken = parseCodeBlockMarker(rawText: line) {
 				tokens.append(codeBlockToken)
 				inCodeBlock.toggle()
 				continue
 			}
+
+			if let bulletedListItem = parseBulletedListItem(rawText: line) {
+				tokens.append(bulletedListItem)
+				continue
+			}
+
+			if let numberedListItem = parseNumberedListItem(rawText: line) {
+				tokens.append(numberedListItem)
+				continue
+			}
+
 			if !inCodeBlock {
 				tokens.append(parseLineBreak(rawText: line))
 				tokens.append(parseHeader(rawText: line))
@@ -73,9 +83,9 @@ private extension Lexer {
 		if let match = rawText.firstMatch(pattern: pattern) {
 			let rangeLevel = match.range(withName: "level")
 			let rangeText = match.range(withName: "text")
-			let blockquoteLevel = rawText.substring(with: rangeLevel).count
-			let blockquoteText = parseString(rawText.substring(with: rangeText))
-			return .blockQuote(level: blockquoteLevel, text: blockquoteText)
+			let level = rawText.substring(with: rangeLevel).count
+			let text = parseString(rawText.substring(with: rangeText))
+			return .blockQuote(level: level, text: text)
 		}
 		return nil
 	}
@@ -97,6 +107,30 @@ private extension Lexer {
 		if let text = rawText.groups(for: pattern).last {
 			let level = rawText.filter { $0 == "`" }.count
 			return .codeBlockMarker(level: level, lang: text)
+		}
+		return nil
+	}
+
+	func parseBulletedListItem(rawText: String) -> Token? {
+		let pattern = #"^(?<level>\h*)(?<text>-\s+.+)"#
+		if let match = rawText.firstMatch(pattern: pattern) {
+			let rangeLevel = match.range(withName: "level")
+			let rangeText = match.range(withName: "text")
+			let level = rawText.substring(with: rangeLevel).count
+			let text = parseString(rawText.substring(with: rangeText))
+			return .bulletedListItem(level: level, text: text)
+		}
+		return nil
+	}
+
+	func parseNumberedListItem(rawText: String) -> Token? {
+		let pattern = #"^(?<level>\h*)(?<text>\d+\.\s+.+)"#
+		if let match = rawText.firstMatch(pattern: pattern) {
+			let rangeLevel = match.range(withName: "level")
+			let rangeText = match.range(withName: "text")
+			let level = rawText.substring(with: rangeLevel).count
+			let text = parseString(rawText.substring(with: rangeText))
+			return .numberedListItem(level: level, text: text)
 		}
 		return nil
 	}
