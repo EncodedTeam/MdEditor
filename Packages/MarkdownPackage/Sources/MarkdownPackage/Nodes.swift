@@ -125,4 +125,28 @@ public final class BulletedListNode: BaseNode {
 }
 
 public final class BulletedListItem: BaseNode {
+	let marker: String
+
+	init(marker: String, children: [INode]) {
+		self.marker = marker
+		super.init(children)
+	}
+}
+
+public final class NumberedListNode: BaseNode {
+	let level: Int
+
+	init(level: Int, children: [INode] = []) {
+		self.level = level
+		super.init(children)
+	}
+}
+
+public final class NumberedListItem: BaseNode {
+	let marker: String
+
+	init(marker: String, children: [INode]) {
+		self.marker = marker
+		super.init(children)
+	}
 }

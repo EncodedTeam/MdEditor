@@ -21,6 +21,7 @@ public final class Parser {
 			nodes.append(parseLineBreak(tokens: &tempTokens))
 			nodes.append(parseCodeBlock(tokens: &tempTokens))
 			nodes.append(parseBulletedList(tokens: &tempTokens))
+			nodes.append(parseNumberedList(tokens: &tempTokens))
 
 			/// Очистим массив распарсенных нодов от nil
 			let parsedNodes = nodes.compactMap { $0 }
@@ -138,9 +139,10 @@ private extension Parser {
 		while !tokens.isEmpty {
 			guard let token = tokens.first else { return nil }
 
-			if case let .bulletedListItem(level, text) = token {
+			if case let .bulletedListItem(level, marker, text) = token {
 				tokens.removeFirst()
-				listItems.append(BulletedListItem(parseText(text)))
+				let node = BulletedListItem(marker: marker, children: parseText(text))
+				listItems.append(node)
 				if startBlock {
 					levelNode = level
 					startBlock = false
@@ -152,6 +154,34 @@ private extension Parser {
 
 		if !listItems.isEmpty {
 			return BulletedListNode(level: levelNode, children: listItems)
+		}
+
+		return nil
+	}
+
+	func parseNumberedList(tokens: inout [Token]) -> NumberedListNode? {
+		var listItems: [INode] = []
+		var startBlock = true
+		var levelNode = 0
+
+		while !tokens.isEmpty {
+			guard let token = tokens.first else { return nil }
+
+			if case let .numberedListItem(level, marker, text) = token {
+				tokens.removeFirst()
+				let node = NumberedListItem(marker: marker, children: parseText(text))
+				listItems.append(node)
+				if startBlock {
+					levelNode = level
+					startBlock = false
+				}
+			} else {
+				break
+			}
+		}
+
+		if !listItems.isEmpty {
+			return NumberedListNode(level: levelNode, children: listItems)
 		}
 
 		return nil

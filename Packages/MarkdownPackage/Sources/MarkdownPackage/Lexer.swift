@@ -112,25 +112,29 @@ private extension Lexer {
 	}
 
 	func parseBulletedListItem(rawText: String) -> Token? {
-		let pattern = #"^(?<level>\h*)(?<text>-\s+.+)"#
+		let pattern = #"^(?<level>\h*)(?<marker>-)\s+(?<text>.+)"#
 		if let match = rawText.firstMatch(pattern: pattern) {
 			let rangeLevel = match.range(withName: "level")
+			let rangeMarker = match.range(withName: "marker")
 			let rangeText = match.range(withName: "text")
 			let level = rawText.substring(with: rangeLevel).count
+			let marker = rawText.substring(with: rangeMarker)
 			let text = parseString(rawText.substring(with: rangeText))
-			return .bulletedListItem(level: level, text: text)
+			return .bulletedListItem(level: level, marker: marker, text: text)
 		}
 		return nil
 	}
 
 	func parseNumberedListItem(rawText: String) -> Token? {
-		let pattern = #"^(?<level>\h*)(?<text>\d+\.\s+.+)"#
+		let pattern = #"^(?<level>\h*)(?<marker>\d+\.)\s+(?<text>.+)"#
 		if let match = rawText.firstMatch(pattern: pattern) {
 			let rangeLevel = match.range(withName: "level")
+			let rangeMarker = match.range(withName: "marker")
 			let rangeText = match.range(withName: "text")
 			let level = rawText.substring(with: rangeLevel).count
+			let marker = rawText.substring(with: rangeMarker)
 			let text = parseString(rawText.substring(with: rangeText))
-			return .numberedListItem(level: level, text: text)
+			return .numberedListItem(level: level, marker: marker, text: text)
 		}
 		return nil
 	}
