@@ -19,9 +19,11 @@ public class BaseNode: INode {
 	}
 }
 
+// MARK: - Main Root Node - Document
 public final class Document: BaseNode {
 }
 
+// MARK: - Header
 public final class HeaderNode: BaseNode {
 	let level: Int
 
@@ -31,6 +33,7 @@ public final class HeaderNode: BaseNode {
 	}
 }
 
+// MARK: - Block Quote
 public final class BlockquoteNode: BaseNode {
 	let level: Int
 
@@ -40,6 +43,7 @@ public final class BlockquoteNode: BaseNode {
 	}
 }
 
+// MARK: - Paragraph
 public final class ParagraphNode: BaseNode {
 }
 
@@ -91,6 +95,7 @@ public final class EscapedCharTextNode: BaseNode {
 	}
 }
 
+// MARK: - Image
 public final class ImageNode: BaseNode {
 	let url: String
 	let size: String
@@ -101,9 +106,11 @@ public final class ImageNode: BaseNode {
 	}
 }
 
+// MARK: - Line Break
 public final class LineBreakNode: BaseNode {
 }
 
+// MARK: - Code Block
 public final class CodeBlockNode: BaseNode {
 	let level: Int
 	let language: String
@@ -115,6 +122,7 @@ public final class CodeBlockNode: BaseNode {
 	}
 }
 
+// MARK: - Bulleted List
 public final class BulletedListNode: BaseNode {
 	let level: Int
 
@@ -133,6 +141,7 @@ public final class BulletedListItem: BaseNode {
 	}
 }
 
+// MARK: - Numbered List
 public final class NumberedListNode: BaseNode {
 	let level: Int
 
