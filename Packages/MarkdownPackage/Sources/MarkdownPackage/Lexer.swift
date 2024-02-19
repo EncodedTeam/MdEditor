@@ -36,11 +36,14 @@ public final class Lexer: ILexer {
 					continue
 				}
 
+				if let horizontalLine = parseHorizontalLine(rawText: line) {
+					tokens.append(horizontalLine)
+					continue
+				}
+
 				tokens.append(parseLineBreak(rawText: line))
-				tokens.append(parseHorizontalLine(rawText: line))
 				tokens.append(parseHeader(rawText: line))
 				tokens.append(parseBlockquote(rawText: line))
-				tokens.append(parseLink(rawText: line))
 				tokens.append(parseTextLine(rawText: line))
 			} else {
 				tokens.append(.codeLine(text: line))
@@ -96,18 +99,6 @@ private extension Lexer {
 			let level = rawText.substring(with: rangeLevel).count
 			let text = parseString(rawText.substring(with: rangeText))
 			return .blockQuote(level: level, text: text)
-		}
-		return nil
-	}
-
-	func parseLink(rawText: String) -> Token? {
-		let pattern = #"[^!]\[(?<header>[^\\]+?)\]\((?<url>[^\\]+?)\)"#
-		if let match = rawText.firstMatch(pattern: pattern) {
-			let rangeHeader = match.range(withName: "header")
-			let rangeUrl = match.range(withName: "url")
-			let header = rawText.substring(with: rangeHeader)
-			let url = rawText.substring(with: rangeUrl)
-			return .link(url: url, text: header)
 		}
 		return nil
 	}

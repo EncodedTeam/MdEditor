@@ -8,7 +8,9 @@
 import Foundation
 
 public final class Parser {
-	func parse(tokens: [Token]) -> Document {
+	public init() {}
+
+	public func parse(tokens: [Token]) -> Document {
 		var tempTokens = tokens
 		var result: [INode] = []
 
@@ -17,7 +19,6 @@ public final class Parser {
 			nodes.append(parseHeader(tokens: &tempTokens))
 			nodes.append(parseBlockquote(tokens: &tempTokens))
 			nodes.append(parseParagraph(tokens: &tempTokens))
-//			nodes.append(parseImage(tokens: &tempTokens))
 			nodes.append(parseLineBreak(tokens: &tempTokens))
 			nodes.append(parseHorizontalLine(tokens: &tempTokens))
 			nodes.append(parseCodeBlock(tokens: &tempTokens))
@@ -80,12 +81,6 @@ private extension Parser {
 		if !textNodes.isEmpty {
 			return ParagraphNode(textNodes)
 		}
-
-		return nil
-	}
-
-	func parseImage(tokens: inout [Token]) -> ImageNode? {
-		guard let token = tokens.first else { return nil }
 
 		return nil
 	}
@@ -215,6 +210,8 @@ private extension Parser {
 				textNodes.append(InlineCodeTextNode(code: code))
 			case .escapedChar(let char):
 				textNodes.append(EscapedCharTextNode(char: char))
+			case .link(let header, let url):
+				textNodes.append(LinkNode(header: header, url: url))
 			}
 		}
 		return textNodes

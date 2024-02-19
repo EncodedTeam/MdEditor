@@ -95,6 +95,16 @@ public final class EscapedCharTextNode: BaseNode {
 	}
 }
 
+public final class LinkNode: BaseNode {
+	let header: String
+	let url: String
+
+	public init(header: String, url: String) {
+		self.header = header
+		self.url = url
+	}
+}
+
 // MARK: - Image
 public final class ImageNode: BaseNode {
 	let url: String

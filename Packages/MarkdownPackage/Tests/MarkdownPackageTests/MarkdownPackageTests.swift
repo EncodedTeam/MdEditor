@@ -10,7 +10,7 @@ final class MarkdownPackageTests: XCTestCase {
 
 		print("-------------------------")
 		print("Tokens:")
-		print(tokens.debugDescription)
+		print(tokens.count)
 		print("-------------------------")
 		print("Documents:")
 		print(document.children)
@@ -30,6 +30,9 @@ private extension MarkdownPackageTests {
 		> Цитата! **жирный тект** цитаты!
 
 		**Это** -- **жирный тект**
+
+		Это ссылка:
+		[Yandex](https://yandex.ru)
 
 		С помощью квантификаторов мы можем указывать сколько раз должен повторяться тот или иной символ (ну или группа символов).
 
@@ -55,7 +58,7 @@ private extension MarkdownPackageTests {
 			- ***негативная ретроспективная проверка*** - `(?<!Y)Xo`
 		___
 		ссылка: [SwiftBook](https://swiftbook.org) картинка ![SwiftBook](https://swiftbook.org)
-		
+
 		ntcn **{n}** - символ по**вто**ряется ровно n ***раз*** user:name@*domen.ru.net*
 		"""
 	}

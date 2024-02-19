@@ -19,6 +19,7 @@ final class TextParser {
 			case boldItalic
 			case inlineCode
 			case escapedChar
+			case link
 		}
 
 		internal init(type: TextParser.PartRegex.PartType, pattern: String) {
@@ -29,11 +30,12 @@ final class TextParser {
 
 	private let partRegexes = [
 		PartRegex(type: .escapedChar, pattern: #"^\\([\\\`\*\_\{\}\[\]\<\>\(\)\+\-\.\!\|#]){1}"#),
-		PartRegex(type: .normal, pattern: #"^(.*?)(?=[\*`\\]|$)"#),
+		PartRegex(type: .normal, pattern: #"^([^\[\!]*?)(?=[\*\!\[`\\]|$)"#),
 		PartRegex(type: .boldItalic, pattern: #"^\*\*\*(.*?)\*\*\*"#),
 		PartRegex(type: .bold, pattern: #"^\*\*(.*?)\*\*"#),
 		PartRegex(type: .italic, pattern: #"^\*(.*?)\*"#),
-		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#)
+		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#),
+		PartRegex(type: .link, pattern: #"(?<!\!)\[([^\\]+?)\]\(([^\\]+?)\)"#)
 	]
 
 	func parse(rawText text: String) -> Text {
@@ -62,6 +64,13 @@ final class TextParser {
 							parts.append(.inlineCode(text: extractedText))
 						case .escapedChar:
 							parts.append(.escapedChar(char: extractedText))
+						case .link:
+							if let group2 = Range(math.range(at: 2), in: text) {
+								let url = String(text[group2])
+								parts.append(.link(header: extractedText, url: url))
+							} else {
+								break
+							}
 						}
 						range = NSRange(group0.upperBound..., in: text)
 						break
