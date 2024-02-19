@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MarkdownPackage
 
 protocol IAboutScreenInteractor: AnyObject {
 	
@@ -37,14 +38,34 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	
 	func fetchData() {
 		Task {
-			let title = url.lastPathComponent
 			let result = await fileStorage?.loadFileBody(url: url) ?? ""
-			await updateUI(with: title, fileData: result)
+			await updateUI(fileData: result)
 		}
 	}
 	
 	@MainActor
-	func updateUI(with title: String, fileData: String) {
-		presenter?.present(responce: AboutScreenModel.Response(fileData: fileData))
+	func updateUI(fileData: String) {
+		let tokens = Lexer().tokenize(fileData)
+		let document = Parser().parse(tokens: tokens)
+		parseText(from: document)
+		
+		presenter?.present(responce: AboutScreenModel.Response(fileData: attributedText))
+	}
+}
+
+private extension AboutScreenInteractor {
+	func parseText(from document: Document) {
+		attributedText = NSMutableAttributedString(string: "")
+		let textNode = getTextNode(node: document.children.first ?? BaseNode())
+		attributedText.append(textNode)
+	}
+	
+	func getTextNode(node: INode) -> NSAttributedString {
+		let nodeText = node.accept(TextResultVisitor())
+		
+		for child in node.children {
+			getTextNode(node: child)
+		}
+		return nodeText
 	}
 }

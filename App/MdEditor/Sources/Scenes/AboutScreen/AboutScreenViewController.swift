@@ -133,6 +133,6 @@ private extension AboutScreenViewController {
 
 extension AboutScreenViewController: IAboutScreenViewController {
 	func render(viewModel: AboutScreenModel.ViewModel) {
-		self.labelFileData.text = viewModel.fileData
+		self.labelFileData.attributedText = viewModel.fileData
 	}
 }
