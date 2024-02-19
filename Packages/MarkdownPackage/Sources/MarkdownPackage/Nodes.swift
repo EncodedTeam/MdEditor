@@ -105,14 +105,15 @@ public final class LinkNode: BaseNode {
 	}
 }
 
-// MARK: - Image
 public final class ImageNode: BaseNode {
-	let url: String
+	let header: String
 	let size: String
+	let url: String
 
-	public init(url: String, size: String) {
-		self.url = url
+	public init(header: String, size: String = "", url: String) {
+		self.header = header
 		self.size = size
+		self.url = url
 	}
 }
 

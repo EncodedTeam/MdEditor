@@ -212,6 +212,8 @@ private extension Parser {
 				textNodes.append(EscapedCharTextNode(char: char))
 			case .link(let header, let url):
 				textNodes.append(LinkNode(header: header, url: url))
+			case .image(let header, let url):
+				textNodes.append(ImageNode(header: header, url: url))
 			}
 		}
 		return textNodes

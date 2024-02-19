@@ -30,5 +30,6 @@ public struct Text {
 		case inlineCode(text: String)
 		case escapedChar(char: String)
 		case link(header: String, url: String)
+		case image(header: String, url: String)
 	}
 }
