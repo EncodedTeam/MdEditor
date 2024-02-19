@@ -3,17 +3,20 @@ import XCTest
 
 final class MarkdownPackageTests: XCTestCase {
 	func test_tokenize_shouldReturnElements() {
-		let sut = Lexer()
+		let sutLexer = Lexer()
+		let sutParser = Parser()
 
-		let tokens = sut.tokenize(TestingData.mdText)
-		let document = Parser().parse(tokens: tokens)
+		let tokens = sutLexer.tokenize(TestingData.mdText)
+		let document = sutParser.parse(tokens: tokens)
 
 		print("-------------------------")
 		print("Tokens:")
 		print(tokens.count)
+		XCTAssertEqual(tokens.count, 39, "Tokens should have 39 elements")
 		print("-------------------------")
 		print("Documents:")
 		print(document.children)
+		XCTAssertEqual(document.children.count, 26, "Document should have 39 children")
 		print("-------------------------")
 	}
 }
