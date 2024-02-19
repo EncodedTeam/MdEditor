@@ -21,3 +21,14 @@ let package = Package(
             dependencies: ["MarkdownPackage"]),
     ]
 )
+
+// For #available(iOS 16, macOS 13, *)
+// Возможность использования Regex с литералами
+for target in package.targets {
+	target.swiftSettings = target.swiftSettings ?? []
+	target.swiftSettings?.append(
+		.unsafeFlags([
+			"-enable-bare-slash-regex",
+		])
+	)
+}

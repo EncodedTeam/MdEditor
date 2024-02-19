@@ -7,16 +7,19 @@
 
 import Foundation
 
-enum Token {
+public enum Token {
 	case header(level: Int, text: Text)
 	case blockQuote(level: Int, text: Text)
-	case paragraph(text: Text)
-	case link(url: String, text: String)
-	case image(url: String, size: Int)
+	case codeBlockMarker(level: Int, lang: String)
+	case codeLine(text: String)
+	case bulletedListItem(level: Int, marker: String, text: Text)
+	case numberedListItem(level: Int, marker: String, text: Text)
+	case textLine(text: Text)
 	case lineBreak
+	case horizontalLine(level: Int)
 }
 
-struct Text {
+public struct Text {
 	let text: [Part]
 
 	enum Part {
@@ -26,5 +29,7 @@ struct Text {
 		case boldItalic(text: String)
 		case inlineCode(text: String)
 		case escapedChar(char: String)
+		case link(header: String, url: String)
+		case image(header: String, url: String)
 	}
 }
