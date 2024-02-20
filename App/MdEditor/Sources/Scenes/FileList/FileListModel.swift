@@ -9,22 +9,21 @@
 import Foundation
 
 enum FileListModel {
-	struct FileViewModel {
-		let url: URL
-		let name: String
-		let isDir: Bool
-		let description: String
-	}
-
-	struct Request {
-		let url: URL
+	enum Request {
+		case fileSelected(indexPath: IndexPath)
 	}
 
 	struct Response {
-		let data: [FileViewModel]
+		var data: [FileSystemEntity]
 	}
 	
 	struct ViewModel { 
 		let data: [FileViewModel]
+
+		struct FileViewModel {
+			let name: String
+			let isDir: Bool
+			let description: String
+		}
 	}
 }

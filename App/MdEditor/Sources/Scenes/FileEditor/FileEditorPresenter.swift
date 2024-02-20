@@ -19,19 +19,15 @@ protocol IFileEditorPresenter {
 }
 
 final class FileEditorPresenter: IFileEditorPresenter {
-	
 	// MARK: - Dependencies
-	
 	private weak var viewController: IFileEditorViewController?
 	
 	// MARK: - Initialization
-	
 	init(viewController: IFileEditorViewController?) {
 		self.viewController = viewController
 	}
 	
 	// MARK: - Public methods
-	
 	func present(responce: FileEditorModel.Response) {
 		let title = responce.title
 		let fileData = responce.fileData
