@@ -14,10 +14,12 @@ enum FileListModel {
 	}
 
 	struct Response {
-		var data: [FileSystemEntity]
+		let currentFile: FileSystemEntity?
+		let data: [FileSystemEntity]
 	}
 	
-	struct ViewModel { 
+	struct ViewModel {
+		let title: String
 		let data: [FileViewModel]
 
 		struct FileViewModel {

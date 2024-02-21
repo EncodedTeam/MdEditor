@@ -77,12 +77,13 @@ final class FileListInteractor: IFileListInteractor {
 	@MainActor
 	func updateUI(with files: [FileSystemEntity]) {
 		self.files = files
-		let response = FileListModel.Response(data: files)
+		let response = FileListModel.Response(currentFile: currentFile, data: files)
 		presenter.present(response: response)
 	}
 
 	func updateTitle(_ title: String) {
-		presenter.updateTitle(title)
+		let response = FileListModel.Response(currentFile: currentFile, data: [])
+		presenter.present(response: response)
 	}
 
 	func performAction(request: FileListModel.Request) {

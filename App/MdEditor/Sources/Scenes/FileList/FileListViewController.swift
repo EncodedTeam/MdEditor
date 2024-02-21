@@ -13,10 +13,6 @@ protocol IFileListViewController: AnyObject {
 	/// Метод отрисовки информации на экране.
 	/// - Parameter viewModel: данные для отрисовки на экране.
 	func render(viewModel: FileListModel.ViewModel)
-
-	/// Метод обновления title страницы
-	/// - Parameter title: заголовок.
-	func updateTitle(_ title: String)
 }
 
 final class FileListViewController: UIViewController {
@@ -25,7 +21,7 @@ final class FileListViewController: UIViewController {
 
 	// MARK: - Private properties
 	private lazy var tableView: UITableView = makeTableView()
-	private var viewModel = FileListModel.ViewModel(data: [])
+	private var viewModel = FileListModel.ViewModel(title: "/", data: [])
 
 	// MARK: - Lifecycle
 	override func viewDidLoad() {
@@ -126,12 +122,9 @@ private extension FileListViewController {
 // MARK: - IFileListViewController
 extension FileListViewController: IFileListViewController {
 	func render(viewModel: FileListModel.ViewModel) {
+		title = viewModel.title
 		guard !viewModel.data.isEmpty else { return }
 		self.viewModel = viewModel
 		tableView.reloadData()
-	}
-
-	func updateTitle(_ title: String) {
-		self.title = title
 	}
 }
