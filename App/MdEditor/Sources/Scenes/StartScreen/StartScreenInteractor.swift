@@ -8,28 +8,33 @@
 
 import Foundation
 
+protocol IStartScreenDelegate: AnyObject {
+	func showAbout()
+	func openFileList()
+	func newFile()
+	func openFile(file: FileSystemEntity)
+}
+
 protocol IStartScreenInteractor {
 	func fetchData()
-	func openFileList()
-	func openAbout()
+	func performAction(request: StartScreenModel.Request)
 }
 
 final class StartScreenInteractor: IStartScreenInteractor {
+	// MARK: - Public properties
+	weak var delegate: IStartScreenDelegate?
 
 	// MARK: - Dependencies
-
 	private var presenter: IStartScreenPresenter?
 	private var fileStorage: IStorageService
 
 	// MARK: - Initialization
-
 	init(presenter: IStartScreenPresenter?, fileStorage: IStorageService) {
 		self.presenter = presenter
 		self.fileStorage = fileStorage
 	}
 
 	// MARK: - Public methods
-
 	func fetchData() {
 		Task {
 			let urls = ResourcesBundle.defaultsUrls
@@ -55,11 +60,16 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		presenter?.present(response: response)
 	}
 
-	func openFileList() {
-		presenter?.openFileList()
-	}
-
-	func openAbout() {
-		presenter?.openAbout()
+	func performAction(request: StartScreenModel.Request) {
+		switch request {
+		case .creaeteNewFile:
+			delegate?.newFile()
+		case .openFileList:
+			delegate?.openFileList()
+		case .showAbout:
+			delegate?.showAbout()
+		case .recentFileSelected(let indexPath):
+			break
+		}
 	}
 }

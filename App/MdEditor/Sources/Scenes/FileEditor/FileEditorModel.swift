@@ -9,7 +9,6 @@
 import Foundation
 
 enum FileEditorModel {
-
 	struct Response {
 		let title: String
 		let fileData: String

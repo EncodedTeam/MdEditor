@@ -35,7 +35,7 @@ final class FileItemTableViewCell: UITableViewCell {
 	}
 
 	// MARK: - Public methods
-	func configure(with file: FileListModel.FileViewModel) {
+	func configure(with file: FileListModel.ViewModel.FileViewModel) {
 		tintColor = .darkGray
 		if file.isDir {
 			imageViewIcon.image = Theme.ImageIcon.directory

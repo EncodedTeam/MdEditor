@@ -9,8 +9,18 @@
 import Foundation
 
 /// StartScreenModel is namespace for splt viewModels
-enum  StartScreenModel {
-	struct Request {
+enum StartScreenModel {
+	enum MenuIdentifier {
+		case openFile
+		case newFile
+		case showAbout
+	}
+
+	enum Request {
+		case openFileList
+		case creaeteNewFile
+		case showAbout
+		case recentFileSelected(indexPath: IndexPath)
 	}
 
 	struct Response {

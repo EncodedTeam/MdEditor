@@ -10,7 +10,6 @@ import UIKit
 
 /// Протокол экрана About.
 protocol IFileEditorViewController: AnyObject {
-	
 	/// Метод отрисовки информации на экране.
 	/// - Parameter viewModel: данные для отрисовки на экране.
 	func render(viewModel: FileEditorModel.ViewModel)
@@ -21,13 +20,10 @@ protocol IFileEditorViewController: AnyObject {
 }
 
 final class FileEditorViewController: UIViewController {
-	
 	// MARK: - Dependencies
-	
 	var interactor: IFileEditorInteractor?
 	
 	// MARK: - Private properties
-	
 	private var viewModel = FileEditorModel.ViewModel(title: "", fileData: "")
 	private var editable: Bool
 	
@@ -36,7 +32,6 @@ final class FileEditorViewController: UIViewController {
 	private var constraints = [NSLayoutConstraint]()
 	
 	// MARK: - Initialization
-	
 	init(editable: Bool) {
 		self.editable = editable
 		super.init(nibName: nil, bundle: nil)
@@ -47,7 +42,6 @@ final class FileEditorViewController: UIViewController {
 	}
 	
 	// MARK: - Lifecycle
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
@@ -60,8 +54,7 @@ final class FileEditorViewController: UIViewController {
 	}
 }
 
-// MARK: - Action
-
+// MARK: - Actions
 private extension FileEditorViewController {
 	@objc
 	func updateTextView(notification: Notification) {
@@ -89,9 +82,7 @@ private extension FileEditorViewController {
 }
 
 // MARK: - UI setup
-
 private extension FileEditorViewController {
-	
 	func setupUI() {
 		view.backgroundColor = Theme.backgroundColor
 		navigationItem.setHidesBackButton(false, animated: true)
@@ -132,9 +123,7 @@ private extension FileEditorViewController {
 }
 
 // MARK: - Layout UI
-
 private extension FileEditorViewController {
-	
 	func layout() {
 		view.addSubview(textViewEditor)
 		
@@ -154,8 +143,7 @@ private extension FileEditorViewController {
 	}
 }
 
-// MARK: - IMainViewController
-
+// MARK: - IFileEditorViewController
 extension FileEditorViewController: IFileEditorViewController {
 	func render(viewModel: FileEditorModel.ViewModel) {
 		self.viewModel = viewModel
