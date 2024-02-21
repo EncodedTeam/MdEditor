@@ -25,6 +25,7 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	// MARK: - Private properties
 	
 	private var url: URL
+	private var attributedText = NSMutableAttributedString(string: "")
 	
 	// MARK: - Initialization
 	
@@ -47,25 +48,22 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	func updateUI(fileData: String) {
 		let tokens = Lexer().tokenize(fileData)
 		let document = Parser().parse(tokens: tokens)
-		parseText(from: document)
+		
+		attributedText = NSMutableAttributedString(string: "")
+		getTextNode(node: document)
 		
 		presenter?.present(responce: AboutScreenModel.Response(fileData: attributedText))
 	}
 }
 
 private extension AboutScreenInteractor {
-	func parseText(from document: Document) {
-		attributedText = NSMutableAttributedString(string: "")
-		let textNode = getTextNode(node: document.children.first ?? BaseNode())
-		attributedText.append(textNode)
-	}
-	
-	func getTextNode(node: INode) -> NSAttributedString {
+	func getTextNode(node: INode) {
+		
 		let nodeText = node.accept(TextResultVisitor())
+		attributedText.append(nodeText)
 		
 		for child in node.children {
 			getTextNode(node: child)
 		}
-		return nodeText
 	}
 }

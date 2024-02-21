@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+
 public protocol INode {
 	var children: [INode] { get }
 }
@@ -25,7 +27,7 @@ public final class Document: BaseNode {
 
 // MARK: - Header
 public final class HeaderNode: BaseNode {
-	let level: Int
+	public let level: Int
 
 	public init(level: Int, children: [INode] = []) {
 		self.level = level
@@ -48,7 +50,7 @@ public final class ParagraphNode: BaseNode {
 }
 
 public final class TextNode: BaseNode {
-	let text: String
+	public let text: String
 
 	public init(text: String) {
 		self.text = text
@@ -56,7 +58,7 @@ public final class TextNode: BaseNode {
 }
 
 public final class BoldTextNode: BaseNode {
-	let text: String
+	public let text: String
 
 	public init(text: String) {
 		self.text = text
