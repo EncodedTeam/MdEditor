@@ -49,21 +49,8 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 		let tokens = Lexer().tokenize(fileData)
 		let document = Parser().parse(tokens: tokens)
 		
-		attributedText = NSMutableAttributedString(string: "")
-		getTextNode(node: document)
+		attributedText.append(document.accept(AttibuteTextVisitor()))
 		
 		presenter?.present(responce: AboutScreenModel.Response(fileData: attributedText))
-	}
-}
-
-private extension AboutScreenInteractor {
-	func getTextNode(node: INode) {
-		
-		let nodeText = node.accept(TextResultVisitor())
-		attributedText.append(nodeText)
-		
-		for child in node.children {
-			getTextNode(node: child)
-		}
 	}
 }

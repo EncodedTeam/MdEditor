@@ -10,7 +10,6 @@ import UIKit
 import MarkdownPackage
 
 protocol IAttibuteTextVisitor {
-	func visit(_ node: INode) -> NSAttributedString
 	func visit(_ node: Document) -> NSAttributedString
 	func visit(_ node: HeaderNode) -> NSAttributedString
 	func visit(_ node: BlockquoteNode) -> NSAttributedString
@@ -32,23 +31,28 @@ protocol IAttibuteTextVisitor {
 	func visit(_ node: NumberedListItem) -> NSAttributedString
 }
 
-class TextResultVisitor: IAttibuteTextVisitor {
-	func visit(_ node: INode) -> NSAttributedString {
-		let result = NSMutableAttributedString()
-		return result
-	}
-	
+class AttibuteTextVisitor: IAttibuteTextVisitor {
 	func visit(_ node: Document) -> NSAttributedString {
 		let result = NSMutableAttributedString()
+		
+		guard let childrens = node.children as? [IVisitor] else { return NSAttributedString(string: "") }
+		for child in childrens {
+			result.append(child.accept(AttibuteTextVisitor()))
+		}
 		return result
 	}
 	
 	func visit(_ node: HeaderNode) -> NSAttributedString {
 		let attributes: [NSAttributedString.Key: Any] = [
-			.font: UIFont.boldSystemFont(ofSize: 10)
+			.font: UIFont.boldSystemFont(ofSize: 40)
 		]
-		let attributedText = NSAttributedString(string: "", attributes: attributes)
-		return attributedText
+		let result = NSMutableAttributedString(string: "", attributes: attributes)
+		
+		guard let childrens = node.children as? [IVisitor] else { return NSAttributedString(string: "") }
+		for child in childrens {
+			result.append(child.accept(AttibuteTextVisitor()))
+		}
+		return result
 	}
 	
 	func visit(_ node: BlockquoteNode) -> NSAttributedString {
@@ -143,146 +147,13 @@ class TextResultVisitor: IAttibuteTextVisitor {
 	}
 }
 
-// MARK: - protocol IVisitor
 
-protocol IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString
-}
-
-// MARK: - Base
-
-extension INode {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
+extension NSAttributedString {
+	static func singleNewline(withFontSize fontSize: CGFloat) -> NSAttributedString {
+		return NSAttributedString(string: "\n", attributes: [.font: UIFont.systemFont(ofSize: fontSize, weight: .regular)])
 	}
-}
-
-extension Document: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Header
-
-extension HeaderNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Block Quote
-
-extension BlockquoteNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Paragraph
-
-extension ParagraphNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension TextNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension BoldTextNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension ItalicTextNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension BoldItalicTextNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension InlineCodeTextNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension EscapedCharTextNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension LinkNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension ImageNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Line Break
-
-extension LineBreakNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Horizontal Line
-
-extension HorizontalLineNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Code Block
-
-extension CodeBlockNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Bulleted List
-
-extension BulletedListNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension BulletedListItem: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-// MARK: - Numbered List
-
-extension NumberedListNode: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
-	}
-}
-
-extension NumberedListItem: IVisitor {
-	func accept(_ visitor: IAttibuteTextVisitor) -> NSAttributedString {
-		return visitor.visit(self)
+	
+	static func doubleNewline(withFontSize fontSize: CGFloat) -> NSAttributedString {
+		return NSAttributedString(string: "\n\n", attributes: [.font: UIFont.systemFont(ofSize: fontSize, weight: .regular)])
 	}
 }

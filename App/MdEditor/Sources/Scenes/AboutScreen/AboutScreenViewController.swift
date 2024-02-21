@@ -83,7 +83,6 @@ private extension AboutScreenViewController {
 		label.backgroundColor = Theme.backgroundColor
 		label.numberOfLines = 0
 		
-		label.font = UIFont.preferredFont(forTextStyle: .body)
 		label.adjustsFontForContentSizeCategory = true
 		
 		label.accessibilityIdentifier = AccessibilityIdentifier.AboutScreen.labelFileData
