@@ -18,7 +18,7 @@ final class MainCoordinator: BaseCoordinator {
 	override func start() {
 #if DEBUG
 		if CommandLine.skipLogin {
-			runEditorFlow()
+			runTodoListFlow()
 			return
 		}
 #endif

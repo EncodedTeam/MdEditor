@@ -69,7 +69,6 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		case .showAbout:
 			delegate?.showAbout()
 		case .recentFileSelected(let indexPath):
-			// TODO: Обработать открытие файла из списка недавних файлов
 			break
 		}
 	}
