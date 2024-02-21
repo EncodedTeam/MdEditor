@@ -12,6 +12,10 @@ protocol IFileListPresenter {
 	/// Отображение экрана со списком заданий.
 	/// - Parameter response: Подготовленные к отображению данные.
 	func present(response: FileListModel.Response)
+
+	/// Метод обновления title страницы
+	/// - Parameter title: заголовок.
+	func updateTitle(_ title: String)
 }
 
 final class FileListPresenter: IFileListPresenter {
@@ -35,6 +39,10 @@ final class FileListPresenter: IFileListPresenter {
 
 		let viewModel = FileListModel.ViewModel(data: fileViewModels)
 		viewController?.render(viewModel: viewModel)
+	}
+
+	func updateTitle(_ title: String) {
+		viewController?.updateTitle(title)
 	}
 }
 

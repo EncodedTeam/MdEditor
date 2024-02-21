@@ -50,6 +50,9 @@ final class FileListInteractor: IFileListInteractor {
 
 	// MARK: - Public methods
 	func fetchData() {
+		// Обновление заголовка сразу в главном потоке
+		updateTitle(currentFile?.name ?? "/")
+		// Получение файлов асинхронно
 		Task {
 			if let currentFile {
 				let result = await storage.fetchData(urls: [currentFile.url])
@@ -76,6 +79,10 @@ final class FileListInteractor: IFileListInteractor {
 		self.files = files
 		let response = FileListModel.Response(data: files)
 		presenter.present(response: response)
+	}
+
+	func updateTitle(_ title: String) {
+		presenter.updateTitle(title)
 	}
 
 	func performAction(request: FileListModel.Request) {
