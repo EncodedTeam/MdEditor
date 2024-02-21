@@ -262,12 +262,12 @@ private extension StartScreenViewController {
 private extension StartScreenViewController {
 	@objc
 	func buttonOpenAction(_ sender: UIButton) {
-		interactor?.openFileList()
+		interactor?.performAction(request: .openFileList)
 	}
 
 	@objc
 	func buttonAboutAction(_ sender: UIButton) {
-		interactor?.openAbout()
+		interactor?.performAction(request: .showAbout)
 	}
 
 	@objc func interfaceModeChanged() {

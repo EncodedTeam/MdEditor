@@ -14,32 +14,27 @@ protocol IFileEditorInteractor: AnyObject {
 }
 
 final class FileEditorInteractor: IFileEditorInteractor {
-
 	// MARK: - Dependencies
-
 	private var presenter: IFileEditorPresenter?
-	private var fileStorage: IStorageService?
+	private var storage: IStorageService?
 
 	// MARK: - Private properties
-
-	private var url: URL
+	private var file: FileSystemEntity
 
 	// MARK: - Initialization
-
-	init(presenter: IFileEditorPresenter, fileStorage: IStorageService, url: URL) {
+	init(presenter: IFileEditorPresenter, storage: IStorageService, file: FileSystemEntity) {
 		self.presenter = presenter
-		self.fileStorage = fileStorage
-		self.url = url
+		self.storage = storage
+		self.file = file
 	}
 
 	// MARK: - Public methods
-
 	func fetchData() {
-		let title = url.lastPathComponent
+		let title = file.name
 		updateTitle(title: title)
 		Task {
-			let title = url.lastPathComponent
-			let result = await fileStorage?.loadFileBody(url: url) ?? ""
+			let title = file.name
+			let result = await storage?.loadFileBody(url: file.url) ?? ""
 			await updateUI(with: title, fileData: result)
 		}
 	}
@@ -50,9 +45,10 @@ final class FileEditorInteractor: IFileEditorInteractor {
 
 	@MainActor
 	func updateUI(with title: String, fileData: String) {
-		presenter?.present(responce: FileEditorModel.Response(
+		let response = FileEditorModel.Response(
 			title: title,
 			fileData: fileData
-		))
+		)
+		presenter?.present(responce: response)
 	}
 }
