@@ -43,15 +43,22 @@ class AttibuteTextVisitor: IAttibuteTextVisitor {
 	}
 	
 	func visit(_ node: HeaderNode) -> NSAttributedString {
-		let attributes: [NSAttributedString.Key: Any] = [
-			.font: UIFont.boldSystemFont(ofSize: 40)
-		]
-		let result = NSMutableAttributedString(string: "", attributes: attributes)
+		let result = NSMutableAttributedString()
 		
 		guard let childrens = node.children as? [IVisitor] else { return NSAttributedString(string: "") }
 		for child in childrens {
 			result.append(child.accept(AttibuteTextVisitor()))
 		}
+		
+		let paragraphStyle = NSMutableParagraphStyle()
+		paragraphStyle.firstLineHeadIndent = 5.0
+		
+		let attributes: [NSAttributedString.Key: Any] = [
+			.paragraphStyle: paragraphStyle,
+			.font: UIFont.boldSystemFont(ofSize: 20)
+		]
+		result.addAttributes(attributes, range: NSRange(location: 0, length: 6))
+		
 		return result
 	}
 	
@@ -146,7 +153,6 @@ class AttibuteTextVisitor: IAttibuteTextVisitor {
 		return attributedText
 	}
 }
-
 
 extension NSAttributedString {
 	static func singleNewline(withFontSize fontSize: CGFloat) -> NSAttributedString {
