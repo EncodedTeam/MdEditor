@@ -9,9 +9,13 @@
 import Foundation
 
 enum ResourcesBundle {
-	static let assets: String = "Assets"
-	static let about: String = "about.md"
-	static let extMD: String = "md"
+	static let assets = "Assets"
+	static let about = "about.md"
+	static let extMD = "md"
+	
+	static let bundle = Bundle.main.resourceURL ?? Bundle.main.bundleURL
+	static let bundlePath = Bundle.main.resourcePath ?? Bundle.main.bundlePath
+	static let aboutFile = bundle.appendingPathComponent(about)
 
 	static var defaultsUrls: [URL] {
 		var urls: [URL] = []
@@ -38,16 +42,18 @@ protocol IStorageService {
 	/// - Parameter urls: источники для получения
 	/// - Returns: `Result<[FileSystemEntity], StorageError>`
 	func fetchData(urls: [URL]) async -> Result<[FileSystemEntity], StorageError>
-	/// Показать последние файлы
+	
+	/// Получить сущность файла
 	/// - Parameters:
-	///   - count: кол-во последних файлов
-	///   - urls: массив источников
-	/// - Returns: `Result<[FileSystemEntity], StorageError>`
-	func fetchRecent(count: Int?, with urls: [URL]) async -> Result<[FileSystemEntity], StorageError>
+	///   - url: `URL` файла
+	///   - ext: массив расширений для отбора
+	/// - Returns: `Optional(FileSystemEntity)`
+	func getEntity(from url: URL, with ext: [String]) async throws -> FileSystemEntity?
+
 	/// Загрузить данные из файла
 	/// - Parameter url: адрес файла
 	/// - Returns: текстовое представление файла
-	func loadFileBody(url: URL) async -> String
+	func loadFile(_ file: FileSystemEntity) async -> String
 }
 
 actor FileStorageService: IStorageService {
@@ -72,54 +78,6 @@ actor FileStorageService: IStorageService {
 		}
 	}
 
-	func fetchRecent(count: Int? = nil, with urls: [URL]) -> Result<[FileSystemEntity], StorageError> {
-		do {
-			/// Ищет указанное кол-во файлов по всем источникам
-			/// В реальной ситуации надо использовать UserDefaults для сохранения и чтения URL открытых файлов
-			let result = try scanFiles(with: urls).sorted(by: >)
-			guard let count else { return.success(result) }
-			let filteredResult = Array(result.prefix(count))
-			return.success(filteredResult)
-		} catch {
-			return .failure(.errorFetching)
-		}
-	}
-
-	func loadFileBody(url: URL) -> String {
-		var text = ""
-		do {
-			text = try String(contentsOf: url, encoding: String.Encoding.utf8)
-		} catch {
-			text = "Failed to read text from \(url.lastPathComponent)"
-		}
-
-		return text
-	}
-}
-
-// MARK: - Private methods
-private extension FileStorageService {
-	func scanFiles(with urls: [URL]) throws -> [FileSystemEntity] {
-		var files: [FileSystemEntity?] = []
-		for item in urls {
-			if item.hasDirectoryPath {
-				let contents = try fileManager.contentsOfDirectory(
-					at: item,
-					includingPropertiesForKeys: nil,
-					options: .skipsHiddenFiles
-				)
-				for nestedItem in contents {
-					let nestedFiles = try scanFiles(with: [nestedItem])
-					files.append(contentsOf: nestedFiles)
-				}
-			} else {
-				let file = try getEntity(from: item)
-				files.append(file)
-			}
-		}
-		return files.compactMap { $0 }
-	}
-
 	func getEntity(from url: URL, with ext: [String] = [ResourcesBundle.extMD]) throws -> FileSystemEntity? {
 		// Если это файл и указано расширение - выполнить проверку на соответствие указанному расширению
 		if !ext.isEmpty, !url.hasDirectoryPath, !ext.contains(url.pathExtension) { return nil }
@@ -129,8 +87,12 @@ private extension FileStorageService {
 		let modificationDate = (attributes[FileAttributeKey.modificationDate] as? Date) ?? Date()
 		let size = (attributes[FileAttributeKey.size] as? UInt64) ?? .zero
 
+		let relativePath = url.relativePath
+		let bundlePath = ResourcesBundle.bundlePath + "/"
+		let path = relativePath.replacingOccurrences(of: bundlePath, with: "")
+
 		return FileSystemEntity(
-			url: url,
+			path: path,
 			isDir: url.hasDirectoryPath,
 			creationDate: creationDate,
 			modificationDate: modificationDate,
@@ -138,6 +100,13 @@ private extension FileStorageService {
 		)
 	}
 
+	func loadFile(_ file: FileSystemEntity) -> String {
+		file.loadFileBody()
+	}
+}
+
+// MARK: - Private methods
+private extension FileStorageService {
 	func fetchRoot(_ urls: [URL]) throws -> [FileSystemEntity] {
 		var files: [FileSystemEntity?] = []
 		for item in urls {

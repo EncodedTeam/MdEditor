@@ -42,18 +42,11 @@ private extension EditorCoordinator {
 	}
 
 	func showAboutScene() {
-		let fileURL = Bundle.main.bundleURL
-			.appendingPathComponent(ResourcesBundle.assets)
-			.appendingPathComponent(ResourcesBundle.about)
-		let viewController = AboutScreenAssembler().assembly(
-			fileStorage: storage,
-			url: fileURL
-		)
-
+		let viewController = AboutScreenAssembler().assembly(storage: storage)
 		navigationController.pushViewController(viewController, animated: true)
 	}
 
-	func showTextPreviewScene(file: FileSystemEntity) {
+	func showFileEditorScene(file: FileSystemEntity) {
 		let viewController = FileEditorAssembler().assembly(
 			storage: storage,
 			file: file,
@@ -67,7 +60,7 @@ private extension EditorCoordinator {
 		let topViewController = navigationController.topViewController
 		let coordinator = FileListCoordinator(
 			navigationController: navigationController,
-			topViewController: topViewController, 
+			topViewController: topViewController,
 			storage: storage
 		)
 		addDependency(coordinator)
@@ -103,6 +96,6 @@ extension EditorCoordinator: IStartScreenDelegate {
 	}
 	
 	func openFile(file: FileSystemEntity) {
-		showTextPreviewScene(file: file)
+		showFileEditorScene(file: file)
 	}
 }

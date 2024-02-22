@@ -49,6 +49,11 @@ final class StartScreenViewController: UIViewController, Accessible {
 		generateAccessibilityIdentifiers()
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		interactor?.fetchData()
+	}
+
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		updateConstraints()
@@ -125,8 +130,6 @@ private extension StartScreenViewController {
 		navigationController?.navigationBar.prefersLargeTitles = true
 		navigationItem.backButtonDisplayMode = .minimal
 		view.backgroundColor = Theme.backgroundColor
-
-		interactor?.fetchData()
 
 		buttonNew.configuration?.imagePadding += Sizes.Padding.half
 

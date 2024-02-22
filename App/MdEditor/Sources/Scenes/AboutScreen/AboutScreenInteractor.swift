@@ -9,42 +9,33 @@
 import Foundation
 
 protocol IAboutScreenInteractor: AnyObject {
-	
 	/// Событие на предоставление данных из файла about.
 	func fetchData()
 }
 
 final class AboutScreenInteractor: IAboutScreenInteractor {
-	
 	// MARK: - Dependencies
-	
 	private var presenter: IAboutScreenPresenter?
-	private var fileStorage: IStorageService?
-	
-	// MARK: - Private properties
-	
-	private var url: URL
-	
+	private var fileStorage: IStorageService
+
 	// MARK: - Initialization
-	
-	init(presenter: IAboutScreenPresenter, fileStorage: IStorageService, url: URL) {
+	init(presenter: IAboutScreenPresenter, fileStorage: IStorageService) {
 		self.presenter = presenter
 		self.fileStorage = fileStorage
-		self.url = url
 	}
 	
 	// MARK: - Public methods
-	
 	func fetchData() {
+		let url = ResourcesBundle.aboutFile
 		Task {
-			let title = url.lastPathComponent
-			let result = await fileStorage?.loadFileBody(url: url) ?? ""
-			await updateUI(with: title, fileData: result)
+			guard let file = try? await fileStorage.getEntity(from: url, with: []) else { return }
+			let result = await fileStorage.loadFile(file)
+			await updateUI(fileData: result)
 		}
 	}
 	
 	@MainActor
-	func updateUI(with title: String, fileData: String) {
+	func updateUI(fileData: String) {
 		presenter?.present(responce: AboutScreenModel.Response(fileData: fileData))
 	}
 }

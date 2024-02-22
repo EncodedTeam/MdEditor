@@ -9,24 +9,24 @@
 import UIKit
 
 struct FileSystemEntity {
-	var url: URL
+	var path: String = ""
 	var isDir = false
 	var creationDate = Date()
 	var modificationDate = Date()
 	var size: UInt64 = .zero
 
+	var url: URL { URL(fileURLWithPath: path, relativeTo: ResourcesBundle.bundle) }
 	var name: String { url.lastPathComponent.replacingOccurrences(of: ".\(ext)", with: "") }
 	var fullName: String { url.lastPathComponent }
 	var ext: String { url.pathExtension }
 	var parent: String? { url.pathComponents.dropLast().last }
-	var path: String { url.relativePath }
 
 	func loadFileBody() -> String {
 		var text = ""
 		do {
 			text = try String(contentsOf: url, encoding: String.Encoding.utf8)
 		} catch {
-			text = "Failed to read text from \(url.lastPathComponent)"
+			text = "Failed to read text from \(fullName)"
 		}
 		return text
 	}
@@ -36,4 +36,7 @@ extension FileSystemEntity: Comparable {
 	static func < (lhs: FileSystemEntity, rhs: FileSystemEntity) -> Bool {
 		lhs.modificationDate < rhs.modificationDate
 	}
+}
+
+extension FileSystemEntity: Codable {
 }

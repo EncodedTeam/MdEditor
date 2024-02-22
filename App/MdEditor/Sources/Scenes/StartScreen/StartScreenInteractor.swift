@@ -37,14 +37,8 @@ final class StartScreenInteractor: IStartScreenInteractor {
 	// MARK: - Public methods
 	func fetchData() {
 		Task {
-			let urls = ResourcesBundle.defaultsUrls
-			let result = await fileStorage.fetchRecent(count: 10, with: urls)
-			switch result {
-			case .success(let files):
-				await updateUI(with: files)
-			case .failure(let error):
-				fatalError(error.localizedDescription)
-			}
+			let result = await RecentFilesManager().getRecentFiles()
+			await updateUI(with: result)
 		}
 	}
 
