@@ -24,7 +24,8 @@ final class FileEditorViewController: UIViewController {
 	var interactor: IFileEditorInteractor?
 	
 	// MARK: - Private properties
-	private var viewModel = FileEditorModel.ViewModel(title: "", fileData: "")
+	
+	private var viewModel = FileEditorModel.ViewModel(title: "", fileData: NSMutableAttributedString())
 	private var editable: Bool
 	
 	private lazy var textViewEditor: UITextView = makeTextView()
@@ -89,7 +90,7 @@ private extension FileEditorViewController {
 		navigationItem.largeTitleDisplayMode = .never
 		navigationController?.navigationBar.tintColor = Theme.mainColor
 		
-		textViewEditor.text = viewModel.fileData
+		textViewEditor.attributedText = viewModel.fileData
 		
 		NotificationCenter.default.addObserver(
 			self,
@@ -147,7 +148,7 @@ private extension FileEditorViewController {
 extension FileEditorViewController: IFileEditorViewController {
 	func render(viewModel: FileEditorModel.ViewModel) {
 		self.viewModel = viewModel
-		self.textViewEditor.text = viewModel.fileData
+		self.textViewEditor.attributedText = viewModel.fileData
 	}
 	
 	func updateTitle(viewModel: FileEditorModel.ViewModel) {

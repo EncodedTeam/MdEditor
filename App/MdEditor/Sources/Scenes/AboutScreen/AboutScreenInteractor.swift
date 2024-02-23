@@ -25,7 +25,6 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	// MARK: - Private properties
 	
 	private var url: URL
-	private var attributedText = NSMutableAttributedString(string: "")
 	
 	// MARK: - Initialization
 	
@@ -49,8 +48,12 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 		let tokens = Lexer().tokenize(fileData)
 		let document = Parser().parse(tokens: tokens)
 		
-		attributedText.append(document.accept(AttibuteTextVisitor()))
-		
-		presenter?.present(responce: AboutScreenModel.Response(fileData: attributedText))
+		let attributedText = document.accept(AttibuteTextVisitor())
+		let stringsAttributedText = NSMutableAttributedString()
+		for oneString in attributedText {
+			
+			stringsAttributedText.append(oneString)
+		}
+		presenter?.present(responce: AboutScreenModel.Response(fileData: stringsAttributedText))
 	}
 }

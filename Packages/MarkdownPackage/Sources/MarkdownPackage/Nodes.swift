@@ -37,7 +37,7 @@ public final class HeaderNode: BaseNode {
 
 // MARK: - Block Quote
 public final class BlockquoteNode: BaseNode {
-	let level: Int
+	public let level: Int
 
 	public init(level: Int, children: [INode] = []) {
 		self.level = level
@@ -66,7 +66,7 @@ public final class BoldTextNode: BaseNode {
 }
 
 public final class ItalicTextNode: BaseNode {
-	let text: String
+	public let text: String
 
 	public init(text: String) {
 		self.text = text
@@ -74,7 +74,7 @@ public final class ItalicTextNode: BaseNode {
 }
 
 public final class BoldItalicTextNode: BaseNode {
-	let text: String
+	public let text: String
 
 	public init(text: String) {
 		self.text = text
@@ -82,7 +82,7 @@ public final class BoldItalicTextNode: BaseNode {
 }
 
 public final class InlineCodeTextNode: BaseNode {
-	let code: String
+	public let code: String
 
 	public init(code: String) {
 		self.code = code
@@ -90,7 +90,7 @@ public final class InlineCodeTextNode: BaseNode {
 }
 
 public final class EscapedCharTextNode: BaseNode {
-	let char: String
+	public let char: String
 
 	public init(char: String) {
 		self.char = char
@@ -98,8 +98,8 @@ public final class EscapedCharTextNode: BaseNode {
 }
 
 public final class LinkNode: BaseNode {
-	let header: String
-	let url: String
+	public let header: String
+	public let url: String
 
 	public init(header: String, url: String) {
 		self.header = header
@@ -108,9 +108,9 @@ public final class LinkNode: BaseNode {
 }
 
 public final class ImageNode: BaseNode {
-	let header: String
-	let size: String
-	let url: String
+	public let header: String
+	public let size: String
+	public let url: String
 
 	public init(header: String, size: String = "", url: String) {
 		self.header = header
@@ -125,7 +125,7 @@ public final class LineBreakNode: BaseNode {
 
 // MARK: - Horizontal Line
 public final class HorizontalLineNode: BaseNode {
-	let level: Int
+	public let level: Int
 	
 	public init(level: Int) {
 		self.level = level
@@ -134,8 +134,8 @@ public final class HorizontalLineNode: BaseNode {
 
 // MARK: - Code Block
 public final class CodeBlockNode: BaseNode {
-	let level: Int
-	let language: String
+	public let level: Int
+	public let language: String
 
 	public init(level: Int, language: String, children: [INode] = []) {
 		self.level = level
@@ -146,7 +146,7 @@ public final class CodeBlockNode: BaseNode {
 
 // MARK: - Bulleted List
 public final class BulletedListNode: BaseNode {
-	let level: Int
+	public let level: Int
 
 	public init(level: Int, children: [INode] = []) {
 		self.level = level
@@ -155,7 +155,7 @@ public final class BulletedListNode: BaseNode {
 }
 
 public final class BulletedListItem: BaseNode {
-	let marker: String
+	public let marker: String
 
 	public init(marker: String, children: [INode]) {
 		self.marker = marker
@@ -165,7 +165,7 @@ public final class BulletedListItem: BaseNode {
 
 // MARK: - Numbered List
 public final class NumberedListNode: BaseNode {
-	let level: Int
+	public let level: Int
 
 	public init(level: Int, children: [INode] = []) {
 		self.level = level
@@ -174,7 +174,7 @@ public final class NumberedListNode: BaseNode {
 }
 
 public final class NumberedListItem: BaseNode {
-	let marker: String
+	public let marker: String
 
 	public init(marker: String, children: [INode]) {
 		self.marker = marker

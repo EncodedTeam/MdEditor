@@ -11,11 +11,11 @@ import Foundation
 enum FileEditorModel {
 	struct Response {
 		let title: String
-		let fileData: String
+		let fileData: NSMutableAttributedString
 	}
 	
 	struct ViewModel {
 		let title: String
-		let fileData: String
+		let fileData: NSMutableAttributedString
 	}
 }
