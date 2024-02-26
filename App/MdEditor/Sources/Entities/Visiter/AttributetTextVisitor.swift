@@ -343,7 +343,3 @@ private extension AttibuteTextVisitor {
 		return NSMutableAttributedString(string: code, attributes: attribute)
 	}
 }
-
-
-
-

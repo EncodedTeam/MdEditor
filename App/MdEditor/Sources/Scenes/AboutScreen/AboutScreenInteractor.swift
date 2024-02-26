@@ -47,13 +47,8 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	func updateUI(fileData: String) {
 		let tokens = Lexer().tokenize(fileData)
 		let document = Parser().parse(tokens: tokens)
-		
 		let attributedText = document.accept(AttibuteTextVisitor())
-		let stringsAttributedText = NSMutableAttributedString()
-		for oneString in attributedText {
-			
-			stringsAttributedText.append(oneString)
-		}
-		presenter?.present(responce: AboutScreenModel.Response(fileData: stringsAttributedText))
+
+		presenter?.present(responce: AboutScreenModel.Response(fileData: attributedText.joined()))
 	}
 }

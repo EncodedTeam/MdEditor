@@ -19,15 +19,15 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	// MARK: - Dependencies
 	
 	private var presenter: IFileEditorPresenter?
-	private var fileStorage: IStorageService?
+	private var storage: IStorageService?
 	
 	// MARK: - Private properties
 	
-	private var url: URL
+	private var file: FileSystemEntity
 	
 	// MARK: - Initialization
 	
-	init(presenter: IFileEditorPresenter, fileStorage: IStorageService, url: URL) {
+	init(presenter: IFileEditorPresenter, storage: IStorageService, file: FileSystemEntity) {
 		self.presenter = presenter
 		self.storage = storage
 		self.file = file
@@ -51,20 +51,11 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	
 	@MainActor
 	func updateUI(with title: String, fileData: String) {
-		
+
 		let tokens = Lexer().tokenize(fileData)
 		let document = Parser().parse(tokens: tokens)
-		
 		let attributedText = document.accept(AttibuteTextVisitor())
-		let stringsAttributedText = NSMutableAttributedString()
-		for oneString in attributedText {
-			
-			stringsAttributedText.append(oneString)
-			
-			presenter?.present(responce: FileEditorModel.Response(
-				title: title,
-				fileData: stringsAttributedText
-			))
-		}
+
+		presenter?.present(responce: FileEditorModel.Response(title: title, fileData: attributedText.joined()))
 	}
 }
