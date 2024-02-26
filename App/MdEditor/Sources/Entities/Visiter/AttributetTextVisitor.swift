@@ -344,22 +344,6 @@ private extension AttibuteTextVisitor {
 	}
 }
 
-extension Sequence where Iterator.Element == NSMutableAttributedString {
-	func joined() -> NSMutableAttributedString {
-		reduce(into: NSMutableAttributedString()) { $0.append($1) }
-	}
-}
 
-extension String {
-	var attributed: NSMutableAttributedString {
-		NSMutableAttributedString(string: self)
-	}
-	
-	static var lineBreak: NSMutableAttributedString {
-		NSMutableAttributedString(string: "\n")
-	}
-	
-	static var tab: NSMutableAttributedString {
-		NSMutableAttributedString(string: "\t")
-	}
-}
+
+
