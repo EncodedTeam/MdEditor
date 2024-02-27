@@ -7,39 +7,18 @@
 //
 
 import UIKit
-import MarkdownPackage
 
-protocol IVisitor {
-	associatedtype Result
+public final class AttibutedTextVisitor: IVisitor {
 	
-	func visit(_ node: Document) -> [Result]
-	func visit(_ node: HeaderNode) -> Result
-	func visit(_ node: BlockquoteNode) -> Result
-	func visit(_ node: ParagraphNode) -> Result
-	func visit(_ node: TextNode) -> Result
-	func visit(_ node: BoldTextNode) -> Result
-	func visit(_ node: ItalicTextNode) -> Result
-	func visit(_ node: BoldItalicTextNode) -> Result
-	func visit(_ node: InlineCodeTextNode) -> Result
-	func visit(_ node: EscapedCharTextNode) -> Result
-	func visit(_ node: LinkNode) -> Result
-	func visit(_ node: ImageNode) -> Result
-	func visit(_ node: LineBreakNode) -> Result
-	func visit(_ node: HorizontalLineNode) -> Result
-	func visit(_ node: CodeBlockNode) -> Result
-	func visit(_ node: BulletedListNode) -> Result
-	func visit(_ node: BulletedListItem) -> Result
-	func visit(_ node: NumberedListNode) -> Result
-	func visit(_ node: NumberedListItem) -> Result
-}
-
-final class AttibuteTextVisitor: IVisitor {
-	func visit(_ node: Document) -> [NSMutableAttributedString] {
+	public init() { }
+	
+	public func visit(_ node: Document) -> [NSMutableAttributedString] {
 		visitChildren(of: node)
 	}
 	
-	func visit(_ node: HeaderNode) -> NSMutableAttributedString {
+	public func visit(_ node: HeaderNode) -> NSMutableAttributedString {
 		let code = makeMdCode(String(repeating: "#", count: node.level) + " ")
+		
 		let text = visitChildren(of: node).joined()
 		
 		let result = NSMutableAttributedString()
@@ -54,9 +33,9 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: BlockquoteNode) -> NSMutableAttributedString {
+	public func visit(_ node: BlockquoteNode) -> NSMutableAttributedString {
 		let code = makeMdCode(String(repeating: ">", count: node.level - 1) + " ")
-		let text = visitChildren(of: node).joined()
+		let text = visitChildren(of: node).joined(separator: " ")
 		
 		let result = NSMutableAttributedString()
 		result.append(code)
@@ -67,15 +46,15 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: ParagraphNode) -> NSMutableAttributedString {
-		let result = visitChildren(of: node).joined()
+	public func visit(_ node: ParagraphNode) -> NSMutableAttributedString {
+		let result = visitChildren(of: node).joined(separator: " ")
 		result.append(String.lineBreak)
 		result.append(String.lineBreak)
 		
 		return result
 	}
 	
-	func visit(_ node: TextNode) -> NSMutableAttributedString {
+	public func visit(_ node: TextNode) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.black,
 			.font: UIFont.systemFont(ofSize: 18)
@@ -83,7 +62,7 @@ final class AttibuteTextVisitor: IVisitor {
 		return NSMutableAttributedString(string: node.text, attributes: attribute)
 	}
 	
-	func visit(_ node: BoldTextNode) -> NSMutableAttributedString {
+	public func visit(_ node: BoldTextNode) -> NSMutableAttributedString {
 		let code = makeMdCode("**")
 		
 		let attribute: [NSAttributedString.Key: Any] = [
@@ -100,7 +79,7 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: ItalicTextNode) -> NSMutableAttributedString {
+	public func visit(_ node: ItalicTextNode) -> NSMutableAttributedString {
 		let code = makeMdCode("*")
 		
 		let attribute: [NSAttributedString.Key: Any] = [
@@ -117,7 +96,7 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: BoldItalicTextNode) -> NSMutableAttributedString {
+	public func visit(_ node: BoldItalicTextNode) -> NSMutableAttributedString {
 		let code = makeMdCode("***")
 		
 		let font: UIFont
@@ -142,7 +121,7 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: InlineCodeTextNode) -> NSMutableAttributedString {
+	public func visit(_ node: InlineCodeTextNode) -> NSMutableAttributedString {
 		let code = makeMdCode("`")
 		
 		let attribute: [NSAttributedString.Key: Any] = [
@@ -154,16 +133,27 @@ final class AttibuteTextVisitor: IVisitor {
 		result.append(code)
 		result.append(text)
 		result.append(code)
-//		result.addAttribute(.backgroundColor, value: UIColor.lightGray, range: NSRange(0..<result.length))
 		
 		return result
 	}
 	
-	func visit(_ node: EscapedCharTextNode) -> NSMutableAttributedString {
-		String.lineBreak
+	public func visit(_ node: EscapedCharTextNode) -> NSMutableAttributedString {
+		let code = makeMdCode("\\")
+		
+		let attribute: [NSAttributedString.Key: Any] = [
+			.foregroundColor: UIColor.gray,
+			.font: UIFont.systemFont(ofSize: 18)
+		]
+		let text = NSMutableAttributedString(string: node.char, attributes: attribute)
+		
+		let result = NSMutableAttributedString()
+		result.append(code)
+		result.append(text)
+		
+		return result
 	}
 	
-	func visit(_ node: LinkNode) -> NSMutableAttributedString {
+	public func visit(_ node: LinkNode) -> NSMutableAttributedString {
 		let codeFirst = makeMdCode(" [\(node.header)](")
 		let codeEnd = makeMdCode(") ")
 		
@@ -182,7 +172,7 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: ImageNode) -> NSMutableAttributedString {
+	public func visit(_ node: ImageNode) -> NSMutableAttributedString {
 		let codeFirst = makeMdCode(" ![\(node.header)](")
 		let codeEnd = makeMdCode(") ")
 		
@@ -201,20 +191,20 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: LineBreakNode) -> NSMutableAttributedString {
+	public func visit(_ node: LineBreakNode) -> NSMutableAttributedString {
 		String.lineBreak
 	}
 	
-	func visit(_ node: HorizontalLineNode) -> NSMutableAttributedString {
+	public func visit(_ node: HorizontalLineNode) -> NSMutableAttributedString {
 		let result = NSMutableAttributedString()
 		return result
 	}
 	
-	func visit(_ node: CodeBlockNode) -> NSMutableAttributedString {
+	public func visit(_ node: CodeBlockNode) -> NSMutableAttributedString {
 		let codeStart = makeMdCode("```\(node.language)")
 		let codeEnd = makeMdCode("```")
 		
-		let text = visitChildren(of: node).joined()
+		let text = visitChildren(of: node).joined(separator: "\n")
 		
 		let result = NSMutableAttributedString()
 		result.append(String.lineBreak)
@@ -226,14 +216,14 @@ final class AttibuteTextVisitor: IVisitor {
 		result.append(String.lineBreak)
 		
 		let attribute: [NSAttributedString.Key: Any] = [
-			.foregroundColor: Theme.mainColor
+			.foregroundColor: UIColor.green
 		]
 		result.addAttributes(attribute, range: NSRange(0..<result.length))
 		
 		return result
 	}
 	
-	func visit(_ node: BulletedListNode) -> NSMutableAttributedString {
+	public func visit(_ node: BulletedListNode) -> NSMutableAttributedString {
 		let level = makeMdCode(String(repeating: "  ", count: node.level))
 		let text = visitChildren(of: node).joined()
 		
@@ -244,9 +234,9 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: BulletedListItem) -> NSMutableAttributedString {
+	public func visit(_ node: BulletedListItem) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.boldSystemFont(ofSize: 18)
+			.font: UIFont.systemFont(ofSize: 18)
 		]
 		let code = NSAttributedString(string: node.marker + " ", attributes: attribute)
 		
@@ -260,8 +250,8 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: NumberedListNode) -> NSMutableAttributedString {
-		let level = makeMdCode(String(repeating: "  ", count: node.level))
+	public func visit(_ node: NumberedListNode) -> NSMutableAttributedString {
+		let level = makeMdCode(String(repeating: " ", count: node.level))
 		let text = visitChildren(of: node).joined()
 		
 		let result = NSMutableAttributedString()
@@ -271,9 +261,9 @@ final class AttibuteTextVisitor: IVisitor {
 		return result
 	}
 	
-	func visit(_ node: NumberedListItem) -> NSMutableAttributedString {
+	public func visit(_ node: NumberedListItem) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.boldSystemFont(ofSize: 18)
+			.font: UIFont.systemFont(ofSize: 18)
 		]
 		let code = NSAttributedString(string: node.marker + " ", attributes: attribute)
 		
@@ -282,60 +272,12 @@ final class AttibuteTextVisitor: IVisitor {
 		let result = NSMutableAttributedString()
 		result.append(code)
 		result.append(text)
-		result.append(String.lineBreak)
 		
 		return result
 	}
 }
 
-extension IVisitor {
-	func visitChildren(of node: INode) -> [Result] {
-		return node.children.compactMap { child in // swiftlint:disable:this closure_body_length
-			switch child {
-			case let child as HeaderNode:
-				return visit(child)
-			case let child as BlockquoteNode:
-				return visit(child)
-			case let child as ParagraphNode:
-				return visit(child)
-			case let child as TextNode:
-				return visit(child)
-			case let child as BoldTextNode:
-				return visit(child)
-			case let child as ItalicTextNode:
-				return visit(child)
-			case let child as BoldItalicTextNode:
-				return visit(child)
-			case let child as InlineCodeTextNode:
-				return visit(child)
-			case let child as EscapedCharTextNode:
-				return visit(child)
-			case let child as LinkNode:
-				return visit(child)
-			case let child as ImageNode:
-				return visit(child)
-			case let child as LineBreakNode:
-				return visit(child)
-			case let child as HorizontalLineNode:
-				return visit(child)
-			case let child as CodeBlockNode:
-				return visit(child)
-			case let child as BulletedListNode:
-				return visit(child)
-			case let child as BulletedListItem:
-				return visit(child)
-			case let child as NumberedListNode:
-				return visit(child)
-			case let child as NumberedListItem:
-				return visit(child)
-			default:
-				return nil
-			}
-		}
-	}
-}
-
-private extension AttibuteTextVisitor {
+private extension AttibutedTextVisitor {
 	func makeMdCode(_ code: String) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.gray

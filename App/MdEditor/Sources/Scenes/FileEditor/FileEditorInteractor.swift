@@ -54,7 +54,9 @@ final class FileEditorInteractor: IFileEditorInteractor {
 
 		let tokens = Lexer().tokenize(fileData)
 		let document = Parser().parse(tokens: tokens)
-		let attributedText = document.accept(AttibuteTextVisitor())
+		
+		let visitor = AttibutedTextVisitor()
+		let attributedText = document.accept(visitor)
 
 		presenter?.present(responce: FileEditorModel.Response(title: title, fileData: attributedText.joined()))
 	}

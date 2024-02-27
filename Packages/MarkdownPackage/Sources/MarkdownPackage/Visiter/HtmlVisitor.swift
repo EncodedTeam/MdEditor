@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import MarkdownPackage
 
 final class HtmlVisitor: IVisitor {
 	typealias Result = String

@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import MarkdownPackage
 
-extension Document {
+public extension Document {
 	func accept<T: IVisitor>(_ visitor: T) -> [T.Result] {
 		return visitor.visit(self)
 	}

@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 public protocol INode {
 	var children: [INode] { get }
 }
