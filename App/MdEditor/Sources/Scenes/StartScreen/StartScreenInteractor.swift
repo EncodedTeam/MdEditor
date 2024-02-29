@@ -47,8 +47,7 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		let documents = files.map { document in
 			StartScreenModel.Document(
 				fileName: document.name, 
-				content: document.loadFileBody(), 
-				stub: false
+				content: document.loadFileBody()
 			)
 		}
 		let response = StartScreenModel.Response(docs: documents)

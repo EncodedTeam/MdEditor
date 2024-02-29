@@ -22,18 +22,13 @@ enum StartScreenModel {
 		let docs: [Document]
 	}
 
-	struct ViewModel {
-		let documents: [Document]
-	}
-
-	enum ViewModelNew {
-		case documents(_ docs: [Document])
+	enum ViewModel {
+		case documents([Document])
 		case stub
 	}
 
 	struct Document {
 		let fileName: String
 		let content: String
-		let stub: Bool
 	}
 }

@@ -37,7 +37,7 @@ final class StartScreenViewController: UIViewController, Accessible {
 	private var narrowConstraints: [NSLayoutConstraint] = []
 	private var wideConstraints: [NSLayoutConstraint] = []
 
-	private var viewModel = StartScreenModel.ViewModel(documents: [])
+	private var viewModel = StartScreenModel.ViewModel.stub
 
 	private var cancellables = Set<AnyCancellable>()
 
@@ -94,7 +94,11 @@ extension StartScreenViewController: IStartScreenViewController {
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension StartScreenViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		viewModel.documents.count
+		if case let .documents(documents) = viewModel {
+			return documents.count
+		} else {
+			return 1 // swiftlint:disable:this numbers_smell
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -104,15 +108,19 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		) as? RecentDocumentCell else {
 			return UICollectionViewCell()
 		}
-		let document = viewModel.documents[indexPath.item]
-		cell.deleteItemPublisher
-			.receive(on: RunLoop.main)
-			.sink { [weak self] in
-				self?.deleteRecentFile(indexPath: indexPath)
-			}
-			.store(in: &cancellables)
-		cell.configure(with: document)
-
+		
+		if case let .documents(documents) = viewModel {
+			let document = documents[indexPath.item]
+			cell.deleteItemPublisher
+				.receive(on: RunLoop.main)
+				.sink { [weak self] in
+					self?.deleteRecentFile(indexPath: indexPath)
+				}
+				.store(in: &cancellables)
+			cell.configure(with: document)
+		} else {
+			cell.showStub()
+		}
 		return cell
 	}
 
@@ -127,10 +135,11 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		if viewModel.documents.first(where: { $0.stub }) != nil {
-			interactor?.performAction(request: .creaeteNewFile)
-		} else {
+		switch viewModel {
+		case .documents:
 			interactor?.performAction(request: .recentFileSelected(indexPath: indexPath))
+		case .stub:
+			interactor?.performAction(request: .creaeteNewFile)
 		}
 	}
 }

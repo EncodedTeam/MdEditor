@@ -17,9 +17,6 @@ final class RecentDocumentCell: UICollectionViewCell {
 	private lazy var label = makeLabel()
 	private lazy var imageViewDeleteItem = makeImageViewDeleteItem()
 
-	private var commonConstraints: [NSLayoutConstraint] = []
-	private var stubConstraints: [NSLayoutConstraint] = []
-
 	var deleteItemPublisher = PassthroughSubject<Void, Never>()
 
 	// MARK: - Initialization
@@ -35,24 +32,30 @@ final class RecentDocumentCell: UICollectionViewCell {
 	// MARK: - Public Methods
 	func configure(with document: StartScreenModel.Document) {
 		imageView.image = nil
+
 		label.text = document.fileName
 		layoutSubviews()
-		if document.stub {
-			let insets = UIEdgeInsets(
-				top: -Sizes.Padding.normal,
-				left: -Sizes.Padding.normal,
-				bottom: -Sizes.Padding.normal,
-				right: -Sizes.Padding.normal
-			)
-			imageView.image = Theme.ImageIcon.newFile?.withAlignmentRectInsets(insets)
-			imageView.tintColor = .systemGray3
-			imageViewDeleteItem.isHidden = true
-			imageViewDeleteItem.isUserInteractionEnabled = false
-		} else {
-			imageViewDeleteItem.isHidden = false
-			imageViewDeleteItem.isUserInteractionEnabled = true
-			imageView.image = imageView.snapshot(with: document.content)
-		}
+		imageView.image = imageView.snapshot(with: document.content)
+
+		imageViewDeleteItem.isHidden = false
+		imageViewDeleteItem.isUserInteractionEnabled = true
+	}
+
+	func showStub() {
+		imageView.image = nil
+		label.text = nil
+
+		let insets = UIEdgeInsets(
+			top: -Sizes.Padding.normal,
+			left: -Sizes.Padding.normal,
+			bottom: -Sizes.Padding.normal,
+			right: -Sizes.Padding.normal
+		)
+		imageView.image = Theme.ImageIcon.newFile?.withAlignmentRectInsets(insets)
+		imageView.tintColor = Theme.stubColor
+
+		imageViewDeleteItem.isHidden = true
+		imageViewDeleteItem.isUserInteractionEnabled = false
 	}
 }
 

@@ -23,12 +23,11 @@ final class StartScreenPresenter: IStartScreenPresenter {
 
 	// MARK: - Public methods
 	func present(response: StartScreenModel.Response) {
-		var docs = response.docs
+		let docs = response.docs
 		if docs.isEmpty {
-			docs.append(StartScreenModel.Document(fileName: "", content: "", stub: true))
+			viewController?.render(with: .stub)
+		} else {
+			viewController?.render(with: .documents(docs))
 		}
-		let viewModel = StartScreenModel.ViewModel(documents: docs)
-
-		viewController?.render(with: viewModel)
 	}
 }
