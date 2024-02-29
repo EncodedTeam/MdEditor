@@ -27,7 +27,11 @@ final class EditorCoordinator: BaseCoordinator {
 // MARK: - Private methods
 private extension EditorCoordinator {
 	func showMessage(message: String) {
-		let alert = UIAlertController(title: L10n.Message.text, message: message, preferredStyle: .alert)
+		let alert = UIAlertController(
+			title: L10n.Message.text,
+			message: message,
+			preferredStyle: .alert
+		)
 		let action = UIAlertAction(title: L10n.Ok.text, style: .default)
 		alert.addAction(action)
 
@@ -35,7 +39,10 @@ private extension EditorCoordinator {
 	}
 
 	func showStartScreenScene() {
-		let (viewController, interactor) = StartScreenAssembler().assembly()
+		let recentFileManager = RecentFileManager()
+		let (viewController, interactor) = StartScreenAssembler().assembly(
+			recentFileManager: recentFileManager
+		)
 		interactor.delegate = self
 
 		navigationController.setViewControllers([viewController], animated: true)

@@ -9,13 +9,14 @@
 import Foundation
 
 /// Показывает последние файлы
-protocol IRecentFilesManager {
+protocol IRecentFileManager {
 	func getRecentFiles() async -> [FileSystemEntity]
 	func addToRecentFiles(_ file: FileSystemEntity) async
 	func clearRecentFiles() async
+	func deleteRecentFile(_ file: FileSystemEntity) async
 }
 
-actor RecentFilesManager: IRecentFilesManager {
+actor RecentFileManager: IRecentFileManager {
 	func getRecentFiles() -> [FileSystemEntity] {
 		guard let data = UserDefaults.standard.data(forKey: UserDefaults.Keys.recentFilesKey.rawValue),
 			  let decodedItems = try? JSONDecoder().decode([FileSystemEntity].self, from: data) else {
@@ -43,5 +44,16 @@ actor RecentFilesManager: IRecentFilesManager {
 
 	func clearRecentFiles() {
 		UserDefaults.standard.reset()
+	}
+
+	func deleteRecentFile(_ file: FileSystemEntity) {
+		var recentFiles = getRecentFiles()
+		recentFiles.removeAll(where: { $0 == file })
+
+		guard let encodedData = try? JSONEncoder().encode(recentFiles) else { return }
+		UserDefaults.standard.setValue(
+			encodedData,
+			forKey: UserDefaults.Keys.recentFilesKey.rawValue
+		)
 	}
 }

@@ -25,5 +25,7 @@ enum Theme {
 		static let unknown = UIImage(systemName: "questionmark.app.dashed")
 		static let directory = UIImage(systemName: "folder.fill")
 		static let file = UIImage(systemName: "doc.text.fill")
+		static let deleteFile = UIImage(systemName: "minus.circle.fill")
+		static let newFile = UIImage(systemName: "plus")
 	}
 }

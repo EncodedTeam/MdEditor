@@ -10,17 +10,12 @@ import Foundation
 
 /// StartScreenModel is namespace for splt viewModels
 enum StartScreenModel {
-	enum MenuIdentifier {
-		case openFile
-		case newFile
-		case showAbout
-	}
-
 	enum Request {
 		case openFileList
 		case creaeteNewFile
 		case showAbout
 		case recentFileSelected(indexPath: IndexPath)
+		case deleteRecentFile(indexPath: IndexPath)
 	}
 
 	struct Response {
@@ -30,8 +25,15 @@ enum StartScreenModel {
 	struct ViewModel {
 		let documents: [Document]
 	}
+
+	enum ViewModelNew {
+		case documents(_ docs: [Document])
+		case stub
+	}
+
 	struct Document {
 		let fileName: String
 		let content: String
+		let stub: Bool
 	}
 }

@@ -7,15 +7,14 @@
 //
 
 import UIKit
+import Combine
 
 protocol IStartScreenViewController: AnyObject {
 	func render(with viewModel: StartScreenModel.ViewModel)
 }
 
 final class StartScreenViewController: UIViewController, Accessible {
-
 	// MARK: - Dependencies
-
 	var interactor: IStartScreenInteractor?
 
 	// MARK: - Private properties
@@ -40,8 +39,9 @@ final class StartScreenViewController: UIViewController, Accessible {
 
 	private var viewModel = StartScreenModel.ViewModel(documents: [])
 
-	// MARK: - Lifecycle
+	private var cancellables = Set<AnyCancellable>()
 
+	// MARK: - Lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
@@ -74,29 +74,30 @@ final class StartScreenViewController: UIViewController, Accessible {
 		super.traitCollectionDidChange(previousTraitCollection)
 		
 		if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+			cancellables.removeAll()
 			collectionViewDocs.reloadData()
 		}
 	}
 }
 
 // MARK: - IStartScreenViewController
-
 extension StartScreenViewController: IStartScreenViewController {
 	func render(with viewModel: StartScreenModel.ViewModel) {
 		self.viewModel = viewModel
-		collectionViewDocs.reloadData()
+		cancellables.removeAll()
+		collectionViewDocs.performBatchUpdates {
+			collectionViewDocs.reloadSections(IndexSet(integer: 0))
+		}
 	}
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
-
 extension StartScreenViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		viewModel.documents.count
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
 		guard let cell = collectionView.dequeueReusableCell(
 			withReuseIdentifier: RecentDocumentCell.reuseIdentifier,
 			for: indexPath
@@ -104,6 +105,12 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 			return UICollectionViewCell()
 		}
 		let document = viewModel.documents[indexPath.item]
+		cell.deleteItemPublisher
+			.receive(on: RunLoop.main)
+			.sink { [weak self] in
+				self?.deleteRecentFile(indexPath: indexPath)
+			}
+			.store(in: &cancellables)
 		cell.configure(with: document)
 
 		return cell
@@ -118,10 +125,17 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		let width = height * Sizes.CollectionView.Multiplier.horizontal
 		return CGSize(width: width, height: height)
 	}
+
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		if viewModel.documents.first(where: { $0.stub }) != nil {
+			interactor?.performAction(request: .creaeteNewFile)
+		} else {
+			interactor?.performAction(request: .recentFileSelected(indexPath: indexPath))
+		}
+	}
 }
 
 // MARK: - SetupUI
-
 private extension StartScreenViewController {
 	func setupUI() {
 		title = L10n.StartScreen.title
@@ -133,6 +147,7 @@ private extension StartScreenViewController {
 
 		buttonNew.configuration?.imagePadding += Sizes.Padding.half
 
+		buttonNew.addTarget(self, action: #selector(buttonNewAction), for: .touchUpInside)
 		buttonOpen.addTarget(self, action: #selector(buttonOpenAction), for: .touchUpInside)
 		buttonAbout.addTarget(self, action: #selector(buttonAboutAction), for: .touchUpInside)
 
@@ -147,11 +162,6 @@ private extension StartScreenViewController {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
 		layout.minimumLineSpacing = Sizes.CollectionView.Padding.lineSpacing
-
-		let itemWidth = view.frame.width
-		let itemHeight = view.frame.height
-
-		layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
 
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		
@@ -203,7 +213,6 @@ private extension StartScreenViewController {
 }
 
 // MARK: - Layout
-
 private extension StartScreenViewController {
 	func setupConstraints() {
 		commonConstraints = [
@@ -264,6 +273,11 @@ private extension StartScreenViewController {
 // MARK: - Actions
 private extension StartScreenViewController {
 	@objc
+	func buttonNewAction(_ sender: UIButton) {
+		interactor?.performAction(request: .creaeteNewFile)
+	}
+
+	@objc
 	func buttonOpenAction(_ sender: UIButton) {
 		interactor?.performAction(request: .openFileList)
 	}
@@ -273,7 +287,7 @@ private extension StartScreenViewController {
 		interactor?.performAction(request: .showAbout)
 	}
 
-	@objc func interfaceModeChanged() {
-		collectionViewDocs.reloadData()
+	func deleteRecentFile(indexPath: IndexPath) {
+		interactor?.performAction(request: .deleteRecentFile(indexPath: indexPath))
 	}
 }
