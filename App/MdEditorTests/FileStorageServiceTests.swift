@@ -87,7 +87,7 @@ private extension FileStorageServiceTests {
 		static let sourceAssetsDirectory = mainBundle.appendingPathComponent(ResourcesBundle.assets)
 		static let sourceAboutFile = sourceAssetsDirectory.appendingPathComponent(ResourcesBundle.about)
 		static let sourceAboutFileName = ResourcesBundle.about
-		static let rootUrls = ResourcesBundle.defaultsUrls
+		static let rootUrls = ResourcesBundle.defaultUrls
 	}
 
 	func makeSut() -> IStorageService {

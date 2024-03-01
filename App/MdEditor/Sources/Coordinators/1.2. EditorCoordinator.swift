@@ -11,11 +11,16 @@ import UIKit
 final class EditorCoordinator: BaseCoordinator {
 	// MARK: - Dependencies
 	private let navigationController: UINavigationController
-	private let storage = FileStorageService()
+	private let storage: IStorageService
 
 	// MARK: - Initialization
 	init(navigationController: UINavigationController) {
 		self.navigationController = navigationController
+		storage = FileStorageService(
+			fileManager: FileManager.default,
+			defaultURL: ResourcesBundle.defaultUrls,
+			ext: [ResourcesBundle.extMD]
+		)
 	}
 
 	// MARK: - Internal methods

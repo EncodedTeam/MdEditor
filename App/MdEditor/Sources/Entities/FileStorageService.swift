@@ -8,28 +8,6 @@
 
 import Foundation
 
-enum ResourcesBundle {
-	static let assets = "Assets"
-	static let about = "about.md"
-	static let extMD = "md"
-	
-	static let bundle = Bundle.main.resourceURL ?? Bundle.main.bundleURL
-	static let bundlePath = Bundle.main.resourcePath ?? Bundle.main.bundlePath
-	static let aboutFile = bundle.appendingPathComponent(about)
-
-	static var defaultsUrls: [URL] {
-		var urls: [URL] = []
-		let bundleUrl = Bundle.main.resourceURL
-		if let docsURL = bundleUrl?.appendingPathComponent(assets) {
-			urls.append(docsURL)
-		}
-		if let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-			urls.append(homeURL)
-		}
-		return urls
-	}
-}
-
 enum StorageError: Error {
 	case errorURL
 	case errorFetching
@@ -39,46 +17,54 @@ enum StorageError: Error {
 
 protocol IStorageService {
 	/// Получить файлы/папки
-	/// - Parameter urls: источники для получения
+	/// - Parameter url: источники для получения файла
 	/// - Returns: `Result<[FileSystemEntity], StorageError>`
-	func fetchData(urls: [URL]) async -> Result<[FileSystemEntity], StorageError>
-	
+	func fetch(of url: URL?) async -> Result<[FileSystemEntity], StorageError>
+
 	/// Получить сущность файла
 	/// - Parameters:
 	///   - url: `URL` файла
 	///   - ext: массив расширений для отбора
 	/// - Returns: `Optional(FileSystemEntity)`
-	func getEntity(from url: URL, with ext: [String]) async throws -> FileSystemEntity?
+	func getEntity(from url: URL, with ext: [String]) throws -> FileSystemEntity?
 
 	/// Загрузить данные из файла
 	/// - Parameter url: адрес файла
 	/// - Returns: текстовое представление файла
-	func loadFile(_ file: FileSystemEntity) async -> String
+	func loadFile(_ file: FileSystemEntity) -> String
 }
 
-actor FileStorageService: IStorageService {
+final class FileStorageService: IStorageService {
 	// MARK: - Private properties
-	private let fileManager = FileManager.default
+	private let fileManager: FileManager
+	private let defaultURL: [URL]
+	private let ext: [String]
+
+	init(
+		fileManager: FileManager = FileManager.default,
+		defaultURL: [URL] = [],
+		ext: [String] = []
+	) {
+		self.fileManager = fileManager
+		self.defaultURL = defaultURL
+		self.ext = ext
+	}
 
 	// MARK: - Public methods
-	func fetchData(urls: [URL]) -> Result<[FileSystemEntity], StorageError> {
-		do {
-			/// В случае передачи 1 URL - возвращает данные о вложенных файлах/папка по этому адресу
-			/// Иначе возвращает `[FileSystemEntity]` по заданным URL
-			if urls.count == 1 {
-				guard let url = urls.first else { return .failure(.errorURL) }
-				let result = try fetch(with: url)
-				return .success(result)
-			} else {
-				let result = try fetchRoot(urls)
-				return .success(result)
+	func fetch(of url: URL?) async -> Result<[FileSystemEntity], StorageError> {
+		if let url {
+			return fetchNestedFiles(of: url)
+		} else {
+			var result: [FileSystemEntity] = []
+			for url in defaultURL {
+				guard let entity = try? getEntity(from: url, with: ext) else { continue }
+				result.append(entity)
 			}
-		} catch {
-			return .failure(.errorFetching)
+			return .success(result)
 		}
 	}
 
-	func getEntity(from url: URL, with ext: [String] = [ResourcesBundle.extMD]) throws -> FileSystemEntity? {
+	func getEntity(from url: URL, with ext: [String]) throws -> FileSystemEntity? {
 		// Если это файл и указано расширение - выполнить проверку на соответствие указанному расширению
 		if !ext.isEmpty, !url.hasDirectoryPath, !ext.contains(url.pathExtension) { return nil }
 
@@ -107,31 +93,21 @@ actor FileStorageService: IStorageService {
 
 // MARK: - Private methods
 private extension FileStorageService {
-	func fetchRoot(_ urls: [URL]) throws -> [FileSystemEntity] {
+	func fetchNestedFiles(of url: URL) -> Result<[FileSystemEntity], StorageError> {
 		var files: [FileSystemEntity?] = []
-		for item in urls {
-			let entity = try getEntity(from: item)
-			files.append(entity)
-		}
-		return files.compactMap { $0 }
-	}
-
-	func fetch(with url: URL) throws -> [FileSystemEntity] {
-		var files: [FileSystemEntity?] = []
-		if url.hasDirectoryPath {
+		do {
 			let contents = try fileManager.contentsOfDirectory(
 				at: url,
 				includingPropertiesForKeys: nil,
 				options: .skipsHiddenFiles
 			)
 			for item in contents {
-				let entity = try getEntity(from: item)
+				let entity = try getEntity(from: item, with: ext)
 				files.append(entity)
 			}
-		} else {
-			let entity = try getEntity(from: url)
-			files.append(entity)
+		} catch {
+			return .failure(.errorURL)
 		}
-		return files.compactMap { $0 }
+		return .success(files.compactMap { $0 })
 	}
 }
