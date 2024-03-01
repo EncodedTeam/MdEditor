@@ -20,15 +20,24 @@ public final class AttributedTextVisitor: IVisitor {
 		let code = makeMdCode(String(repeating: "#", count: node.level) + " ")
 		
 		let text = visitChildren(of: node).joined()
+		let string = String.lineBreak
+		string.addAttribute(
+			.font,
+			value: UIFont.systemFont(ofSize: Appearance.textSize),
+			range: NSRange(0..<string.length)
+		)
 		
 		let result = NSMutableAttributedString()
 		result.append(code)
 		result.append(text)
-		result.append(String.lineBreak)
-		result.append(String.lineBreak)
-		
-		result.addAttribute(.font, value: UIFont.systemFont(ofSize: Appearance.headerSize[node.level - 1]), range: NSRange(0..<result.length))
 
+		result.addAttribute(
+			.font,
+			value: UIFont.systemFont(ofSize: Appearance.headerSize[node.level - 1]),
+			range: NSRange(0..<result.length)
+		)
+		result.append(string)
+		
 		return result
 	}
 	
@@ -39,7 +48,6 @@ public final class AttributedTextVisitor: IVisitor {
 		let result = NSMutableAttributedString()
 		result.append(code)
 		result.append(text)
-		result.append(String.lineBreak)
 		result.append(String.lineBreak)
 		
 		return result
@@ -83,6 +91,40 @@ public final class AttributedTextVisitor: IVisitor {
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
 			.font: UIFont.italicSystemFont(ofSize: Appearance.textSize)
+		]
+		let text = NSMutableAttributedString(string: node.text, attributes: attribute)
+		
+		let result = NSMutableAttributedString()
+		result.append(code)
+		result.append(text)
+		result.append(code)
+		
+		return result
+	}
+	
+	public func visit(_ node: StrikeTextNode) -> NSMutableAttributedString {
+		let code = makeMdCode("~~")
+		
+		let attribute: [NSAttributedString.Key: Any] = [
+			.strikethroughStyle : NSUnderlineStyle.single.rawValue,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
+		]
+		let text = NSMutableAttributedString(string: node.text, attributes: attribute)
+		
+		let result = NSMutableAttributedString()
+		result.append(code)
+		result.append(text)
+		result.append(code)
+		
+		return result
+	}
+	
+	public func visit(_ node: HighlightedTextNode) -> NSMutableAttributedString {
+		let code = makeMdCode("==")
+		
+		let attribute: [NSAttributedString.Key: Any] = [
+			.backgroundColor: Appearance.highlightedTextBackground,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		let text = NSMutableAttributedString(string: node.text, attributes: attribute)
 		
@@ -153,8 +195,8 @@ public final class AttributedTextVisitor: IVisitor {
 	}
 	
 	public func visit(_ node: LinkNode) -> NSMutableAttributedString {
-		let codeFirst = makeMdCode(" [\(node.header)](")
-		let codeEnd = makeMdCode(") ")
+		let codeFirst = makeMdCode("[\(node.header)](")
+		let codeEnd = makeMdCode(")")
 		
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
@@ -173,8 +215,8 @@ public final class AttributedTextVisitor: IVisitor {
 	}
 	
 	public func visit(_ node: ImageNode) -> NSMutableAttributedString {
-		let codeFirst = makeMdCode(" ![\(node.header)](")
-		let codeEnd = makeMdCode(") ")
+		let codeFirst = makeMdCode("![\(node.header)|\(node.size)](")
+		let codeEnd = makeMdCode(")")
 		
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
@@ -193,15 +235,22 @@ public final class AttributedTextVisitor: IVisitor {
 	}
 	
 	public func visit(_ node: LineBreakNode) -> NSMutableAttributedString {
-		String.lineBreak
+		let string = String.lineBreak
+		string.addAttribute(
+			.font,
+			value: UIFont.systemFont(ofSize: Appearance.textSize),
+			range: NSRange(0..<string.length)
+		)
+		return string
 	}
 	
 	public func visit(_ node: HorizontalLineNode) -> NSMutableAttributedString {
-		let attribute: [NSAttributedString.Key: Any] = [
-			.strikethroughStyle: NSUnderlineStyle.single.rawValue,
-			.strikethroughColor: UIColor.gray
-		]
-		let result = NSMutableAttributedString(string: "\n\r\u{00A0} \u{0009} \u{00A0}\n\n", attributes: attribute)
+//		let attribute: [NSAttributedString.Key: Any] = [
+//			.strikethroughStyle: NSUnderlineStyle.single.rawValue,
+//			.strikethroughColor: UIColor.gray
+//		]
+//		let result = NSMutableAttributedString(string: "\n\r\u{00A0} \u{0009} \u{00A0}\n\n", attributes: attribute)
+		let result = NSMutableAttributedString()
 		return result
 	}
 	
@@ -212,7 +261,6 @@ public final class AttributedTextVisitor: IVisitor {
 		let text = visitChildren(of: node).joined(separator: "\n")
 		
 		let result = NSMutableAttributedString()
-		result.append(String.lineBreak)
 		result.append(codeStart)
 		result.append(text)
 		result.append(String.lineBreak)
@@ -220,7 +268,7 @@ public final class AttributedTextVisitor: IVisitor {
 		result.append(String.lineBreak)
 		
 		let attribute: [NSAttributedString.Key: Any] = [
-			.foregroundColor: UIColor.green
+			.foregroundColor: Appearance.codeBlockColor
 		]
 		result.addAttributes(attribute, range: NSRange(0..<result.length))
 		
@@ -228,11 +276,10 @@ public final class AttributedTextVisitor: IVisitor {
 	}
 	
 	public func visit(_ node: BulletedListNode) -> NSMutableAttributedString {
-		let level = makeMdCode(String(repeating: "  ", count: node.level))
-		let text = visitChildren(of: node).joined()
+		let level = String(repeating: "  ", count: node.level)
+		let text = visitChildren(of: node).joined(separator: "\n" + level)
 		
 		let result = NSMutableAttributedString()
-		result.append(level)
 		result.append(text)
 		
 		return result
@@ -249,17 +296,15 @@ public final class AttributedTextVisitor: IVisitor {
 		let result = NSMutableAttributedString()
 		result.append(code)
 		result.append(text)
-		result.append(String.lineBreak)
 		
 		return result
 	}
 	
 	public func visit(_ node: NumberedListNode) -> NSMutableAttributedString {
-		let level = makeMdCode(String(repeating: " ", count: node.level))
-		let text = visitChildren(of: node).joined()
+		let level = String(repeating: "  ", count: node.level)
+		let text = visitChildren(of: node).joined(separator: "\n" + level)
 		
 		let result = NSMutableAttributedString()
-		result.append(level)
 		result.append(text)
 		
 		return result
@@ -284,7 +329,7 @@ public final class AttributedTextVisitor: IVisitor {
 private extension AttributedTextVisitor {
 	func makeMdCode(_ code: String) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
-			.foregroundColor: UIColor.gray,
+			.foregroundColor: UIColor.brown,
 			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		return NSMutableAttributedString(string: code, attributes: attribute)
@@ -295,7 +340,9 @@ private extension AttributedTextVisitor {
 
 private extension AttributedTextVisitor {
 	enum Appearance {
-		static let markdownCodeColor: UIColor = .lightGray
+		static let markdownCodeColor: UIColor = UIColor(red: 200, green: 150, blue: 107, alpha: 1)
+		static let codeBlockColor: UIColor = .gray
+		static let highlightedTextBackground: UIColor = .systemOrange
 		static let textSize: CGFloat = 18
 		static let textColor: UIColor = .black
 		static let textBoldColor: UIColor = .black

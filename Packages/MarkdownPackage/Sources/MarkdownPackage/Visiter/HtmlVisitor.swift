@@ -9,6 +9,14 @@
 import Foundation
 
 final class HtmlVisitor: IVisitor {
+	func visit(_ node: HighlightedTextNode) -> String {
+		String()
+	}
+	
+	func visit(_ node: StrikeTextNode) -> String {
+		String()
+	}
+	
 	typealias Result = String
 	
 	func visit(_ node: MarkdownPackage.Document) -> [String] {

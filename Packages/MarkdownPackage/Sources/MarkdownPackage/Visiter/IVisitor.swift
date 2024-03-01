@@ -18,6 +18,8 @@ public protocol IVisitor {
 	func visit(_ node: TextNode) -> Result
 	func visit(_ node: BoldTextNode) -> Result
 	func visit(_ node: ItalicTextNode) -> Result
+	func visit(_ node: StrikeTextNode) -> Result
+	func visit(_ node: HighlightedTextNode) -> Result
 	func visit(_ node: BoldItalicTextNode) -> Result
 	func visit(_ node: InlineCodeTextNode) -> Result
 	func visit(_ node: EscapedCharTextNode) -> Result
@@ -47,6 +49,10 @@ extension IVisitor {
 			case let child as BoldTextNode:
 				return visit(child)
 			case let child as ItalicTextNode:
+				return visit(child)
+			case let child as StrikeTextNode:
+				return visit(child)
+			case let child as HighlightedTextNode:
 				return visit(child)
 			case let child as BoldItalicTextNode:
 				return visit(child)

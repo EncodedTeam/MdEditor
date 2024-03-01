@@ -77,6 +77,22 @@ public final class ItalicTextNode: BaseNode {
 	}
 }
 
+public final class StrikeTextNode: BaseNode {
+	public let text: String
+	
+	public init(text: String) {
+		self.text = text
+	}
+}
+
+public final class HighlightedTextNode: BaseNode {
+	public let text: String
+	
+	public init(text: String) {
+		self.text = text
+	}
+}
+
 public final class BoldItalicTextNode: BaseNode {
 	public let text: String
 
