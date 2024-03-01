@@ -45,12 +45,9 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	
 	@MainActor
 	func updateUI(fileData: String) {
-		let tokens = Lexer().tokenize(fileData)
-		let document = Parser().parse(tokens: tokens)
 		
-		let visitor = AttibutedTextVisitor()
-		let attributedText = document.accept(visitor)
+		let attrributedText = MarkdownToAttributedTextConverter().convert(markdownText: fileData)
 
-		presenter?.present(responce: AboutScreenModel.Response(fileData: attributedText.joined()))
+		presenter?.present(responce: AboutScreenModel.Response(fileData: attrributedText))
 	}
 }

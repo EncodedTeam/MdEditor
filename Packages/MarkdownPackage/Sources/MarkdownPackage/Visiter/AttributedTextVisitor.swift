@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class AttibutedTextVisitor: IVisitor {
+public final class AttributedTextVisitor: IVisitor {
 	
 	public init() { }
 	
@@ -27,15 +27,14 @@ public final class AttibutedTextVisitor: IVisitor {
 		result.append(String.lineBreak)
 		result.append(String.lineBreak)
 		
-		let sizes: [CGFloat] = [34, 30, 28, 26, 24, 22]
-		result.addAttribute(.font, value: UIFont.systemFont(ofSize: sizes[node.level]), range: NSRange(0..<result.length))
+		result.addAttribute(.font, value: UIFont.systemFont(ofSize: Appearance.headerSize[node.level - 1]), range: NSRange(0..<result.length))
 
 		return result
 	}
 	
 	public func visit(_ node: BlockquoteNode) -> NSMutableAttributedString {
-		let code = makeMdCode(String(repeating: ">", count: node.level - 1) + " ")
-		let text = visitChildren(of: node).joined(separator: " ")
+		let code = makeMdCode(String(repeating: ">", count: node.level) + " ")
+		let text = visitChildren(of: node).joined()
 		
 		let result = NSMutableAttributedString()
 		result.append(code)
@@ -47,8 +46,7 @@ public final class AttibutedTextVisitor: IVisitor {
 	}
 	
 	public func visit(_ node: ParagraphNode) -> NSMutableAttributedString {
-		let result = visitChildren(of: node).joined(separator: " ")
-		result.append(String.lineBreak)
+		let result = visitChildren(of: node).joined()
 		result.append(String.lineBreak)
 		
 		return result
@@ -57,7 +55,7 @@ public final class AttibutedTextVisitor: IVisitor {
 	public func visit(_ node: TextNode) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.black,
-			.font: UIFont.systemFont(ofSize: 18)
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		return NSMutableAttributedString(string: node.text, attributes: attribute)
 	}
@@ -67,7 +65,7 @@ public final class AttibutedTextVisitor: IVisitor {
 		
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
-			.font: UIFont.boldSystemFont(ofSize: 18)
+			.font: UIFont.boldSystemFont(ofSize: Appearance.textSize)
 		]
 		let text = NSMutableAttributedString(string: node.text, attributes: attribute)
 		
@@ -84,7 +82,7 @@ public final class AttibutedTextVisitor: IVisitor {
 		
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
-			.font: UIFont.italicSystemFont(ofSize: 18)
+			.font: UIFont.italicSystemFont(ofSize: Appearance.textSize)
 		]
 		let text = NSMutableAttributedString(string: node.text, attributes: attribute)
 		
@@ -102,9 +100,9 @@ public final class AttibutedTextVisitor: IVisitor {
 		let font: UIFont
 		if let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
 			.withSymbolicTraits([.traitBold, .traitItalic]) {
-			font = UIFont(descriptor: fontDescriptor, size: 18)
+			font = UIFont(descriptor: fontDescriptor, size: Appearance.textSize)
 		} else {
-			font = UIFont.boldSystemFont(ofSize: 18)
+			font = UIFont.boldSystemFont(ofSize: Appearance.textSize)
 		}
 		
 		let attribute: [NSAttributedString.Key: Any] = [
@@ -125,7 +123,8 @@ public final class AttibutedTextVisitor: IVisitor {
 		let code = makeMdCode("`")
 		
 		let attribute: [NSAttributedString.Key: Any] = [
-			.foregroundColor: UIColor.gray
+			.foregroundColor: UIColor.gray,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		let text = NSMutableAttributedString(string: node.code, attributes: attribute)
 		
@@ -142,7 +141,7 @@ public final class AttibutedTextVisitor: IVisitor {
 		
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.gray,
-			.font: UIFont.systemFont(ofSize: 18)
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		let text = NSMutableAttributedString(string: node.char, attributes: attribute)
 		
@@ -159,7 +158,8 @@ public final class AttibutedTextVisitor: IVisitor {
 		
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
-			.underlineStyle: NSUnderlineStyle.single.rawValue
+			.underlineStyle: NSUnderlineStyle.single.rawValue,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		let link = NSMutableAttributedString(string: node.url, attributes: attribute)
 		link.addAttribute(.link, value: node.url, range: NSRange(0..<link.length))
@@ -178,7 +178,8 @@ public final class AttibutedTextVisitor: IVisitor {
 		
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
-			.underlineStyle: NSUnderlineStyle.single.rawValue
+			.underlineStyle: NSUnderlineStyle.single.rawValue,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		let link = NSMutableAttributedString(string: node.url, attributes: attribute)
 		link.addAttribute(.link, value: node.url, range: NSRange(0..<link.length))
@@ -196,7 +197,11 @@ public final class AttibutedTextVisitor: IVisitor {
 	}
 	
 	public func visit(_ node: HorizontalLineNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		let attribute: [NSAttributedString.Key: Any] = [
+			.strikethroughStyle: NSUnderlineStyle.single.rawValue,
+			.strikethroughColor: UIColor.gray
+		]
+		let result = NSMutableAttributedString(string: "\n\r\u{00A0} \u{0009} \u{00A0}\n\n", attributes: attribute)
 		return result
 	}
 	
@@ -209,7 +214,6 @@ public final class AttibutedTextVisitor: IVisitor {
 		let result = NSMutableAttributedString()
 		result.append(String.lineBreak)
 		result.append(codeStart)
-		result.append(String.lineBreak)
 		result.append(text)
 		result.append(String.lineBreak)
 		result.append(codeEnd)
@@ -236,7 +240,7 @@ public final class AttibutedTextVisitor: IVisitor {
 	
 	public func visit(_ node: BulletedListItem) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.systemFont(ofSize: 18)
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		let code = NSAttributedString(string: node.marker + " ", attributes: attribute)
 		
@@ -263,7 +267,7 @@ public final class AttibutedTextVisitor: IVisitor {
 	
 	public func visit(_ node: NumberedListItem) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.systemFont(ofSize: 18)
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		let code = NSAttributedString(string: node.marker + " ", attributes: attribute)
 		
@@ -277,11 +281,27 @@ public final class AttibutedTextVisitor: IVisitor {
 	}
 }
 
-private extension AttibutedTextVisitor {
+private extension AttributedTextVisitor {
 	func makeMdCode(_ code: String) -> NSMutableAttributedString {
 		let attribute: [NSAttributedString.Key: Any] = [
-			.foregroundColor: UIColor.gray
+			.foregroundColor: UIColor.gray,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
 		]
 		return NSMutableAttributedString(string: code, attributes: attribute)
+	}
+}
+
+// MARK: - Appearance
+
+private extension AttributedTextVisitor {
+	enum Appearance {
+		static let markdownCodeColor: UIColor = .lightGray
+		static let textSize: CGFloat = 18
+		static let textColor: UIColor = .black
+		static let textBoldColor: UIColor = .black
+		static let textBoldItalicColor: UIColor = .black
+		static let textItalicColor: UIColor = .black
+		static let headerSize: [CGFloat] = [40, 30, 26, 22, 20, 18]
+		static let headerColor: [UIColor] = [.black, .black, .black, .black, .black, .black]
 	}
 }

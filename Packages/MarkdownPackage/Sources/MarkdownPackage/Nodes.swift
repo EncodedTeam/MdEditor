@@ -12,7 +12,7 @@ public protocol INode {
 }
 
 public class BaseNode: INode {
-	public private(set) var children: [INode]
+	private(set) public var children: [INode]
 
 	public init(_ children: [INode] = []) {
 		self.children = children
@@ -21,6 +21,12 @@ public class BaseNode: INode {
 
 // MARK: - Main Root Node - Document
 public final class Document: BaseNode {
+}
+
+extension Document {
+	func accept<T: IVisitor>(visitor: T) -> [T.Result] {
+		visitor.visit(self)
+	}
 }
 
 // MARK: - Header

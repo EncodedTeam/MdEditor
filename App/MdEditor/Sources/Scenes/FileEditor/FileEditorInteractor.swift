@@ -52,12 +52,8 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	@MainActor
 	func updateUI(with title: String, fileData: String) {
 
-		let tokens = Lexer().tokenize(fileData)
-		let document = Parser().parse(tokens: tokens)
-		
-		let visitor = AttibutedTextVisitor()
-		let attributedText = document.accept(visitor)
+		let attrributedText = MarkdownToAttributedTextConverter().convert(markdownText: fileData)
 
-		presenter?.present(responce: FileEditorModel.Response(title: title, fileData: attributedText.joined()))
+		presenter?.present(responce: FileEditorModel.Response(title: title, fileData: attrributedText))
 	}
 }
