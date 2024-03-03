@@ -54,22 +54,12 @@ final class FileListInteractor: IFileListInteractor {
 		updateTitle(currentFile?.name ?? "/")
 		// Получение файлов асинхронно
 		Task {
-			if let currentFile {
-				let result = await storage.fetchData(urls: [currentFile.url])
-				switch result {
-				case .success(let files):
-					await updateUI(with: files)
-				case .failure(let error):
-					fatalError(error.localizedDescription)
-				}
-			} else {
-				let result = await storage.fetchData(urls: ResourcesBundle.defaultsUrls)
-				switch result {
-				case .success(let files):
-					await updateUI(with: files)
-				case .failure(let error):
-					fatalError(error.localizedDescription)
-				}
+			let result = await storage.fetchData(of: currentFile?.url)
+			switch result {
+			case .success(let files):
+				await updateUI(with: files)
+			case .failure(let error):
+				fatalError(error.localizedDescription)
 			}
 		}
 	}

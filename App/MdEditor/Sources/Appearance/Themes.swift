@@ -19,11 +19,14 @@ enum Theme {
 	static let backgroundColor = Colors.white
 	static let borderColor = Colors.purple
 	static let previewColor = UIColor.systemGray6.withAlphaComponent(0.2)
+	static let stubColor = UIColor.systemGray3
 
 	enum ImageIcon {
 		static let aboutUs = UIImage(systemName: "info.bubble.fill")
 		static let unknown = UIImage(systemName: "questionmark.app.dashed")
 		static let directory = UIImage(systemName: "folder.fill")
 		static let file = UIImage(systemName: "doc.text.fill")
+		static let deleteFile = UIImage(systemName: "minus.circle.fill")
+		static let newFile = UIImage(systemName: "plus")
 	}
 }
