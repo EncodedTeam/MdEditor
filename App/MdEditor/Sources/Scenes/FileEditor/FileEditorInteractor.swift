@@ -19,8 +19,7 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	// MARK: - Dependencies
 	
 	private var presenter: IFileEditorPresenter?
-	private var storage: IStorageService?
-	
+	private var storage: IStorageService
 	// MARK: - Private properties
 	
 	private var file: FileSystemEntity
@@ -40,7 +39,8 @@ final class FileEditorInteractor: IFileEditorInteractor {
 		updateTitle(title: title)
 		Task {
 			let title = file.name
-			let result = await storage?.loadFileBody(url: file.url) ?? ""
+			let result = file.loadFileBody()
+			await RecentFileManager(key: UserDefaults.Keys.recentFilesKey.rawValue).addToRecentFiles(file)
 			await updateUI(with: title, fileData: result)
 		}
 	}

@@ -26,25 +26,19 @@ final class StartScreenInteractor: IStartScreenInteractor {
 
 	// MARK: - Dependencies
 	private var presenter: IStartScreenPresenter?
-	private var fileStorage: IStorageService
+	private var recentFileManager: IRecentFileManager
 
 	// MARK: - Initialization
-	init(presenter: IStartScreenPresenter?, fileStorage: IStorageService) {
+	init(presenter: IStartScreenPresenter?, recentFileManager: IRecentFileManager) {
 		self.presenter = presenter
-		self.fileStorage = fileStorage
+		self.recentFileManager = recentFileManager
 	}
 
 	// MARK: - Public methods
 	func fetchData() {
 		Task {
-			let urls = ResourcesBundle.defaultsUrls
-			let result = await fileStorage.fetchRecent(count: 10, with: urls)
-			switch result {
-			case .success(let files):
-				await updateUI(with: files)
-			case .failure(let error):
-				fatalError(error.localizedDescription)
-			}
+			let result = await recentFileManager.getRecentFiles()
+			await updateUI(with: result)
 		}
 	}
 
@@ -69,7 +63,20 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		case .showAbout:
 			delegate?.showAbout()
 		case .recentFileSelected(let indexPath):
-			break
+			Task {
+				let recentFiles = await recentFileManager.getRecentFiles()
+				let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
+				await MainActor.run {
+					delegate?.openFile(file: recentFile)
+				}
+			}
+		case .deleteRecentFile(let indexPath):
+			Task {
+				let recentFiles = await recentFileManager.getRecentFiles()
+				let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
+				await recentFileManager.deleteRecentFile(recentFile)
+				fetchData()
+			}
 		}
 	}
 }

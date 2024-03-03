@@ -10,44 +10,34 @@ import Foundation
 import MarkdownPackage
 
 protocol IAboutScreenInteractor: AnyObject {
-	
 	/// Событие на предоставление данных из файла about.
 	func fetchData()
 }
 
 final class AboutScreenInteractor: IAboutScreenInteractor {
-	
 	// MARK: - Dependencies
-	
 	private var presenter: IAboutScreenPresenter?
-	private var fileStorage: IStorageService?
-	
-	// MARK: - Private properties
-	
-	private var url: URL
-	
+	private var fileStorage: IStorageService
+
 	// MARK: - Initialization
+	init(presenter: IAboutScreenPresenter, fileStorage: IStorageService) {
 	
-	init(presenter: IAboutScreenPresenter, fileStorage: IStorageService, url: URL) {
 		self.presenter = presenter
 		self.fileStorage = fileStorage
-		self.url = url
 	}
 	
 	// MARK: - Public methods
-	
 	func fetchData() {
+		let url = ResourcesBundle.aboutFile
 		Task {
-			let result = await fileStorage?.loadFileBody(url: url) ?? ""
+			let result = fileStorage.loadFile(from: url)
 			await updateUI(fileData: result)
 		}
 	}
 	
 	@MainActor
 	func updateUI(fileData: String) {
-		
 		let attrributedText = MarkdownToAttributedTextConverter().convert(markdownText: fileData)
-
 		presenter?.present(responce: AboutScreenModel.Response(fileData: attrributedText))
 	}
 }
