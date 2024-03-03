@@ -10,9 +10,19 @@ import Foundation
 
 /// Показывает последние файлы
 protocol IRecentFileManager {
+	/// Предоставляет список файлов
+	/// - Returns: массив системных файлов
 	func getRecentFiles() async -> [FileSystemEntity]
+
+	/// Добавляет файл к списку последних файлов
+	/// - Parameter file: системный файл
 	func addToRecentFiles(_ file: FileSystemEntity) async
+	
+	/// Очищает список последних файлов
 	func clearRecentFiles() async
+
+	/// Удаляет указанный системный файл из списка последних файлов
+	/// - Parameter file: системный файл
 	func deleteRecentFile(_ file: FileSystemEntity) async
 }
 
