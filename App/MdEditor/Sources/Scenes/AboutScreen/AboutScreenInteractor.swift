@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MarkdownPackage
 
 protocol IAboutScreenInteractor: AnyObject {
 	/// Событие на предоставление данных из файла about.
@@ -20,6 +21,7 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 
 	// MARK: - Initialization
 	init(presenter: IAboutScreenPresenter, fileStorage: IStorageService) {
+	
 		self.presenter = presenter
 		self.fileStorage = fileStorage
 	}
@@ -35,6 +37,7 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	
 	@MainActor
 	func updateUI(fileData: String) {
-		presenter?.present(responce: AboutScreenModel.Response(fileData: fileData))
+		let attrributedText = MarkdownToAttributedTextConverter().convert(markdownText: fileData)
+		presenter?.present(responce: AboutScreenModel.Response(fileData: attrributedText))
 	}
 }

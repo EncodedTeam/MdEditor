@@ -26,6 +26,8 @@ public struct Text {
 		case normal(text: String)
 		case bold(text: String)
 		case italic(text: String)
+		case strike(text: String)
+		case highlighted(text: String)
 		case boldItalic(text: String)
 		case inlineCode(text: String)
 		case escapedChar(char: String)

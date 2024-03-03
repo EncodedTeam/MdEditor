@@ -16,6 +16,8 @@ final class TextParser {
 			case normal
 			case bold
 			case italic
+			case strike
+			case highlighted
 			case boldItalic
 			case inlineCode
 			case escapedChar
@@ -31,10 +33,12 @@ final class TextParser {
 
 	private let partRegexes = [
 		PartRegex(type: .escapedChar, pattern: #"^\\([\\\`\*\_\{\}\[\]\<\>\(\)\+\-\.\!\|#]){1}"#),
-		PartRegex(type: .normal, pattern: #"^([^\[\!]*?)(?=[\*\!\[`\\]|$)"#),
+		PartRegex(type: .normal, pattern: #"^([^\[\!]*?)(?=[\~\=\*\!\[`\\]|$)"#),
 		PartRegex(type: .boldItalic, pattern: #"^\*\*\*(.*?)\*\*\*"#),
 		PartRegex(type: .bold, pattern: #"^\*\*(.*?)\*\*"#),
 		PartRegex(type: .italic, pattern: #"^\*(.*?)\*"#),
+		PartRegex(type: .strike, pattern: #"^\~\~(.*?)\~\~"#),
+		PartRegex(type: .highlighted, pattern: #"^\=\=(.*?)\=\="#),
 		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#),
 		PartRegex(type: .link, pattern: #"(?<!\!)\[([^\\]+?)\]\(([^\\]+?)\)"#),
 		PartRegex(type: .image, pattern: #"!\[([^\\]+?)\]\(([^\\]+?)\)"#)
@@ -60,6 +64,10 @@ final class TextParser {
 							parts.append(.bold(text: extractedText))
 						case .italic:
 							parts.append(.italic(text: extractedText))
+						case .strike:
+							parts.append(.strike(text: extractedText))
+						case .highlighted:
+							parts.append(.highlighted(text: extractedText))
 						case .boldItalic:
 							parts.append(.boldItalic(text: extractedText))
 						case .inlineCode:

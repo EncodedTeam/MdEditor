@@ -15,9 +15,11 @@ public final class Lexer: ILexer {
 	public init() { }
 	
 	public func tokenize(_ input: String) -> [Token] {
+		
 		let lines = input.components(separatedBy: .newlines)
 		var tokens: [Token?] = []
 		var inCodeBlock = false
+		
 		for line in lines {
 			if let codeBlockToken = parseCodeBlockMarker(rawText: line) {
 				tokens.append(codeBlockToken)

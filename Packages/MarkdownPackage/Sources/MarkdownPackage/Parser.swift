@@ -204,6 +204,10 @@ private extension Parser {
 				textNodes.append(BoldTextNode(text: text))
 			case .italic(let text):
 				textNodes.append(ItalicTextNode(text: text))
+			case .strike(let text):
+				textNodes.append(StrikeTextNode(text: text))
+			case .highlighted(let text):
+				textNodes.append(HighlightedTextNode(text: text))
 			case .boldItalic(let text):
 				textNodes.append(BoldItalicTextNode(text: text))
 			case .inlineCode(let code):
