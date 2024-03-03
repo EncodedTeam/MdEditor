@@ -14,8 +14,8 @@ public final class MarkdownToAttributedTextConverter {
 	
 	public func convert(markdownText: String) -> NSMutableAttributedString {
 		let document = markdownToDocument.convert(markdownText: markdownText)
-		
-		return convert(document: document)
+		let result = convert(document: document)
+		return result
 	}
 	
 	func convert(document: Document) -> NSMutableAttributedString {

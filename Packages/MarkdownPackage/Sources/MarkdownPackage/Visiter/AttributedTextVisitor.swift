@@ -18,14 +18,7 @@ public final class AttributedTextVisitor: IVisitor {
 	
 	public func visit(_ node: HeaderNode) -> NSMutableAttributedString {
 		let code = makeMdCode(String(repeating: "#", count: node.level) + " ")
-		
 		let text = visitChildren(of: node).joined()
-		let string = String.lineBreak
-		string.addAttribute(
-			.font,
-			value: UIFont.systemFont(ofSize: Appearance.textSize),
-			range: NSRange(0..<string.length)
-		)
 		
 		let result = NSMutableAttributedString()
 		result.append(code)
@@ -36,7 +29,6 @@ public final class AttributedTextVisitor: IVisitor {
 			value: UIFont.systemFont(ofSize: Appearance.headerSize[node.level - 1]),
 			range: NSRange(0..<result.length)
 		)
-		result.append(string)
 		
 		return result
 	}
@@ -48,16 +40,12 @@ public final class AttributedTextVisitor: IVisitor {
 		let result = NSMutableAttributedString()
 		result.append(code)
 		result.append(text)
-		result.append(String.lineBreak)
 		
 		return result
 	}
 	
 	public func visit(_ node: ParagraphNode) -> NSMutableAttributedString {
-		let result = visitChildren(of: node).joined()
-		result.append(String.lineBreak)
-		
-		return result
+		visitChildren(of: node).joined()
 	}
 	
 	public func visit(_ node: TextNode) -> NSMutableAttributedString {
@@ -234,7 +222,7 @@ public final class AttributedTextVisitor: IVisitor {
 		return result
 	}
 	
-	public func visit(_ node: LineBreakNode) -> NSMutableAttributedString {
+	public func visit(_ node: EmptyLineNode) -> NSMutableAttributedString {
 		let string = String.lineBreak
 		string.addAttribute(
 			.font,
@@ -243,14 +231,19 @@ public final class AttributedTextVisitor: IVisitor {
 		)
 		return string
 	}
-	
+
+	public func visit(_ node: LineBreakNode) -> NSMutableAttributedString {
+		String.lineBreak
+	}
+
 	public func visit(_ node: HorizontalLineNode) -> NSMutableAttributedString {
-//		let attribute: [NSAttributedString.Key: Any] = [
-//			.strikethroughStyle: NSUnderlineStyle.single.rawValue,
-//			.strikethroughColor: UIColor.gray
-//		]
-//		let result = NSMutableAttributedString(string: "\n\r\u{00A0} \u{0009} \u{00A0}\n\n", attributes: attribute)
-		let result = NSMutableAttributedString()
+		let line = "____________"
+		let attribute: [NSAttributedString.Key: Any] = [
+			.foregroundColor: UIColor.gray,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
+		]
+		let result = NSMutableAttributedString(string: line, attributes: attribute)
+		result.append(String.lineBreak)
 		return result
 	}
 	
@@ -258,15 +251,17 @@ public final class AttributedTextVisitor: IVisitor {
 		let codeStart = makeMdCode("```\(node.language)")
 		let codeEnd = makeMdCode("```")
 		
-		let text = visitChildren(of: node).joined(separator: "\n")
+		let text = visitChildren(of: node).joined()
 		
 		let result = NSMutableAttributedString()
 		result.append(codeStart)
-		result.append(text)
 		result.append(String.lineBreak)
+
+		result.append(text)
+
 		result.append(codeEnd)
 		result.append(String.lineBreak)
-		
+
 		let attribute: [NSAttributedString.Key: Any] = [
 			.foregroundColor: Appearance.codeBlockColor
 		]
@@ -274,10 +269,22 @@ public final class AttributedTextVisitor: IVisitor {
 		
 		return result
 	}
-	
+
+	public func visit(_ node: CodeBlockItem) -> NSMutableAttributedString {
+		let attribute: [NSAttributedString.Key: Any] = [
+			.foregroundColor: UIColor.gray,
+			.font: UIFont.systemFont(ofSize: Appearance.textSize)
+		]
+		let text = NSMutableAttributedString(string: node.code, attributes: attribute)
+		let result = NSMutableAttributedString()
+		result.append(text)
+
+		return result
+	}
+
 	public func visit(_ node: BulletedListNode) -> NSMutableAttributedString {
 		let level = String(repeating: "  ", count: node.level)
-		let text = visitChildren(of: node).joined(separator: "\n" + level)
+		let text = visitChildren(of: node).joined(separator: level)
 		
 		let result = NSMutableAttributedString()
 		result.append(text)
@@ -302,7 +309,7 @@ public final class AttributedTextVisitor: IVisitor {
 	
 	public func visit(_ node: NumberedListNode) -> NSMutableAttributedString {
 		let level = String(repeating: "  ", count: node.level)
-		let text = visitChildren(of: node).joined(separator: "\n" + level)
+		let text = visitChildren(of: node).joined(separator: level)
 		
 		let result = NSMutableAttributedString()
 		result.append(text)
