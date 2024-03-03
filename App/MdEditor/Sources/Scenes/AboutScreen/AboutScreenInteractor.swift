@@ -28,8 +28,7 @@ final class AboutScreenInteractor: IAboutScreenInteractor {
 	func fetchData() {
 		let url = ResourcesBundle.aboutFile
 		Task {
-			guard let file = try? await fileStorage.getEntity(from: url, with: []) else { return }
-			let result = await fileStorage.loadFile(file)
+			let result = fileStorage.loadFile(from: url)
 			await updateUI(fileData: result)
 		}
 	}

@@ -34,8 +34,8 @@ final class FileEditorInteractor: IFileEditorInteractor {
 		updateTitle(title: title)
 		Task {
 			let title = file.name
-			let result = await storage.loadFile(file)
-			await RecentFileManager().addToRecentFiles(file)
+			let result = file.loadFileBody()
+			await RecentFileManager(key: UserDefaults.Keys.recentFilesKey.rawValue).addToRecentFiles(file)
 			await updateUI(with: title, fileData: result)
 		}
 	}

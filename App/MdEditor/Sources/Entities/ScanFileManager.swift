@@ -35,7 +35,7 @@ actor ScanFileManager: IScanFileManager {
 					files.append(contentsOf: nestedFiles)
 				}
 			} else {
-				let file = try await storage.getEntity(from: item, with: [])
+				let file = try storage.getEntity(from: item, with: [])
 				files.append(file)
 			}
 		}

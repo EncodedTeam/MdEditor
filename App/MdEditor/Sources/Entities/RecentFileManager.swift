@@ -17,8 +17,16 @@ protocol IRecentFileManager {
 }
 
 actor RecentFileManager: IRecentFileManager {
+	private let userDefaults: UserDefaults
+	private let key: String
+
+	init(userDefaults: UserDefaults = UserDefaults.standard, key: String) {
+		self.userDefaults = userDefaults
+		self.key = key
+	}
+
 	func getRecentFiles() -> [FileSystemEntity] {
-		guard let data = UserDefaults.standard.data(forKey: UserDefaults.Keys.recentFilesKey.rawValue),
+		guard let data = userDefaults.data(forKey: key),
 			  let decodedItems = try? JSONDecoder().decode([FileSystemEntity].self, from: data) else {
 			return []
 		}
@@ -36,14 +44,14 @@ actor RecentFileManager: IRecentFileManager {
 		let result = Array(recentFiles.prefix(5))
 
 		guard let encodedData = try? JSONEncoder().encode(result) else { return }
-		UserDefaults.standard.setValue(
+		userDefaults.setValue(
 			encodedData,
-			forKey: UserDefaults.Keys.recentFilesKey.rawValue
+			forKey: key
 		)
 	}
 
 	func clearRecentFiles() {
-		UserDefaults.standard.reset()
+		userDefaults.removeObject(forKey: key)
 	}
 
 	func deleteRecentFile(_ file: FileSystemEntity) {
@@ -51,9 +59,9 @@ actor RecentFileManager: IRecentFileManager {
 		recentFiles.removeAll(where: { $0 == file })
 
 		guard let encodedData = try? JSONEncoder().encode(recentFiles) else { return }
-		UserDefaults.standard.setValue(
+		userDefaults.setValue(
 			encodedData,
-			forKey: UserDefaults.Keys.recentFilesKey.rawValue
+			forKey: key
 		)
 	}
 }

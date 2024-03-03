@@ -44,7 +44,7 @@ private extension EditorCoordinator {
 	}
 
 	func showStartScreenScene() {
-		let recentFileManager = RecentFileManager()
+		let recentFileManager = RecentFileManager(key: UserDefaults.Keys.recentFilesKey.rawValue)
 		let (viewController, interactor) = StartScreenAssembler().assembly(
 			recentFileManager: recentFileManager
 		)

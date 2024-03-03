@@ -54,7 +54,7 @@ final class FileListInteractor: IFileListInteractor {
 		updateTitle(currentFile?.name ?? "/")
 		// Получение файлов асинхронно
 		Task {
-			let result = await storage.fetch(of: currentFile?.url)
+			let result = await storage.fetchData(of: currentFile?.url)
 			switch result {
 			case .success(let files):
 				await updateUI(with: files)

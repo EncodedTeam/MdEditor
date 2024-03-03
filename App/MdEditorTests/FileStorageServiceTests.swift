@@ -16,7 +16,7 @@ final class FileStorageServiceTests: XCTestCase {
 		let sut = makeSut()
 		let source = TestingData.sourceAboutFile
 
-		let result = await sut.fetchData(urls: [source])
+		let result = await sut.fetchData(of: source)
 		let files = try? result.get()
 		let fileName = files?.first?.fullName ?? ""
 
@@ -27,13 +27,12 @@ final class FileStorageServiceTests: XCTestCase {
 		)
 	}
 
-	@MainActor
-	func test_about_shouldContainsSpecialText() async {
+	func test_about_shouldContainsSpecialText() {
 		let sut = makeSut()
 		let source = TestingData.sourceAboutFile
 		let necesseryText = TestingData.aboutNecesseryText
 
-		let string = await sut.loadFileBody(url: source)
+		let string = sut.loadFile(from: source)
 		let checkContains = string.contains(necesseryText)
 
 		XCTAssertTrue(
@@ -48,22 +47,10 @@ final class FileStorageServiceTests: XCTestCase {
 		let source = TestingData.rootUrls
 		let correctNumber = source.count
 
-		let result = await sut.fetchData(urls: source)
+		let result = await sut.fetchData(of: nil)
 		let files = try? result.get()
 
 		XCTAssertEqual(files?.count, correctNumber, "Service should return \(correctNumber) roots items")
-	}
-
-	@MainActor
-	func test_assets_fetchRecentFilesShouldHaveItems() async {
-		let sut = makeSut()
-		let sources = TestingData.rootUrls
-		let numberItemsOfFetch = 5
-
-		let result = await sut.fetchRecent(count: numberItemsOfFetch, with: sources)
-		let files = try? result.get()
-
-		XCTAssertEqual(files?.count, numberItemsOfFetch, "Service should return \(numberItemsOfFetch) recent items")
 	}
 
 	@MainActor
@@ -71,7 +58,7 @@ final class FileStorageServiceTests: XCTestCase {
 		let sut = makeSut()
 		let sourceAssets = TestingData.sourceAssetsDirectory
 
-		let result = await sut.fetchData(urls: [sourceAssets])
+		let result = await sut.fetchData(of: sourceAssets)
 
 		XCTAssertNoThrow(try result.get(), "Service should fetch directory Assets without any errors")
 
@@ -83,15 +70,18 @@ final class FileStorageServiceTests: XCTestCase {
 private extension FileStorageServiceTests {
 	enum TestingData {
 		static let aboutNecesseryText = "MdEditor — Текстовый редактор"
-		static let mainBundle = Bundle.main.bundleURL
+		static let mainBundle = ResourcesBundle.bundle
 		static let sourceAssetsDirectory = mainBundle.appendingPathComponent(ResourcesBundle.assets)
-		static let sourceAboutFile = sourceAssetsDirectory.appendingPathComponent(ResourcesBundle.about)
+		static let sourceAboutFile = mainBundle.appendingPathComponent(ResourcesBundle.about)
 		static let sourceAboutFileName = ResourcesBundle.about
 		static let rootUrls = ResourcesBundle.defaultUrls
 	}
 
 	func makeSut() -> IStorageService {
-		let sut = FileStorageService()
+		let sut = FileStorageService(
+			fileManager: FileManager.default,
+			defaultURL: TestingData.rootUrls
+		)
 		return sut
 	}
 }

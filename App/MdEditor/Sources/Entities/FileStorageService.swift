@@ -19,7 +19,7 @@ protocol IStorageService {
 	/// Получить файлы/папки
 	/// - Parameter url: источники для получения файла
 	/// - Returns: `Result<[FileSystemEntity], StorageError>`
-	func fetch(of url: URL?) async -> Result<[FileSystemEntity], StorageError>
+	func fetchData(of url: URL?) async -> Result<[FileSystemEntity], StorageError>
 
 	/// Получить сущность файла
 	/// - Parameters:
@@ -31,7 +31,7 @@ protocol IStorageService {
 	/// Загрузить данные из файла
 	/// - Parameter url: адрес файла
 	/// - Returns: текстовое представление файла
-	func loadFile(_ file: FileSystemEntity) -> String
+	func loadFile(from url: URL) -> String
 }
 
 final class FileStorageService: IStorageService {
@@ -51,7 +51,7 @@ final class FileStorageService: IStorageService {
 	}
 
 	// MARK: - Public methods
-	func fetch(of url: URL?) async -> Result<[FileSystemEntity], StorageError> {
+	func fetchData(of url: URL?) async -> Result<[FileSystemEntity], StorageError> {
 		if let url {
 			return fetchNestedFiles(of: url)
 		} else {
@@ -64,7 +64,7 @@ final class FileStorageService: IStorageService {
 		}
 	}
 
-	func getEntity(from url: URL, with ext: [String]) throws -> FileSystemEntity? {
+	func getEntity(from url: URL, with ext: [String] = []) throws -> FileSystemEntity? {
 		// Если это файл и указано расширение - выполнить проверку на соответствие указанному расширению
 		if !ext.isEmpty, !url.hasDirectoryPath, !ext.contains(url.pathExtension) { return nil }
 
@@ -86,8 +86,9 @@ final class FileStorageService: IStorageService {
 		)
 	}
 
-	func loadFile(_ file: FileSystemEntity) -> String {
-		file.loadFileBody()
+	func loadFile(from url: URL) -> String {
+		guard let file = try? getEntity(from: url) else { return "" }
+		return file.loadFileBody()
 	}
 }
 
@@ -96,11 +97,16 @@ private extension FileStorageService {
 	func fetchNestedFiles(of url: URL) -> Result<[FileSystemEntity], StorageError> {
 		var files: [FileSystemEntity?] = []
 		do {
-			let contents = try fileManager.contentsOfDirectory(
-				at: url,
-				includingPropertiesForKeys: nil,
-				options: .skipsHiddenFiles
-			)
+			var contents: [URL] = []
+			if url.hasDirectoryPath {
+				contents = try fileManager.contentsOfDirectory(
+					at: url,
+					includingPropertiesForKeys: nil,
+					options: .skipsHiddenFiles
+				)
+			} else {
+				contents = [url]
+			}
 			for item in contents {
 				let entity = try getEntity(from: item, with: ext)
 				files.append(entity)
