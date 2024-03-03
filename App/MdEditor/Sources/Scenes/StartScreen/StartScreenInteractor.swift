@@ -36,13 +36,10 @@ final class StartScreenInteractor: IStartScreenInteractor {
 
 	// MARK: - Public methods
 	func fetchData() {
-		Task {
-			let result = await recentFileManager.getRecentFiles()
-			await updateUI(with: result)
-		}
+		let result = recentFileManager.getRecentFiles()
+		updateUI(with: result)
 	}
 
-	@MainActor
 	func updateUI(with files: [FileSystemEntity]) {
 		let documents = files.map { document in
 			StartScreenModel.Document(
@@ -63,20 +60,14 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		case .showAbout:
 			delegate?.showAbout()
 		case .recentFileSelected(let indexPath):
-			Task {
-				let recentFiles = await recentFileManager.getRecentFiles()
-				let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
-				await MainActor.run {
-					delegate?.openFile(file: recentFile)
-				}
-			}
+			let recentFiles = recentFileManager.getRecentFiles()
+			let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
+			delegate?.openFile(file: recentFile)
 		case .deleteRecentFile(let indexPath):
-			Task {
-				let recentFiles = await recentFileManager.getRecentFiles()
-				let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
-				await recentFileManager.deleteRecentFile(recentFile)
-				fetchData()
-			}
+			let recentFiles = recentFileManager.getRecentFiles()
+			let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
+			recentFileManager.deleteRecentFile(recentFile)
+			fetchData()
 		}
 	}
 }

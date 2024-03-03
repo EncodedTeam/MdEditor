@@ -12,48 +12,47 @@ import Foundation
 protocol IRecentFileManager {
 	/// Предоставляет список файлов
 	/// - Returns: массив системных файлов
-	func getRecentFiles() async -> [FileSystemEntity]
+	func getRecentFiles() -> [FileSystemEntity]
 
 	/// Добавляет файл к списку последних файлов
 	/// - Parameter file: системный файл
-	func addToRecentFiles(_ file: FileSystemEntity) async
+	func addToRecentFiles(_ file: FileSystemEntity)
 	
 	/// Очищает список последних файлов
-	func clearRecentFiles() async
+	func clearRecentFiles()
 
 	/// Удаляет указанный системный файл из списка последних файлов
 	/// - Parameter file: системный файл
-	func deleteRecentFile(_ file: FileSystemEntity) async
+	func deleteRecentFile(_ file: FileSystemEntity)
 }
 
-actor RecentFileManager: IRecentFileManager {
+final class RecentFileManager: IRecentFileManager {
+	// MARK: - Private properties
 	private let userDefaults: UserDefaults
 	private let key: String
+	private let countOfShowItems: Int
 
-	init(userDefaults: UserDefaults = UserDefaults.standard, key: String) {
+	// MARK: - Initialization
+	init(userDefaults: UserDefaults = UserDefaults.standard, key: String, countOfShowItems: Int = 5) {
 		self.userDefaults = userDefaults
 		self.key = key
+		self.countOfShowItems = countOfShowItems
 	}
 
+	// MARK: - Public methods
 	func getRecentFiles() -> [FileSystemEntity] {
-		guard let data = userDefaults.data(forKey: key),
-			  let decodedItems = try? JSONDecoder().decode([FileSystemEntity].self, from: data) else {
-			return []
-		}
-		return decodedItems.compactMap { $0 }
+		return getRecentFiles(all: false)
 	}
 
 	func addToRecentFiles(_ file: FileSystemEntity) {
-		var recentFiles = getRecentFiles()
+		var recentFiles = getRecentFiles(all: true)
 		if let index = recentFiles.firstIndex(of: file) {
 			recentFiles.move(fromOffsets: IndexSet(integer: index), toOffset: 0)
 		} else {
 			recentFiles.insert(file, at: 0)
 		}
-		
-		let result = Array(recentFiles.prefix(5))
 
-		guard let encodedData = try? JSONEncoder().encode(result) else { return }
+		guard let encodedData = try? JSONEncoder().encode(recentFiles) else { return }
 		userDefaults.setValue(
 			encodedData,
 			forKey: key
@@ -65,7 +64,7 @@ actor RecentFileManager: IRecentFileManager {
 	}
 
 	func deleteRecentFile(_ file: FileSystemEntity) {
-		var recentFiles = getRecentFiles()
+		var recentFiles = getRecentFiles(all: true)
 		recentFiles.removeAll(where: { $0 == file })
 
 		guard let encodedData = try? JSONEncoder().encode(recentFiles) else { return }
@@ -73,5 +72,18 @@ actor RecentFileManager: IRecentFileManager {
 			encodedData,
 			forKey: key
 		)
+	}
+}
+
+// MARK: - Private methods
+private extension RecentFileManager {
+	func getRecentFiles(all: Bool) -> [FileSystemEntity] {
+		guard let data = userDefaults.data(forKey: key),
+			  let decodedItems = try? JSONDecoder().decode([FileSystemEntity].self, from: data) else {
+			return []
+		}
+		let result = decodedItems.compactMap { $0 }
+		guard all else { return Array(result.prefix(countOfShowItems)) }
+		return result
 	}
 }

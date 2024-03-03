@@ -13,10 +13,6 @@ protocol IFileEditorViewController: AnyObject {
 	/// Метод отрисовки информации на экране.
 	/// - Parameter viewModel: данные для отрисовки на экране.
 	func render(viewModel: FileEditorModel.ViewModel)
-	
-	/// Метод обновления title страницы
-	/// - Parameter viewModel: данные для отрисовки на экране.
-	func updateTitle(viewModel: FileEditorModel.ViewModel)
 }
 
 final class FileEditorViewController: UIViewController {
@@ -148,11 +144,7 @@ private extension FileEditorViewController {
 extension FileEditorViewController: IFileEditorViewController {
 	func render(viewModel: FileEditorModel.ViewModel) {
 		self.viewModel = viewModel
-		self.textViewEditor.attributedText = viewModel.fileData
-	}
-	
-	func updateTitle(viewModel: FileEditorModel.ViewModel) {
-		self.viewModel = viewModel
-		self.title = viewModel.title
+		title = viewModel.title
+		textViewEditor.attributedText = viewModel.fileData
 	}
 }

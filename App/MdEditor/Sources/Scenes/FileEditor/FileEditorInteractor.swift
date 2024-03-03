@@ -15,17 +15,14 @@ protocol IFileEditorInteractor: AnyObject {
 }
 
 final class FileEditorInteractor: IFileEditorInteractor {
-	
 	// MARK: - Dependencies
-	
 	private var presenter: IFileEditorPresenter?
 	private var storage: IStorageService
-	// MARK: - Private properties
 	
+	// MARK: - Private properties
 	private var file: FileSystemEntity
 	
 	// MARK: - Initialization
-	
 	init(presenter: IFileEditorPresenter, storage: IStorageService, file: FileSystemEntity) {
 		self.presenter = presenter
 		self.storage = storage
@@ -33,27 +30,15 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	}
 	
 	// MARK: - Public methods
-	
 	func fetchData() {
 		let title = file.name
-		updateTitle(title: title)
-		Task {
-			let title = file.name
-			let result = file.loadFileBody()
-			await RecentFileManager(key: UserDefaults.Keys.recentFilesKey.rawValue).addToRecentFiles(file)
-			await updateUI(with: title, fileData: result)
-		}
+		let result = file.loadFileBody()
+		RecentFileManager(key: UserDefaults.Keys.recentFilesKey.rawValue).addToRecentFiles(file)
+		updateUI(with: title, fileData: result)
 	}
-	
-	private func updateTitle(title: String) {
-		presenter?.presentTitle(responce: FileEditorModel.Response(title: title, fileData: NSMutableAttributedString()))
-	}
-	
-	@MainActor
+
 	func updateUI(with title: String, fileData: String) {
-
 		let attrributedText = MarkdownToAttributedTextConverter().convert(markdownText: fileData)
-
 		presenter?.present(responce: FileEditorModel.Response(title: title, fileData: attrributedText))
 	}
 }
