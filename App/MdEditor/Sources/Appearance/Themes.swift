@@ -16,7 +16,7 @@ enum Theme {
 	static let secondaryTextColor = Colors.purple
 	static let importantColor = Colors.red
 	static let tintColorCell = Colors.green
-	static let backgroundColor = Colors.white
+	static let backgroundColor = Colors.smoke
 	static let borderColor = Colors.purple
 	static let previewColor = UIColor.systemGray6.withAlphaComponent(0.2)
 	static let stubColor = UIColor.systemGray3

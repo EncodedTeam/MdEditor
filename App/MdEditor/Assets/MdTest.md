@@ -81,7 +81,7 @@ Internal link: [[link to h1]]
 
 image:
 
-![[15f4b6353310a9cd0ea994c7830b4c4c_MD5.jpeg|500]]
+![15f4b6353310a9cd0ea994c7830b4c4c_MD5.jpeg|500](url)
 
 emoji: ⛺  😂‚
 
