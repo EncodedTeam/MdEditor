@@ -11,11 +11,16 @@ import UIKit
 final class EditorCoordinator: BaseCoordinator {
 	// MARK: - Dependencies
 	private let navigationController: UINavigationController
-	private let storage = FileStorageService()
+	private let storage: IStorageService
 
 	// MARK: - Initialization
 	init(navigationController: UINavigationController) {
 		self.navigationController = navigationController
+		storage = FileStorageService(
+			fileManager: FileManager.default,
+			defaultURL: ResourcesBundle.defaultUrls,
+			ext: [ResourcesBundle.extMD]
+		)
 	}
 
 	// MARK: - Internal methods
@@ -27,7 +32,11 @@ final class EditorCoordinator: BaseCoordinator {
 // MARK: - Private methods
 private extension EditorCoordinator {
 	func showMessage(message: String) {
-		let alert = UIAlertController(title: L10n.Message.text, message: message, preferredStyle: .alert)
+		let alert = UIAlertController(
+			title: L10n.Message.text,
+			message: message,
+			preferredStyle: .alert
+		)
 		let action = UIAlertAction(title: L10n.Ok.text, style: .default)
 		alert.addAction(action)
 
@@ -35,25 +44,21 @@ private extension EditorCoordinator {
 	}
 
 	func showStartScreenScene() {
-		let (viewController, interactor) = StartScreenAssembler().assembly()
+		let recentFileManager = RecentFileManager(key: UserDefaults.Keys.recentFilesKey.rawValue)
+		let (viewController, interactor) = StartScreenAssembler().assembly(
+			recentFileManager: recentFileManager
+		)
 		interactor.delegate = self
 
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 
 	func showAboutScene() {
-		let fileURL = Bundle.main.bundleURL
-			.appendingPathComponent(ResourcesBundle.assets)
-			.appendingPathComponent(ResourcesBundle.about)
-		let viewController = AboutScreenAssembler().assembly(
-			fileStorage: storage,
-			url: fileURL
-		)
-
+		let viewController = AboutScreenAssembler().assembly(storage: storage)
 		navigationController.pushViewController(viewController, animated: true)
 	}
 
-	func showTextPreviewScene(file: FileSystemEntity) {
+	func showFileEditorScene(file: FileSystemEntity) {
 		let viewController = FileEditorAssembler().assembly(
 			storage: storage,
 			file: file,
@@ -67,7 +72,7 @@ private extension EditorCoordinator {
 		let topViewController = navigationController.topViewController
 		let coordinator = FileListCoordinator(
 			navigationController: navigationController,
-			topViewController: topViewController, 
+			topViewController: topViewController,
 			storage: storage
 		)
 		addDependency(coordinator)
@@ -103,6 +108,6 @@ extension EditorCoordinator: IStartScreenDelegate {
 	}
 	
 	func openFile(file: FileSystemEntity) {
-		showTextPreviewScene(file: file)
+		showFileEditorScene(file: file)
 	}
 }

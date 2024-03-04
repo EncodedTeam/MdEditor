@@ -15,7 +15,7 @@ public enum Token {
 	case bulletedListItem(level: Int, marker: String, text: Text)
 	case numberedListItem(level: Int, marker: String, text: Text)
 	case textLine(text: Text)
-	case lineBreak
+	case emptyLine
 	case horizontalLine(level: Int)
 }
 
@@ -26,6 +26,8 @@ public struct Text {
 		case normal(text: String)
 		case bold(text: String)
 		case italic(text: String)
+		case strike(text: String)
+		case highlighted(text: String)
 		case boldItalic(text: String)
 		case inlineCode(text: String)
 		case escapedChar(char: String)

@@ -90,4 +90,8 @@ extension FileListCoordinator: IFileListDelegate {
 	func openFile(file: FileSystemEntity) {
 		showFileEditorScene(file: file)
 	}
+
+	func goHome() {
+		navigationController.popToRootViewController(animated: true)
+	}
 }

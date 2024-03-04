@@ -9,7 +9,7 @@
 import UIKit
 
 final class FileItemTableViewCell: UITableViewCell {
-	static let cellIdentifier = "FileItemCell"
+	static let cellIdentifier = String(describing: FileItemTableViewCell.self)
 
 	// MARK: - Private properties
 	private lazy var imageViewIcon = makeImageView()

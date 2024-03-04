@@ -7,15 +7,14 @@
 //
 
 import UIKit
+import Combine
 
 protocol IStartScreenViewController: AnyObject {
 	func render(with viewModel: StartScreenModel.ViewModel)
 }
 
 final class StartScreenViewController: UIViewController, Accessible {
-
 	// MARK: - Dependencies
-
 	var interactor: IStartScreenInteractor?
 
 	// MARK: - Private properties
@@ -38,15 +37,25 @@ final class StartScreenViewController: UIViewController, Accessible {
 	private var narrowConstraints: [NSLayoutConstraint] = []
 	private var wideConstraints: [NSLayoutConstraint] = []
 
-	private var viewModel = StartScreenModel.ViewModel(documents: [])
+	private var viewModel = StartScreenModel.ViewModel.stub
+
+	private var cancellables = Set<AnyCancellable>()
 
 	// MARK: - Lifecycle
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
 		setupConstraints()
 		generateAccessibilityIdentifiers()
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		let landscape = UIDevice.current.orientation.isLandscape == true
+		interactor?.performAction(
+			request: .changeCountRecentFiles(landscape: landscape)
+		)
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -62,6 +71,11 @@ final class StartScreenViewController: UIViewController, Accessible {
 		
 		coordinator.animate { [weak self] _ in
 			self?.navigationController?.navigationBar.sizeToFit()
+			
+			let landscape = UIDevice.current.orientation.isLandscape == true
+			self?.interactor?.performAction(
+				request: .changeCountRecentFiles(landscape: landscape)
+			)
 		}
 	}
 
@@ -69,38 +83,53 @@ final class StartScreenViewController: UIViewController, Accessible {
 		super.traitCollectionDidChange(previousTraitCollection)
 		
 		if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+			cancellables.removeAll()
 			collectionViewDocs.reloadData()
 		}
 	}
 }
 
 // MARK: - IStartScreenViewController
-
 extension StartScreenViewController: IStartScreenViewController {
 	func render(with viewModel: StartScreenModel.ViewModel) {
 		self.viewModel = viewModel
-		collectionViewDocs.reloadData()
+		cancellables.removeAll()
+		collectionViewDocs.performBatchUpdates {
+			collectionViewDocs.reloadSections(IndexSet(integer: 0))
+		}
 	}
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
-
 extension StartScreenViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		viewModel.documents.count
+		if case let .documents(documents) = viewModel {
+			return documents.count
+		} else {
+			return 1 // swiftlint:disable:this numbers_smell
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
 		guard let cell = collectionView.dequeueReusableCell(
 			withReuseIdentifier: RecentDocumentCell.reuseIdentifier,
 			for: indexPath
 		) as? RecentDocumentCell else {
 			return UICollectionViewCell()
 		}
-		let document = viewModel.documents[indexPath.item]
-		cell.configure(with: document)
-
+		
+		if case let .documents(documents) = viewModel {
+			let document = documents[indexPath.item]
+			cell.deleteItemPublisher
+				.receive(on: RunLoop.main)
+				.sink { [weak self] in
+					self?.deleteRecentFile(indexPath: indexPath)
+				}
+				.store(in: &cancellables)
+			cell.configure(with: document)
+		} else {
+			cell.showStub()
+		}
 		return cell
 	}
 
@@ -113,10 +142,18 @@ extension StartScreenViewController: UICollectionViewDataSource, UICollectionVie
 		let width = height * Sizes.CollectionView.Multiplier.horizontal
 		return CGSize(width: width, height: height)
 	}
+
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		switch viewModel {
+		case .documents:
+			interactor?.performAction(request: .recentFileSelected(indexPath: indexPath))
+		case .stub:
+			interactor?.performAction(request: .creaeteNewFile)
+		}
+	}
 }
 
 // MARK: - SetupUI
-
 private extension StartScreenViewController {
 	func setupUI() {
 		title = L10n.StartScreen.title
@@ -126,10 +163,9 @@ private extension StartScreenViewController {
 		navigationItem.backButtonDisplayMode = .minimal
 		view.backgroundColor = Theme.backgroundColor
 
-		interactor?.fetchData()
-
 		buttonNew.configuration?.imagePadding += Sizes.Padding.half
 
+		buttonNew.addTarget(self, action: #selector(buttonNewAction), for: .touchUpInside)
 		buttonOpen.addTarget(self, action: #selector(buttonOpenAction), for: .touchUpInside)
 		buttonAbout.addTarget(self, action: #selector(buttonAboutAction), for: .touchUpInside)
 
@@ -144,18 +180,13 @@ private extension StartScreenViewController {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
 		layout.minimumLineSpacing = Sizes.CollectionView.Padding.lineSpacing
-
-		let itemWidth = view.frame.width
-		let itemHeight = view.frame.height
-
-		layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
+		layout.sectionInset = Sizes.CollectionView.sectionInset
 
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 		
 		collectionView.register(RecentDocumentCell.self, forCellWithReuseIdentifier: RecentDocumentCell.reuseIdentifier)
 		collectionView.accessibilityIdentifier = AccessibilityIdentifier.StartScreen.collectionView.description
-		
-		collectionView.isPagingEnabled = true
+
 		collectionView.showsHorizontalScrollIndicator = false
 		collectionView.backgroundColor = .clear
 
@@ -200,7 +231,6 @@ private extension StartScreenViewController {
 }
 
 // MARK: - Layout
-
 private extension StartScreenViewController {
 	func setupConstraints() {
 		commonConstraints = [
@@ -209,16 +239,20 @@ private extension StartScreenViewController {
 				constant: Sizes.Padding.normal
 			),
 			collectionViewDocs.leadingAnchor.constraint(
-				equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-				constant: Sizes.Padding.normal
+				equalTo: view.safeAreaLayoutGuide.leadingAnchor
 			),
-			collectionViewDocs.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			collectionViewDocs.trailingAnchor.constraint(
+				equalTo: view.safeAreaLayoutGuide.trailingAnchor
+			),
 
 			stackViewButttons.topAnchor.constraint(
 				equalTo: collectionViewDocs.bottomAnchor,
 				constant: Sizes.Padding.normal
 			),
-			stackViewButttons.leadingAnchor.constraint(equalTo: collectionViewDocs.leadingAnchor)
+			stackViewButttons.leadingAnchor.constraint(
+				equalTo: collectionViewDocs.leadingAnchor,
+				constant: Sizes.Padding.normal
+			)
 		]
 
 		narrowConstraints = [
@@ -261,6 +295,11 @@ private extension StartScreenViewController {
 // MARK: - Actions
 private extension StartScreenViewController {
 	@objc
+	func buttonNewAction(_ sender: UIButton) {
+		interactor?.performAction(request: .creaeteNewFile)
+	}
+
+	@objc
 	func buttonOpenAction(_ sender: UIButton) {
 		interactor?.performAction(request: .openFileList)
 	}
@@ -270,7 +309,7 @@ private extension StartScreenViewController {
 		interactor?.performAction(request: .showAbout)
 	}
 
-	@objc func interfaceModeChanged() {
-		collectionViewDocs.reloadData()
+	func deleteRecentFile(indexPath: IndexPath) {
+		interactor?.performAction(request: .deleteRecentFile(indexPath: indexPath))
 	}
 }

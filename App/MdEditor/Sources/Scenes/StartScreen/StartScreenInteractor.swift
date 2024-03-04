@@ -26,29 +26,20 @@ final class StartScreenInteractor: IStartScreenInteractor {
 
 	// MARK: - Dependencies
 	private var presenter: IStartScreenPresenter?
-	private var fileStorage: IStorageService
+	private var recentFileManager: IRecentFileManager
 
 	// MARK: - Initialization
-	init(presenter: IStartScreenPresenter?, fileStorage: IStorageService) {
+	init(presenter: IStartScreenPresenter?, recentFileManager: IRecentFileManager) {
 		self.presenter = presenter
-		self.fileStorage = fileStorage
+		self.recentFileManager = recentFileManager
 	}
 
 	// MARK: - Public methods
 	func fetchData() {
-		Task {
-			let urls = ResourcesBundle.defaultsUrls
-			let result = await fileStorage.fetchRecent(count: 10, with: urls)
-			switch result {
-			case .success(let files):
-				await updateUI(with: files)
-			case .failure(let error):
-				fatalError(error.localizedDescription)
-			}
-		}
+		let result = recentFileManager.getRecentFiles()
+		updateUI(with: result)
 	}
 
-	@MainActor
 	func updateUI(with files: [FileSystemEntity]) {
 		let documents = files.map { document in
 			StartScreenModel.Document(
@@ -69,7 +60,26 @@ final class StartScreenInteractor: IStartScreenInteractor {
 		case .showAbout:
 			delegate?.showAbout()
 		case .recentFileSelected(let indexPath):
-			break
+			let recentFiles = recentFileManager.getRecentFiles()
+			let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
+			delegate?.openFile(file: recentFile)
+		case .deleteRecentFile(let indexPath):
+			let recentFiles = recentFileManager.getRecentFiles()
+			let recentFile = recentFiles[min(indexPath.row, recentFiles.count - 1)]
+			recentFileManager.deleteRecentFile(recentFile)
+			fetchData()
+		case .changeCountRecentFiles(landscape: let landscape):
+			if landscape {
+				recentFileManager.changeCountOfRecentFilesTo(
+					Sizes.CollectionView.countOfCellsInLandscape
+				)
+			} else {
+				recentFileManager.changeCountOfRecentFilesTo(
+					Sizes.CollectionView.countOfCellsInPortrait
+				)
+			}
+			let result = recentFileManager.getRecentFiles()
+			updateUI(with: result)
 		}
 	}
 }
