@@ -70,7 +70,15 @@ enum Sizes {
 			static let lineSpacing: CGFloat = 20
 		}
 
-		static let sectionInset = UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 0)
+		static let sectionInset = UIEdgeInsets(
+			top: 0,
+			left: Sizes.Padding.normal,
+			bottom: 0,
+			right: Sizes.Padding.normal
+		)
+
+		static let countOfCellsInPortrait: Int = 5
+		static let countOfCellsInLandscape: Int = 10
 
 		enum Multiplier {
 			static let vertical: CGFloat = 1 / 5
