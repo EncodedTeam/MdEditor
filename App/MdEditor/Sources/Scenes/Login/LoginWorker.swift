@@ -71,9 +71,3 @@ class StubLoginWorker: ILoginWorker {
 		}
 	}
 }
-
-final class TestingLoginWorker: ILoginWorker {
-	func login(login: String, password: String) -> Result<Void, LoginError> {
-		.success(())
-	}
-}
