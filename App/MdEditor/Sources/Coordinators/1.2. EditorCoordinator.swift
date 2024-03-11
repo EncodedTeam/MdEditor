@@ -59,12 +59,13 @@ private extension EditorCoordinator {
 	}
 
 	func showFileEditorScene(file: FileSystemEntity) {
-		let viewController = FileEditorAssembler().assembly(
+		let (viewController, interactor) = FileEditorAssembler().assembly(
 			storage: storage,
 			file: file,
 			editable: true
 		)
-
+		interactor.delegate = self
+		
 		navigationController.pushViewController(viewController, animated: true)
 	}
 
@@ -109,5 +110,13 @@ extension EditorCoordinator: IStartScreenDelegate {
 	
 	func openFile(file: FileSystemEntity) {
 		showFileEditorScene(file: file)
+	}
+}
+
+// MARK: - IFileEditorDelegate
+extension EditorCoordinator: IFileEditorDelegate {
+	func exportToPDF(text: String, author: String, title: String) {
+		let viewController = PdfAssembler().assembly(text: text, author: author, title: title)
+		navigationController.pushViewController(viewController, animated: true)
 	}
 }

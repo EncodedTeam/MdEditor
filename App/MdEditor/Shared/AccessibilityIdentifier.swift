@@ -68,6 +68,7 @@ enum AccessibilityIdentifier {
 		case section(index: Int)
 		case cell(section: Int, row: Int)
 		case homeBarButton
+		case menuBarButton
 
 		var description: String {
 			switch self {
@@ -79,6 +80,8 @@ enum AccessibilityIdentifier {
 				return "FileListViewController.cell-\(section)-\(row)"
 			case .homeBarButton:
 				return "FileListViewController.homeBarButton"
+			case .menuBarButton :
+				return "FileListViewController.menuBarButton"
 			}
 		}
 	}
