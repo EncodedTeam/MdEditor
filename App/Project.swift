@@ -7,8 +7,8 @@ enum ProjectSettings {
 	public static var projectName: String { "MdEditor" }
 	public static var targerVersion: String { "15.0" }
 	public static var bundleId: String { "com.\(organizationName).\(projectName)" }
-	public static var marketingVersion: String { "4.4.0" }
-	public static var currentProjectVersion: String { "2" }
+	public static var marketingVersion: String { "$(VERSION)" }
+	public static var currentProjectVersion: String { "$(BUILD_NUMBER)" }
 }
 
 private var swiftLintTargetScript: TargetScript {
@@ -32,6 +32,11 @@ private var swiftLintTargetScript: TargetScript {
 private let scripts: [TargetScript] = [
 	swiftLintTargetScript
 ]
+
+private let preActionScriptForRun = """
+	cd "$SRCROOT/$PRODUCT_NAME/Environments"
+	source Version.sh
+	"""
 
 let project = Project(
 	name: ProjectSettings.projectName,
@@ -71,7 +76,11 @@ let project = Project(
 				.package(product: "TaskManagerPackage", type: .runtime),
 				.package(product: "DataStructuresPackage", type: .runtime),
 				.package(product: "MarkdownPackage", type: .runtime)
-			]
+			],
+			settings: .settings(configurations: [
+				.debug(name: "Debug", xcconfig: "\(ProjectSettings.projectName)/Environments/Config.xcconfig"),
+				.release(name: "Release", xcconfig: "\(ProjectSettings.projectName)/Environments/Config.xcconfig")
+			])
 		),
 		Target(
 			name: "\(ProjectSettings.projectName)Tests",
@@ -115,7 +124,15 @@ let project = Project(
 				"\(ProjectSettings.projectName)Tests",
 				"\(ProjectSettings.projectName)UITests"
 			]),
-			runAction: .runAction(executable: "\(ProjectSettings.projectName)")
+			runAction: .runAction(
+				preActions: [
+					.init(
+						scriptText: preActionScriptForRun,
+						target: .project(path: "", target: "\(ProjectSettings.projectName)")
+					)
+				],
+				executable: "\(ProjectSettings.projectName)"
+			)
 		),
 		Scheme(
 			name: "\(ProjectSettings.projectName)Tests",
@@ -131,5 +148,8 @@ let project = Project(
 			testAction: .targets(["\(ProjectSettings.projectName)UITests"]),
 			runAction: .runAction(executable: "\(ProjectSettings.projectName)UITests")
 		)
+	],
+	additionalFiles: [
+		"\(ProjectSettings.projectName)/Environments/Version.sh"
 	]
 )
