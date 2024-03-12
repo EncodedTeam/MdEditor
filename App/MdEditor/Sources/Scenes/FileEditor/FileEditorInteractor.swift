@@ -9,16 +9,24 @@
 import Foundation
 import MarkdownPackage
 
+protocol IFileEditorDelegate: AnyObject {
+	func exportToPDF(text: String, author: String, title: String)
+}
+
 protocol IFileEditorInteractor: AnyObject {
 	/// Событие на предоставление данных из файла.
 	func fetchData()
+
+	func performAction(request: FileEditorModel.Request)
 }
 
-final class FileEditorInteractor: IFileEditorInteractor {
+final class FileEditorInteractor {
 	// MARK: - Dependencies
+	weak var delegate: IFileEditorDelegate?
+	
 	private var presenter: IFileEditorPresenter?
 	private var storage: IStorageService
-	
+
 	// MARK: - Private properties
 	private var file: FileSystemEntity
 	
@@ -28,8 +36,9 @@ final class FileEditorInteractor: IFileEditorInteractor {
 		self.storage = storage
 		self.file = file
 	}
-	
-	// MARK: - Public methods
+}
+
+extension FileEditorInteractor: IFileEditorInteractor {
 	func fetchData() {
 		let title = file.name
 		let result = file.loadFileBody()
@@ -40,5 +49,13 @@ final class FileEditorInteractor: IFileEditorInteractor {
 	func updateUI(with title: String, fileData: String) {
 		let attrributedText = MarkdownToAttributedTextConverter().convert(markdownText: fileData)
 		presenter?.present(responce: FileEditorModel.Response(title: title, fileData: attrributedText))
+	}
+
+	func performAction(request: FileEditorModel.Request) {
+		switch request {
+		case .exportToPDF:
+			let fileData = file.loadFileBody()
+			delegate?.exportToPDF(text: fileData, author: "Author", title: file.name)
+		}
 	}
 }
