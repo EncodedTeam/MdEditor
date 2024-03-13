@@ -33,7 +33,6 @@ final class FileEditorViewController: UIViewController {
 
 	private var constraints = [NSLayoutConstraint]()
 
-//	private let popover = PopoverViewController()
 	private var cancellable: AnyCancellable?
 
 	// MARK: - Initialization
@@ -116,6 +115,7 @@ private extension FileEditorViewController {
 		navigationController?.navigationBar.tintColor = Theme.mainColor
 
 		navigationItem.setHidesBackButton(false, animated: true)
+		navigationItem.backButtonDisplayMode = .minimal
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.rightBarButtonItem = menuBarButton
 

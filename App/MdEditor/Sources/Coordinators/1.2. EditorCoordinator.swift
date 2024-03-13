@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MarkdownPackage
 
 final class EditorCoordinator: BaseCoordinator {
 	// MARK: - Dependencies
@@ -92,6 +93,14 @@ private extension EditorCoordinator {
 
 		coordinator.start()
 	}
+
+	func showPdfPreviewScene(file: FileSystemEntity, author: String) {
+		let converter = MainQueueDispatchConverterDecorator<Data>(
+			MarkdownToPdfConverter(pdfAuthor: author, pdfTitle: file.name)
+		)
+		let viewController = PdfPreviewAssembler().assembly(file: file, converter: converter)
+		navigationController.pushViewController(viewController, animated: true)
+	}
 }
 
 // MARK: - IStartScreenDelegate
@@ -115,8 +124,7 @@ extension EditorCoordinator: IStartScreenDelegate {
 
 // MARK: - IFileEditorDelegate
 extension EditorCoordinator: IFileEditorDelegate {
-	func exportToPDF(text: String, author: String, title: String) {
-		let viewController = PdfAssembler().assembly(text: text, author: author, title: title)
-		navigationController.pushViewController(viewController, animated: true)
+	func exportToPDF(file: FileSystemEntity, author: String) {
+		showPdfPreviewScene(file: file, author: author)
 	}
 }
