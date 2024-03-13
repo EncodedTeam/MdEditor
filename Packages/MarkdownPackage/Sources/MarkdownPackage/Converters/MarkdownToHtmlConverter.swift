@@ -20,7 +20,7 @@ public final class MarkdownToHtmlConverter: IMarkdownConverter {
 			let visitor = HtmlVisitor()
 			let html = document.accept(visitor: visitor)
 
-			completion(makeHtml(html.joined()))
+			completion(self.makeHtml(html.joined()))
 		}
 	}
 

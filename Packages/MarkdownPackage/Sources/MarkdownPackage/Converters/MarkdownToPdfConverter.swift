@@ -64,14 +64,14 @@ public final class MarkdownToPdfConverter: IMarkdownConverter {
 			sleep(1)
 #endif
 			guard let self else { return }
-			let document = markdownToDocument.convert(markdownText: markdownText)
+			let document = self.markdownToDocument.convert(markdownText: markdownText)
 
 			let visitor = AttributedTextVisitor()
 			let lines = document.accept(visitor: visitor)
 
 			let pdfMetaData  = [
-				kCGPDFContextAuthor: pdfAuthor,
-				kCGPDFContextTitle: pdfTitle
+				kCGPDFContextAuthor: self.pdfAuthor,
+				kCGPDFContextTitle: self.pdfTitle
 			]
 
 			let format = UIGraphicsPDFRendererFormat()
