@@ -10,7 +10,7 @@ import Foundation
 import MarkdownPackage
 
 protocol IFileEditorDelegate: AnyObject {
-	func exportToPDF(text: String, author: String, title: String)
+	func exportToPDF(file: FileSystemEntity, author: String)
 }
 
 protocol IFileEditorInteractor: AnyObject {
@@ -54,8 +54,7 @@ extension FileEditorInteractor: IFileEditorInteractor {
 	func performAction(request: FileEditorModel.Request) {
 		switch request {
 		case .exportToPDF:
-			let fileData = file.loadFileBody()
-			delegate?.exportToPDF(text: fileData, author: "Author", title: file.name)
+			delegate?.exportToPDF(file: file, author: "Author")
 		}
 	}
 }

@@ -160,7 +160,7 @@ private extension StartScreenViewController {
 		navigationItem.setHidesBackButton(true, animated: true)
 		navigationItem.backButtonDisplayMode = .minimal
 		navigationController?.navigationBar.prefersLargeTitles = true
-		navigationItem.backButtonDisplayMode = .minimal
+
 		view.backgroundColor = Theme.backgroundColor
 
 		buttonNew.configuration?.imagePadding += Sizes.Padding.half

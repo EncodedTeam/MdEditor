@@ -37,57 +37,73 @@ enum FormatPages {
 	}
 }
 
-public final class MarkdownToPdfConverter {
+public final class MarkdownToPdfConverter: IMarkdownConverter {
 	enum Constants {
 		static let pageRect = CGRect(origin: .zero, size: FormatPages.A4.size)
 		static let initialCursorPosition: CGFloat = 20
 		static let lineSpacing: CGFloat = 12
 		static let indent: CGFloat = 20
 	}
-
-	private let markdownToDocument = MarkdownToDocument()
-
-	public init() { }
 	
-	public func convert(markdownText: String, pdfAuthor: String, pdfTitle: String) -> Data {
-		let document = markdownToDocument.convert(markdownText: markdownText)
-		
-		let visitor = AttributedTextVisitor()
-		let lines = document.accept(visitor: visitor)
-		
-		let pdfMetaData  = [
-			kCGPDFContextAuthor: pdfAuthor,
-			kCGPDFContextTitle: pdfTitle
-		]
-		
-		let format = UIGraphicsPDFRendererFormat()
-		format.documentInfo = pdfMetaData as [String: Any]
+	// MARK: - Private properties
+	private let markdownToDocument = MarkdownToDocument()
+	private let pdfAuthor: String
+	private let pdfTitle: String
 
-		let graphicsRenderer = UIGraphicsPDFRenderer(bounds: Constants.pageRect, format: format)
-
-		let data = graphicsRenderer.pdfData { context in
-			context.beginPage()
-			
-			var cursor: CGFloat = Constants.initialCursorPosition
-
-			lines.forEach { line in
-				// Удалим символ \n (переноса строки) в конце строки
-				line.replaceCharacters(in: .init(location: line.length - 1, length: 1), with: "")
-				cursor = addAttributedText(
-					context: context,
-					text: line,
-					indent: Constants.indent,
-					cursor: cursor,
-					pdfSize: Constants.pageRect.size
-				)
-				
-				cursor += Constants.lineSpacing
-			}
-			
-		}
-		
-		return data
+	// MARK: - Initialization
+	public init(pdfAuthor: String, pdfTitle: String) {
+		self.pdfAuthor = pdfAuthor
+		self.pdfTitle = pdfTitle
 	}
+
+	// MARK: - Public methods
+	public func convert(markdownText: String, completion: @escaping (Data) -> Void) {
+		DispatchQueue.global().async { [weak self] in
+#if DEBUG
+			// Преднамеренная задержка для демонстрации асинхронной работы
+			sleep(1)
+#endif
+			guard let self else { return }
+			let document = markdownToDocument.convert(markdownText: markdownText)
+
+			let visitor = AttributedTextVisitor()
+			let lines = document.accept(visitor: visitor)
+
+			let pdfMetaData  = [
+				kCGPDFContextAuthor: pdfAuthor,
+				kCGPDFContextTitle: pdfTitle
+			]
+
+			let format = UIGraphicsPDFRendererFormat()
+			format.documentInfo = pdfMetaData as [String: Any]
+
+			let graphicsRenderer = UIGraphicsPDFRenderer(bounds: Constants.pageRect, format: format)
+
+			let data = graphicsRenderer.pdfData { context in
+				context.beginPage()
+
+				var cursor: CGFloat = Constants.initialCursorPosition
+
+				lines.forEach { line in
+					// Удалим символ \n (переноса строки) в конце строки
+					line.replaceCharacters(in: .init(location: line.length - 1, length: 1), with: "")
+					cursor = self.addAttributedText(
+						context: context,
+						text: line,
+						indent: Constants.indent,
+						cursor: cursor,
+						pdfSize: Constants.pageRect.size
+					)
+
+					cursor += Constants.lineSpacing
+				}
+
+			}
+
+			completion(data)
+		}
+	}
+
 }
 
 private extension MarkdownToPdfConverter {
