@@ -96,5 +96,9 @@ enum Sizes {
 			static let y: CGFloat = 10
 		}
 	}
+
+	enum PdfPreview {
+		static let pageBreakMargins = UIEdgeInsets(top: 32, left: 16, bottom: 16, right: 16)
+	}
 }
 // swiftlint:enable type_name

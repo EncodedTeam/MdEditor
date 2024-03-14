@@ -29,5 +29,6 @@ enum Theme {
 		static let deleteFile = UIImage(systemName: "minus.circle.fill")
 		static let newFile = UIImage(systemName: "plus")
 		static let homeButton = UIImage(systemName: "house.fill")
+		static let menuButton = UIImage(systemName: "text.justify")
 	}
 }

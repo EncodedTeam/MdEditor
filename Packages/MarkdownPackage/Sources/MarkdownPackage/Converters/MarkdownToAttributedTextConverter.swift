@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class MarkdownToAttributedTextConverter {
+public final class MarkdownToAttributedTextConverter: IMarkdownConverter {
 	private let markdownToDocument = MarkdownToDocument()
 	
 	public init() { }
@@ -18,7 +18,16 @@ public final class MarkdownToAttributedTextConverter {
 		return result
 	}
 	
-	func convert(document: Document) -> NSMutableAttributedString {
+	public func convert(markdownText: String, completion: @escaping (NSMutableAttributedString) -> Void) {
+		DispatchQueue.global().async { [weak self] in
+			guard let self else { return }
+			let document = self.markdownToDocument.convert(markdownText: markdownText)
+			let result = self.convert(document: document)
+			completion(result)
+		}
+	}
+
+	private func convert(document: Document) -> NSMutableAttributedString {
 		let visitor = AttributedTextVisitor()
 		
 		let result = document.accept(visitor: visitor)
