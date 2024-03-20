@@ -30,6 +30,7 @@ final class FileEditorViewController: UIViewController {
 	private var editable: Bool
 	
 	private lazy var textViewEditor: UITextView = makeTextView()
+	private lazy var popover = PopoverViewController()
 
 	private var constraints = [NSLayoutConstraint]()
 
@@ -55,6 +56,11 @@ final class FileEditorViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		layout()
+	}
+
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		popover.dismiss(animated: true)
 	}
 }
 
@@ -86,7 +92,6 @@ private extension FileEditorViewController {
 
 	@objc
 	func menuButtonAction(_ sender: UIBarItem) {
-		let popover = PopoverViewController()
 		popover.modalPresentationStyle = .popover
 		cancellable = popover.performActionPublisher
 			.receive(on: RunLoop.main)
@@ -101,7 +106,12 @@ private extension FileEditorViewController {
 		presentingVC.delegate = self
 		presentingVC.sourceView = view
 		presentingVC.permittedArrowDirections = []
-		presentingVC.sourceRect = CGRect(x: view.bounds.maxX, y: view.bounds.minY, width: 0, height: 0)
+		presentingVC.sourceRect = CGRect(
+			x: view.bounds.width - view.safeAreaInsets.right,
+			y: view.safeAreaInsets.top + Sizes.Padding.double,
+			width: 0,
+			height: 0
+		)
 
 		present(popover, animated: true)
 	}
