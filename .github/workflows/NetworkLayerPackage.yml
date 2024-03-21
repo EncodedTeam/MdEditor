@@ -9,7 +9,7 @@ jobs:
   NetworkLayerPackage_UnitTests:
     name: Build & Tests
     env:
-      SCHEME: NetworkLayerPackageTests
+      SCHEME: NetworkLayerPackage
       DEVICE: iPhone 14 Pro
     runs-on: macos-latest
     steps:
