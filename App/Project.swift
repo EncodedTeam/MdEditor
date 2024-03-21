@@ -50,7 +50,8 @@ let project = Project(
 	packages: [
 		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
 		.local(path: .relativeToManifest("../Packages/DataStructuresPackage")),
-		.local(path: .relativeToManifest("../Packages/MarkdownPackage"))
+		.local(path: .relativeToManifest("../Packages/MarkdownPackage")),
+		.local(path: .relativeToManifest("../Packages/NetworkLayerPackage"))
 	],
 	settings: .settings(
 		base: SettingsDictionary()
@@ -75,7 +76,8 @@ let project = Project(
 			dependencies: [
 				.package(product: "TaskManagerPackage", type: .runtime),
 				.package(product: "DataStructuresPackage", type: .runtime),
-				.package(product: "MarkdownPackage", type: .runtime)
+				.package(product: "MarkdownPackage", type: .runtime),
+				.package(product: "NetworkLayerPackage", type: .runtime)
 			],
 			settings: .settings(configurations: [
 				.debug(name: "Debug", xcconfig: "\(ProjectSettings.projectName)/Environments/Config.xcconfig"),
