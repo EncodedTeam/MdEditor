@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import NetworkLayerPackage
 
 enum NetworkEndpoints {
 	static let api = URL(string: "https://practice.swiftbook.org/api")! // swiftlint:disable:this force_unwrapping
@@ -24,17 +23,17 @@ extension NetworkEndpoints: CustomStringConvertible {
 	var description: String {
 		switch self {
 		case .login:
-			"/auth/login"
+			return "/auth/login"
 		case .getAllFiles:
-			"/files"
+			return "/files"
 		case .getFile(let id):
-			"/files/\(id)"
+			return "/files/\(id)"
 		case .download(let id):
-			"/files/download/\(id)"
+			return "/files/download/\(id)"
 		case .upload:
-			"/files/upload"
+			return "/files/upload"
 		case .delete(let id):
-			"/files/\(id)"
+			return "/files/\(id)"
 		}
 	}
 }
