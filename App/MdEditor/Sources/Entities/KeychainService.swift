@@ -8,10 +8,15 @@
 
 import Foundation
 
+enum KeychainAuthParameters {
+	static let serviceName = Bundle.main.bundleIdentifier ?? "SomeBundleIdentifier"
+	static let key = "AuthAccessToken"
+}
+
 struct KeychainService {
 	// MARK: - Private properties
-	private let serviceName: String
-	private let key: String
+	private let serviceName: String = KeychainAuthParameters.serviceName
+	private let key: String = KeychainAuthParameters.key
 
 	// MARK: - Public methods
 	@discardableResult
@@ -50,6 +55,16 @@ struct KeychainService {
 	func delete() -> Bool {
 		let queryDictionary = setupKeychainQueryDictionary()
 		let status = SecItemDelete(queryDictionary as CFDictionary)
+		return status == errSecSuccess
+	}
+
+	@discardableResult
+	func deleteAll() -> Bool {
+		let queryDictionary = [
+			kSecClass: kSecClassGenericPassword,
+			kSecAttrService: serviceName
+		] as CFDictionary
+		let status = SecItemDelete(queryDictionary)
 		return status == errSecSuccess
 	}
 
