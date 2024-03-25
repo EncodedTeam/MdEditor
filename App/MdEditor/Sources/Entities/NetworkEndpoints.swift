@@ -9,31 +9,31 @@
 import Foundation
 
 enum NetworkEndpoints {
-	static let api = URL(string: "https://practice.swiftbook.org/api")! // swiftlint:disable:this force_unwrapping
+	static let baseURL = URL(string: "https://practice.swiftbook.org")! // swiftlint:disable:this force_unwrapping
 	
 	case login
 	case getAllFiles
-	case getFile(String)
-	case download(String)
+	case getFile(id: String)
+	case download(id: String)
 	case upload
-	case delete(String)
+	case delete(id: String)
 }
 
 extension NetworkEndpoints: CustomStringConvertible {
 	var description: String {
 		switch self {
 		case .login:
-			return "/auth/login"
+			return "/api/auth/login"
 		case .getAllFiles:
-			return "/files"
+			return "/api/files"
 		case .getFile(let id):
-			return "/files/\(id)"
+			return "/api/files/\(id)"
 		case .download(let id):
-			return "/files/download/\(id)"
+			return "/api/files/download/\(id)"
 		case .upload:
-			return "/files/upload"
+			return "/api/files/upload"
 		case .delete(let id):
-			return "/files/\(id)"
+			return "/api/files/\(id)"
 		}
 	}
 }
