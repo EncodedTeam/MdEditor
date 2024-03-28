@@ -51,7 +51,7 @@ struct NetworkResponseLogin: Codable {
 final class LoginWorker: ILoginWorker {
 	// MARK: - Private properties
 	private let logger = Logger(subsystem: "MdEditor.Logger", category: "LoginWorker")
-	private let networkService = NetworkService(session: URLSession.shared, baseUrl: NetworkEndpoints.api)
+	private let networkService = NetworkService(session: URLSession.shared, baseUrl: NetworkEndpoints.baseURL)
 
 	// MARK: - Public methods
 	func login(login: String, password: String, completion: @escaping (Result<Void, LoginError>) -> Void) {
